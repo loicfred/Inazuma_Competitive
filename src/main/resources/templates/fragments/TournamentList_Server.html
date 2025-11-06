@@ -1,5 +1,5 @@
 <div class="tournament-section-box" th:each="CT : ${tournaments}">
-    <a style="display: flex; align-items: center;" th:href="${'/t/' + CT.ID}" target="_blank">
+    <a style="display: flex; align-items: center;" th:href="${'/t/' + CT.getId()}" target="_blank">
         <img th:src="@{/img/games/{gameCode}.png(gameCode=${CT.getGame().getCode()})}" style="width: 5%;">
         <div style="display: block; margin-left: 5px;">
             <h5 class="IEBOLD" th:text="${CT.getName()}"></h5>
