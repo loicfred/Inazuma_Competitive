@@ -213,7 +213,7 @@
                 </div>
                 <div style="width: 500px;">
                     <h5 class="IEBOLD">Tournament Details</h5>
-                    <p class="IEStrike mb-0" th:text="'Total Tournaments: ' + ${profile.Totals().getTotalTournaments()}"></p>
+                    <p class="IEStrike mb-0" th:text="'Total Tournaments: ' + ${profile.Totals().getTotalStats().getAsLong('TCount')}"></p>
                     <p class="IEStrike mb-0" th:text="'Tournament Activity: ' + ${profile.getActivity(null, null).getAsInt('Tournament Activity')}"></p>
                     <p class="IEStrike" th:text="'Avg Tournament Activity: ' + ${utils.format(profile.getActivity(null, null).getAsDouble('Average Tournament Activity'))}"></p>
                 </div>

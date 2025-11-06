@@ -17,7 +17,7 @@
     <tr th:each="TR : ${stats}">
         <td style="text-align: left;">
             <a th:href="'/p/'+ ${TR.getAsLong('DiscordID')}" style="display: flex; align-items: center; text-decoration: none; color: white;">
-                <img th:src="${TR.getAsString('AvatarURL')}" alt="">
+                <img th:src="${TR.getAsString('AvatarURL')}" onerror="this.src='/img/AvatarDefault.png'" alt="">
                 <p class="IEStrike mb-0" th:text="${TR.getAsString('FullName')}"></p>
             </a>
         </td>

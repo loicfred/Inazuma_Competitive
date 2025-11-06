@@ -369,7 +369,7 @@ public class Retrieval {
                         .flatMap(richCustomEmoji -> message.addReaction(Emoji.fromCustom(richCustomEmoji))
                                 .flatMap(Void -> richCustomEmoji.delete())).queue();
             } else {
-                try (InputStream is = Main.class.getResourceAsStream("/img/AvatarDefault.png")) {
+                try (InputStream is = Main.class.getResourceAsStream("/static/img/AvatarDefault.png")) {
                     BotStaffGuild.createEmoji("Vote" + num, Icon.from(is))
                             .flatMap(richCustomEmoji -> message.addReaction(Emoji.fromCustom(richCustomEmoji))
                                     .flatMap(Void -> richCustomEmoji.delete())).queue();

@@ -5,7 +5,6 @@ import ie.enums.Element;
 import ie.enums.Gender;
 import ie.enums.Position;
 import iecompbot.objects.match.League;
-import iecompbot.objects.server.tournament.challonge.server.SChallonge_Participant;
 import iecompbot.springboot.data.DatabaseObject;
 
 import java.util.Map;
@@ -65,10 +64,6 @@ public class Profile_Total extends DatabaseObject<Profile_Total> {
     private transient Row TotalStats = null;
     public Row getTotalStats() {
         return TotalStats == null ? TotalStats = doQuery("SELECT * FROM inazuma_competitive.profile_stats WHERE UserID = ?", getId()).orElse(null) : TotalStats;
-    }
-
-    public int getTotalTournaments() {
-        return Tournaments == null ? Tournaments = Count(SChallonge_Participant.class, "DiscordID = ?", getId()) : Tournaments;
     }
 
     public int getWins() {

@@ -961,22 +961,24 @@ public class ClanFeatures extends ListenerAdapter {
                                 Clan C = Clan.get(CMD.ClanID);
                                 List<String> SelectedOptions = event.getValues();
                                 event.deferEdit().queue(M -> {
-                                    Item I = Item.get(Long.parseLong(SelectedOptions.getFirst()));
-                                    if (event.getComponentId().contains("bg")) {
-                                        C.getLicenses().setCardBackground(I);
-                                        C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license background to **" + I.getName() + "**.");
-                                    } else if (event.getComponentId().contains("fg")) {
-                                        C.getLicenses().setCardForeground(I);
-                                        C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license foreground to **" + I.getName() + "**.");
-                                    } else if (event.getComponentId().contains("ry")) {
-                                        C.getLicenses().setCardRay(I);
-                                        C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license ray to **" + I.getName() + "**.");
-                                    } else if (event.getComponentId().contains("st")) {
-                                        C.getLicenses().setCardStrike(I);
-                                        C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license strike to **" + I.getName() + "**.");
-                                    } else if (event.getComponentId().contains("sp")) {
+                                    if (event.getComponentId().contains("sp")) {
                                         C.getLicenses().setSponsor(Long.parseLong(SelectedOptions.getFirst()));
                                         C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license sponsor to **" + SelectedOptions.getFirst() + "**.");
+                                    } else {
+                                        Item I = Item.get(Long.parseLong(SelectedOptions.getFirst()));
+                                        if (event.getComponentId().contains("bg")) {
+                                            C.getLicenses().setCardBackground(I);
+                                            C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license background to **" + I.getName() + "**.");
+                                        } else if (event.getComponentId().contains("fg")) {
+                                            C.getLicenses().setCardForeground(I);
+                                            C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license foreground to **" + I.getName() + "**.");
+                                        } else if (event.getComponentId().contains("ry")) {
+                                            C.getLicenses().setCardRay(I);
+                                            C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license ray to **" + I.getName() + "**.");
+                                        } else if (event.getComponentId().contains("st")) {
+                                            C.getLicenses().setCardStrike(I);
+                                            C.AddClanLog(event.getUser(), "[License]", "Modified the clan's license strike to **" + I.getName() + "**.");
+                                        }
                                     }
                                     C.getLicenses().Update();
                                     C.LicenseManageUI(M);

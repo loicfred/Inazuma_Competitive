@@ -25,7 +25,7 @@ public class InterclanImageBuilder extends ImageBuilder {
     private final Image Top = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/Interclan/InterclanTop.png"))).getImage();
     private final Image Middle = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/Interclan/InterclanMiddle.png"))).getImage();
     private final Image Bottom = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/Interclan/InterclanBottom.png"))).getImage();
-    private final Image ImgDefaultAvatar = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/AvatarDefault.png"))).getImage();
+    private final Image ImgDefaultAvatar = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/static/img/AvatarDefault.png"))).getImage();
 
     public InterclanImageBuilder(Interclan I) {
         this.I = I;

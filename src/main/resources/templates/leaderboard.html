@@ -11,16 +11,30 @@
 
     <style>
         main {
-            background-color: rgb(30, 30, 30);
-            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/img/bg.jpg");
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #000645;
+        }
+        input:checked + .slider, input:checked + .minislider {
+            background-color: #000c87;
+        }
+
+        td {
+            text-align: left;
         }
 
         .content {
             flex: 3;
             color: white;
+            background-color: rgb(30, 30, 30);
             justify-content: space-between;
             align-items: center;
-            padding: 30px 40px 60px 40px;
+            padding: 10px 40px 60px 40px;
+            min-height: 100vh;
         }
         .content h1 {
             font: 2.5rem IEBold, sans-serif;
@@ -54,6 +68,7 @@
 <main layout:fragment="content">
     <section class="content">
         <div id="leaderboard-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+        <h5 id="itemload" class="IEBOLD" style="text-align: center; padding-top: 100px">Loading...</h5>
         <div id="leaderboard"></div>
     </section>
 </main>
@@ -74,6 +89,7 @@
             fetch(`/LeaderboardData`)
                 .then(res => res.text())
                 .then(html => {
+                    document.getElementById("itemload").classList.add("d-none");
                     document.getElementById("leaderboard").innerHTML = html;
                 });
         } else {
@@ -94,9 +110,40 @@
             fetch(`/LeaderboardData?g=${encodeURIComponent(g)}`)
                 .then(res => res.text())
                 .then(html => {
+                    document.getElementById("itemload").classList.add("d-none");
                     document.getElementById("leaderboard").innerHTML = html;
                 });
         }
     }
     showLeaderboards("Tourn-ALL");
+</script>
+<script>
+    let StatsSortDirection = [];
+    function sortStats(colIndex) {
+        const table = document.getElementById("statsTable");
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        // Toggle direction
+        StatsSortDirection[colIndex] = !StatsSortDirection[colIndex];
+        const direction = StatsSortDirection[colIndex] ? -1 : 1;
+
+        rows.sort((a, b) => {
+            const aText = a.cells[colIndex].innerText.trim();
+            const bText = b.cells[colIndex].innerText.trim();
+
+            const aNum = parseFloat(aText.replace(/[^\d.-]/g, ''));
+            const bNum = parseFloat(bText.replace(/[^\d.-]/g, ''));
+
+            // If numeric sort
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return (aNum - bNum) * direction;
+            }
+
+            // Else string sort
+            return aText.localeCompare(bText) * direction;
+        });
+
+        rows.forEach(row => tbody.appendChild(row)); // Re-append in new order
+    }
 </script>

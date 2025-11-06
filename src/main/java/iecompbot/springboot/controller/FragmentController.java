@@ -84,7 +84,7 @@ public class FragmentController {
     @GetMapping("/LeaderboardData")
     public String getLeaderboardData(@RequestParam(value = "g", required = false) String games, Model model) {
         int i = 1;
-        List<DatabaseObject.Row> TRs = doQueryAll("CALL DisplayTop15(?,?,?,?);", games, null, 1, 1000);
+        List<DatabaseObject.Row> TRs = doQueryAll("CALL inazuma_competitive.DisplayAllStats(?);", games, null, 1, 1000);
         for (DatabaseObject.Row TR : TRs) TR.rows.put("Count", i++);
         model.addAttribute("players", TRs);
         return "fragments/LeaderboardData";

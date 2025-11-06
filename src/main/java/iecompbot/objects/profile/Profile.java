@@ -9,11 +9,11 @@ import iecompbot.interaction.cmdbreakdown.profile.GamesCommand;
 import iecompbot.interaction.cmdbreakdown.profile.ProfileCommand;
 import iecompbot.interaction.custom.BuiltMessageE;
 import iecompbot.objects.BotEmoji;
-import iecompbot.objects.match.Game;
-import iecompbot.objects.match.League;
 import iecompbot.objects.Nationality;
 import iecompbot.objects.clan.Clan;
 import iecompbot.objects.clan.ClanMember;
+import iecompbot.objects.match.Game;
+import iecompbot.objects.match.League;
 import iecompbot.objects.match.MatchLog;
 import iecompbot.objects.profile.item.Item;
 import iecompbot.objects.profile.item.Scoreboard;
@@ -26,7 +26,6 @@ import iecompbot.objects.profile.quest.quest.Profile_Quest;
 import iecompbot.objects.profile.quest.quest.Quest_Objective;
 import iecompbot.objects.server.ServerInfo;
 import iecompbot.objects.server.tournament.challonge.server.SChallonge_Match;
-import iecompbot.objects.server.tournament.challonge.server.SChallonge_Participant;
 import iecompbot.springboot.data.DatabaseObject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
@@ -620,10 +619,10 @@ public class Profile extends DatabaseObject<Profile> {
 
         E.addField(Totals().getLeague().getEmojiFormatted() + " " + TL(M,"Matches"),
                 TL(M,"TotalMedals") + " : **" + Totals.get("Medals") + "**\n"
-                + "All Tournaments: **" + Count(SChallonge_Participant.class, "DiscordID = ?", ID) + "**\n"
-                + "Top 1s: **" + getItem("First Medal").Amount + "**\n"
-                + "Top 2s: **" + getItem("Second Medal").Amount + "**\n"
-                + "Top 3s: **" + getItem("Third Medal").Amount + "**", true);
+                + "All Tournaments: **" + Totals.get("TCount") + "**\n"
+                + "Top 1s: **" + Totals.get("T1") + "**\n"
+                + "Top 2s: **" + Totals.get("T2") + "**\n"
+                + "Top 3s: **" + Totals.get("T3") + "**", true);
 
         List<ClanMember> clans = ClanMember.OfUser(this);
         for (ClanMember CM : clans) {

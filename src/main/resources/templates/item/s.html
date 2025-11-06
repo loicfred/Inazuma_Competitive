@@ -673,7 +673,7 @@
 
     // Toggle direction
     StatsSortDirection[colIndex] = !StatsSortDirection[colIndex];
-    const direction = StatsSortDirection[colIndex] ? 1 : -1;
+    const direction = StatsSortDirection[colIndex] ? -1 : 1;
 
     rows.sort((a, b) => {
       const aText = a.cells[colIndex].innerText.trim();

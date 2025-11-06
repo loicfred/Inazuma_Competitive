@@ -291,17 +291,19 @@ public class ProfileFeatures extends ListenerAdapter {
                                 event.deferEdit().queue(M -> {
                                     try {
                                         List<String> SelectedOptions = event.getValues();
-                                        Item I = P.getItem(Long.parseLong(SelectedOptions.getFirst())).getItem();
-                                        if (event.getComponentId().contains("bg")) {
-                                            P.setCardBackground(I);
-                                        } else if (event.getComponentId().contains("fg")) {
-                                            P.setCardForeground(I);
-                                        } else if (event.getComponentId().contains("ry")) {
-                                            P.setCardRay(I);
-                                        } else if (event.getComponentId().contains("st")) {
-                                            P.setCardStrike(I);
-                                        } else if (event.getComponentId().contains("sp")) {
+                                        if (event.getComponentId().contains("sp")) {
                                             P.setSponsor(Long.parseLong(SelectedOptions.getFirst()));
+                                        } else {
+                                            Item I = P.getItem(Long.parseLong(SelectedOptions.getFirst())).getItem();
+                                            if (event.getComponentId().contains("bg")) {
+                                                P.setCardBackground(I);
+                                            } else if (event.getComponentId().contains("fg")) {
+                                                P.setCardForeground(I);
+                                            } else if (event.getComponentId().contains("ry")) {
+                                                P.setCardRay(I);
+                                            } else if (event.getComponentId().contains("st")) {
+                                                P.setCardStrike(I);
+                                            }
                                         }
                                         P.LicenseManageUI(M);
                                         P.resetCards();
