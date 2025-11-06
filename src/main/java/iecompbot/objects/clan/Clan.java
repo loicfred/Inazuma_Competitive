@@ -80,7 +80,6 @@ import static my.utilities.util.Utilities.*;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Clan extends DatabaseObject<Clan> {
     private transient Nationality Nat = null;
-    private transient Clan_License ClanLicense = null;
     private transient List<ClanRole> ClanRoles = null;
     private transient List<ClanMember> ClanMembers = null;
     private transient BotEmoji emoji = null;
@@ -115,6 +114,14 @@ public class Clan extends DatabaseObject<Clan> {
     public String InstagramURL = null;
     public String DiscordURL = null;
     public String TiktokURL = null;
+
+    public long CardBackground = 40001;
+    public long CardForeground = 50001;
+    public long CardRay = 60001;
+    public long CardStrike = 70001;
+    public long Sponsor = 871133534184681523L;
+
+
     public long getId() {
         return ID;
     }
@@ -188,9 +195,6 @@ public class Clan extends DatabaseObject<Clan> {
         return Emblem;
     }
 
-    public Clan_License getLicenses() {
-        return ClanLicense == null ? ClanLicense = Clan_License.get(getId()) : ClanLicense;
-    }
     public List<ClanRole> getClanRoles() {
         return ClanRoles == null ? ClanRoles = ClanRole.of(this) : ClanRoles;
     }
@@ -276,6 +280,43 @@ public class Clan extends DatabaseObject<Clan> {
         UpdateOnly("MemberCount");
         return MemberCount;
     }
+
+
+
+    public long getSponsor() {
+        return Sponsor;
+    }
+
+    public Item getCardBackgroundItem() {
+        return Item.get(CardBackground);
+    }
+    public Item getCardForegroundItem() {
+        return Item.get(CardForeground);
+    }
+    public Item getCardRayItem() {
+        return Item.get(CardRay);
+    }
+    public Item getCardStrikeItem() {
+        return Item.get(CardStrike);
+    }
+
+    public void setCardBackground(Item i) {
+        if (i.getType().equals(Item.ItemType.LICENSE_BG)) CardBackground = i.getId();
+    }
+    public void setCardRay(Item i) {
+        if (i.getType().equals(Item.ItemType.LICENSE_RY)) CardRay = i.getId();
+    }
+    public void setCardForeground(Item i) {
+        if (i.getType().equals(Item.ItemType.LICENSE_FG)) CardForeground = i.getId();
+    }
+    public void setCardStrike(Item i) {
+        if (i.getType().equals(Item.ItemType.LICENSE_ST)) CardStrike = i.getId();
+    }
+    public void setSponsor(long sponsor) {
+        Sponsor = sponsor;
+    }
+
+
 
     public Clan() {}
     public Clan(User captain, String name, String tag, String description, String colorcode, Nationality nationality, String status, List<User> members, MessageEmbed.Thumbnail emblem) throws Exception {
@@ -1680,11 +1721,11 @@ public class Clan extends DatabaseObject<Clan> {
         E.setDescription(TL(M, "license-manager-description"));
         E.setThumbnail(getEmblemURL());
         E.setColor(getColor());
-        E.addField(TL(M,"background"), getLicenses().getCardBackgroundItem().getName(), false);
-        E.addField(TL(M,"foreground"), getLicenses().getCardForegroundItem().getName(), false);
-        E.addField(TL(M,"ray"), getLicenses().getCardRayItem().getName(), false);
-        E.addField(TL(M,"strike"), getLicenses().getCardStrikeItem().getName(), false);
-        E.addField(TL(M,"sponsor"), getLicenses().getSponsor() + "", false);
+        E.addField(TL(M,"background"), getCardBackgroundItem().getName(), false);
+        E.addField(TL(M,"foreground"), getCardForegroundItem().getName(), false);
+        E.addField(TL(M,"ray"), getCardRayItem().getName(), false);
+        E.addField(TL(M,"strike"), getCardStrikeItem().getName(), false);
+        E.addField(TL(M,"sponsor"), getSponsor() + "", false);
         try (CardImageBuilder CIB = new CardImageBuilder(Profile.get(M.getInteraction().getUser()), this)) {
             E.setImage(getFileUrl(CIB.GenerateCardPNG().DownloadPNGToFile(), "card.png"));
         }

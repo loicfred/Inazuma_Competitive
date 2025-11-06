@@ -59,11 +59,11 @@ public class CardImageBuilder extends ImageBuilder {
         P = p;
         clan = c;
         try {
-            BG = c.getLicenses().getCardBackgroundItem();
-            FG = c.getLicenses().getCardForegroundItem();
-            RY = c.getLicenses().getCardRayItem();
-            ST = c.getLicenses().getCardStrikeItem();
-            sponsor = c.getLicenses().getSponsor();
+            BG = c.getCardBackgroundItem();
+            FG = c.getCardForegroundItem();
+            RY = c.getCardRayItem();
+            ST = c.getCardStrikeItem();
+            sponsor = c.getSponsor();
             Number = clan.getMemberById(p.getId()).getNumber();
         } catch (Exception ignored) {}
     }
