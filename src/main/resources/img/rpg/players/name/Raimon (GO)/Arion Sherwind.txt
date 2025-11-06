@@ -1,0 +1,19 @@
+Wind
+MF
+Boy
+A+
+S
+A
+B
+S
+C
+GP: 164
+TP: 155
+M: Easy Breezy
+M: Hyper-Swiper
+M: Tornado Tunnel
+M: Arashi Tatsumaki Hurricane
+S: -
+S: -
+SP: Arch Pegasus
+200

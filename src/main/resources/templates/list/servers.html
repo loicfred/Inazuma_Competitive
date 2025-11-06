@@ -1,0 +1,104 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" content="Servers | Inazuma Competitive" />
+    <meta name="twitter:title" content="Servers | Inazuma Competitive">
+    <meta property="og:description" content="View the list of all servers of the community." />
+    <meta name="twitter:description" content="View the list of all servers of the community.">
+    <title>Servers | Inazuma Competitive</title>
+    <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+    <style>
+        main {
+            background: linear-gradient(to bottom, rgba(40, 5, 5, 255) 50%, rgba(30, 5, 5, 255) 100%);
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #600000;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .servers-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+        }
+        .serverlist {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 20px;
+        }
+        .server-box {
+            border-radius: 10px;
+            text-decoration: none;
+            transition: 0.1s;
+            width: 375px;
+            height: 300px;
+        }
+
+        .join {
+            font: 16px IEStrike, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 40px;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #248045;
+            margin-left: auto;
+            margin-top: auto;
+        }
+        .join:hover {
+            scale: 105%;
+        }
+
+        .server-description {
+            margin: 3px;
+            font-size: 11px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .serverlist {
+                gap: 10px;
+            }
+        }
+
+        .bubble-btn {
+            font: 12px IEStrike, sans-serif;
+            padding: 0 2px;
+            margin-right: 5px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <section class="servers-section">
+        <div class="IEBOLD fs-2 mb-2">Public Servers</div>
+        <div th:if="${servers.size() > 0}" class="serverlist">
+            <div th:each="each : ${servers}" class="server-box" th:style="'background: linear-gradient(to right, rgba(40, 5, 5, 255) 1%, rgba(0, 0, 0, 0) 100%), url(' + '\'' + ${each.IconUrl} + '\'' + '); background-size: 300px 300px; background-position-x: 125px; background-repeat: no-repeat; border: 5px solid ' + ${each.DominantColorcode} + ';'">
+                <div th:style="'display: flex; flex-direction: column; height: 100%; padding: 20px; background: linear-gradient(to top, ' + ${utils.darkenColor(each.DominantColorcode, 0.25)} + 'FF 1%, #00000044 100%); border-radius: 6px;'">
+                    <a th:href="'/s/' + ${each.getId()}">
+                        <div class="IEStrike fs-4"><span class="emoji" th:text="${each.getNationality().getCodepoints()}"></span> <span class="IEBOLD" th:text="${each.getGuild().getName().length() > 32 ? each.getGuild().getName().substring(0,32) + '...' : each.getGuild().getName()}"></span></div>
+                        <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                            <p class="bubble-btn IEStrike mb-0" th:text="${each.MemberCount}"></p>
+                            <p class="IEStrike mb-0" th:text="'Created on: ' + ${#dates.format(each.getGuild().getTimeCreated().toEpochSecond(), 'dd/MM/yyyy')}"></p>
+                        </div>
+                        <div class="IEStrike server-description" th:text="${each.getGuild().getDescription() != null ? (each.getGuild().getDescription().length() > 200 ? each.getGuild().getDescription().substring(0,200) + '...' : each.getGuild().getDescription()) : 'Inazuma Eleven Server'}"></div>
+                    </a>
+                    <a class="IEBOLD join" th:href="${each.PermanentInviteLink}" target="_blank">Join</a>
+                </div>
+            </div>
+        </div>
+        <div class=" fs-2 mb-2" th:if="${servers.size() == 0}">No servers found.</div>
+    </section>
+</main>
+
+</html>

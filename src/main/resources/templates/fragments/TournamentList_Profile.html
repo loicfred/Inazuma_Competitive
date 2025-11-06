@@ -1,0 +1,13 @@
+<div class="tournament-section-box" th:each="CT : ${tournaments}">
+    <a style="display: flex; align-items: center;" th:href="${'/t/' + CT.getAsString('ID')}" target="_blank">
+        <img th:src="@{/img/games/{gameCode}.png(gameCode=${CT.getAsString('GameCode')})}" style="width: 5%;">
+        <div style="display: block; margin-left: 5px;">
+            <h5 class="IEBOLD" th:text="${CT.getAsString('Name')}"></h5>
+            <p class="IEStrike mb-0" th:text="'Position: ' + ${CT.getAsString('Position')} + ' | Match & Goal Difference: ' + ${CT.getAsString('Wins')} + '/' + ${CT.getAsString('Ties')} + '/-' + ${CT.getAsString('Loses')} + ' | +'  + ${CT.getAsString('GoalsScored')} + '/-' + ${CT.getAsString('GoalsTaken')} + ' | Participants: ' + ${CT.getAsString('ParticipantCount')}"></p>
+        </div>
+    </a>
+    <a style="background-color: darkorange; margin: 5px 5px 5px auto; display: flex; align-items: center; justify-content: center; min-width: 90px; max-width: 90px; height: 40px; border-radius: 5px; padding: 5px" th:href="${CT.getAsString('FullChallongeURL')}" target="_blank">
+        <p class="IEStrike mb-0">View</p>
+    </a>
+</div>
+<h5 class="IEBOLD noItemFound" style="justify-self: center;" th:if="${tournaments.isEmpty()}">No tournaments yet.</h5>

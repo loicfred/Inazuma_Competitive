@@ -1,0 +1,270 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" content="Home | Inazuma Competitive" />
+    <meta name="twitter:title" content="Home | Inazuma Competitive">
+
+    <meta property="og:description" content="Inazuma Competitive is a project with the goal to unite and improve the experience of the whole Inazuma Eleven community.
+            We facilitate tournament organisation and clan management. The tournaments and results of players are all recorded here.
+            You will find everything you want about the community." />
+    <meta name="twitter:description" content="Inazuma Competitive is a project with the goal to unite and improve the experience of the whole Inazuma Eleven community.
+            We facilitate tournament organisation and clan management. The tournaments and results of players are all recorded here.
+            You will find everything you want about the community.">
+    <meta name="twitter:image" content="/img/avatar.png">
+    <meta property="og:image" content="/img/avatar.png" />
+
+    <style>
+        main {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/img/bg.jpg");
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #222222;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .content {
+            flex: 3;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 40px 70px 40px;
+            max-width: 60%;
+            margin: auto;
+            text-align: center;
+        }
+
+        .content .title {
+            font: 2.2rem IEBold, sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .content .text {
+            font: 1.1rem IEStrike, sans-serif;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .btn-list {
+            gap: 60px;
+            padding: 40px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+        }
+
+        .button {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: 300px;
+            height: 180px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s;
+            padding: 15px;
+            color: white;
+
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+        }
+
+        .button .label {
+            font: 1.2rem IEBold, sans-serif;
+        }
+
+        .button .desc {
+            font: 0.8rem IEStrike, sans-serif;
+            opacity: 0.8;
+        }
+
+        #clanbtn { background-image: url("/img/clans.png"); border: 2px solid rgb(40, 40, 200); }
+        #tournbtn { background-image: url("/img/tournaments.png"); border: 2px solid rgb(200, 150, 0); }
+        #serverbtn { background-image: url("/img/servers.png"); border: 2px solid rgb(150, 0, 0); }
+
+        #suggestions {
+            padding: 40px 30px 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+
+        #suggestions .section-title {
+            font: 1.8rem IEBold, sans-serif;
+            margin-bottom: 25px;
+        }
+
+        .tournament-panel {
+            background-color: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            width: 90%;
+            padding: 15px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tournament-panel:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .gameIcon {
+            width: 90px;
+            height: 90px;
+            margin-right: 15px;
+        }
+
+        .tournament-info {
+            flex: 1;
+        }
+
+        .tournament-name {
+            font: 1.3rem IEBold, sans-serif;
+            margin-bottom: 4px;
+        }
+
+        .tournament-details {
+            font: 0.95rem IEStrike, sans-serif;
+            opacity: 0.9;
+        }
+
+        .tournament-panel-details-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .btn-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border-radius: 5px;
+            width: 100px;
+            height: 38px;
+            font: 0.95rem IEStrike, sans-serif;
+            transition: background 0.2s;
+        }
+
+        .btn-join {
+            background-color: #248045;
+        }
+        .btn-join:hover {
+            background-color: #2ea959;
+        }
+
+        .btn-view {
+            background-color: rgb(200,100,0);
+        }
+        .btn-view:hover {
+            background-color: rgb(220,130,20);
+        }
+
+        @media screen and (max-width: 768px) {
+            .content {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+
+            .content .title {
+                font-size: 1.6rem;
+            }
+
+            .content .text {
+                font-size: 0.95rem;
+            }
+
+            .btn-list {
+                gap: 25px;
+            }
+
+            .button {
+                width: 90%;
+                height: auto;
+                padding: 20px;
+            }
+
+            .tournament-panel {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+            }
+
+            .gameIcon {
+                width: 60px;
+                height: 60px;
+                margin: 0;
+            }
+
+            .tournament-panel-details-buttons {
+                margin-top: 10px;
+                justify-content: center;
+            }
+
+            .tournament-details {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <section class="content">
+        <div class="title">What is Inazuma Competitive?</div>
+        <div class="text">
+            <b>Inazuma Competitive</b> is a project with the goal to unite and improve the experience of the whole Inazuma Eleven community.
+            We facilitate tournament organisation and clan management. The tournaments and results of players are all recorded here.
+            You will find everything you want about the community.
+        </div>
+    </section>
+
+    <section class="btn-list">
+        <a class="button" id="clanbtn" th:href="'/clans'">
+            <div class="label">Clans</div>
+            <div class="desc">See all the 40+ clans making up the community!</div>
+        </a>
+        <a class="button" id="tournbtn" th:href="'/tournaments'">
+            <div class="label">Tournaments</div>
+            <div class="desc">See all the 450+ archived tournaments organised within the community!</div>
+        </a>
+        <a class="button" id="serverbtn" th:href="'/servers'">
+            <div class="label">Servers</div>
+            <div class="desc">See all the 30+ servers which are keeping the community active while organising tournaments!</div>
+        </a>
+    </section>
+
+    <section id="suggestions">
+        <div th:if="${tournaments.size() > 0}" class="section-title">Active Tournaments</div>
+        <div th:if="${tournaments.size() > 0}" th:each="each : ${tournaments}" class="tournament-panel">
+            <img class="gameIcon" th:src="@{/img/games/{gameCode}.png(gameCode=${each.getGame().getCode()})}" alt="game.png"/>
+            <div class="tournament-info">
+                <div class="tournament-name" th:text="${each.getName()}"></div>
+                <div class="tournament-details" th:text="'Participants: ' + ${each.getParticipantCount()} + ' | ' + ${each.getType().toString().toUpperCase()} + ' | ' + ${#dates.format(each.getStartAtTimeEpochSecond() * 1000, 'dd MMM yyyy HH:mm')} + ' ~ ' + ${each.getProgressMeter() + '%'}"></div>
+            </div>
+            <div class="tournament-panel-details-buttons">
+                <a class="btn-custom btn-join" th:if="${#strings.equals(each.getState().toString(), 'pending')}" th:href="${each.getInscriptionChannelInviteLink()}" target="_blank">Join</a>
+                <a class="btn-custom btn-view" th:if="${each.getState().toString() != 'pending'}" th:href="${each.getFullChallongeURL()}" target="_blank">View</a>
+            </div>
+        </div>
+        <div th:if="${tournaments.isEmpty()}" class="section-title">No upcoming tournaments found.</div>
+    </section>
+</main>
+
+</html>

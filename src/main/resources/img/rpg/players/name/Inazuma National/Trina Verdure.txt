@@ -1,0 +1,19 @@
+Wood
+DF
+Girl
+E
+C
+A+
+D
+B
+C
+GP: 108
+TP: 213
+M: Spider Web
+M: Leaf Roll
+M: Double Touch
+M: Konoha Rendezvous
+S: -
+S: -
+SP: Fox
+120

@@ -1,0 +1,102 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" content="Leaderboard | Inazuma Competitive" />
+    <meta property="og:description" content="The leaderboard of Inazuma Competitive. See who is the best player in the community and what they have achieved." />
+    <meta property="og:image" content="/img/avatar.png" />
+    <meta name="twitter:title" content="Leaderboard | Inazuma Competitive">
+    <meta name="twitter:description" content="The leaderboard of Inazuma Competitive. See who is the best player in the community and what they have achieved.
+            You will find everything you want about the community.">
+    <meta name="twitter:image" content="/img/avatar.png">
+
+    <style>
+        main {
+            background-color: rgb(30, 30, 30);
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 3;
+            color: white;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 40px 60px 40px;
+        }
+        .content h1 {
+            font: 2.5rem IEBold, sans-serif;
+            margin-bottom: 20px;
+        }
+        .content p {
+            line-height: 1.5;
+            font: 1.0rem IEStrike, sans-serif;
+        }
+
+        @media screen and (max-width: 768px) {
+            .content {
+                padding: 15px;
+                max-width: 100%;
+            }
+            .content h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            .content p {
+                line-height: 1.4;
+                font-size: 12px;
+            }
+            .tournament-panel-details-buttons a {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <section class="content">
+        <div id="leaderboard-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+        <div id="leaderboard"></div>
+    </section>
+</main>
+
+</html>
+
+<script>
+    generateSwitches('leaderboard-switches', 'Tourn', commonItems, 'showLeaderboards');
+    function showLeaderboards(selected) {
+        if (document.querySelector("input[name='Tourn-ALL']").checked === true && selected === "Tourn-ALL") {
+            document.querySelector("input[name='Tourn-IEGOGLX']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOCS']").checked = false;
+            document.querySelector("input[name='Tourn-IEGO1']").checked = false;
+            document.querySelector("input[name='Tourn-IEVRBETA']").checked = false;
+            document.querySelector("input[name='Tourn-IEVR']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOSTR']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOSTRXTR']").checked = false;
+            fetch(`/LeaderboardData`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("leaderboard").innerHTML = html;
+                });
+        } else {
+            document.querySelector("input[name='Tourn-ALL']").checked = false;
+            // List of checkbox values to check
+            const gameKeys = [
+                "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+            ];
+
+            // Get checked values
+            const selectedGames = gameKeys.filter(key => {
+                return document.querySelector(`input[name='Tourn-${key}']`)?.checked;
+            });
+
+            // Join them in a comma-separated string
+            const g = selectedGames.join(",");
+
+            fetch(`/LeaderboardData?g=${encodeURIComponent(g)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("leaderboard").innerHTML = html;
+                });
+        }
+    }
+    showLeaderboards("Tourn-ALL");
+</script>

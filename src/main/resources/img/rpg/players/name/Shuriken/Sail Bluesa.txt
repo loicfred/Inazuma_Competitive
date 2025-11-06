@@ -1,0 +1,19 @@
+Fire
+FW
+Boy
+A+
+B
+A
+E
+A+
+B
+GP: 127
+TP: 116
+M: Spider Web
+M: Double-Touch
+M: Matchlock Bullet
+M: Decoy Deploy
+S: -
+S: -
+SP: -
+80

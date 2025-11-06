@@ -1,0 +1,19 @@
+Earth
+MF
+Boy
+B
+A
+A
+D
+C
+C
+GP: 176
+TP: 152
+M: Spider Web
+M: Flurry Dash
+M: -
+M: -
+S: Cool Up
+S: -
+SP: -
+60

@@ -1,0 +1,19 @@
+Earth
+GK
+Boy
+B
+A
+A+
+S
+A
+B
+GP: 159
+TP: 149
+M: Shot Trap
+M: High Voltage
+M: Demon Cut
+M: -
+S: Put Your Back Into It
+S: -
+SP: -
+160

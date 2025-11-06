@@ -1,0 +1,19 @@
+Earth
+MF
+Boy
+B
+A
+A
+B
+A
+A
+GP: 136
+TP: 149
+M: Field of Force
+M: Killer Slide
+M: Doom Rain
+M: Devil Ball
+S: -
+S: -
+SP: -
+120

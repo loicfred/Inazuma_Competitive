@@ -1,0 +1,19 @@
+Wood
+DF
+Boy
+B
+C
+A+
+A
+B
+A
+GP: 156
+TP: 129
+M: Power Charge
+M: Volcano Cut
+M: Shot Trap
+M: 
+S: Put Your Back Into It
+S: -
+SP: -
+120

@@ -1,0 +1,19 @@
+Wind
+DF
+Girl
+C
+B
+A+
+C
+A
+C
+GP: 121
+TP: 153
+M: Frozen Steal
+M: Water Veil
+M: -
+M: -
+S: Economy
+S: -
+SP: -
+60

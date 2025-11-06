@@ -1,0 +1,39 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <title>About | Inazuma Competitive</title>
+    <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+    <style>
+        main {
+            background-color: #323232;
+            min-height: 100vh;
+        }
+        header, footer, .dropdown {
+            background-color: #5e5e5e;
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <p>In the past, community members would get their clan roles and tags by asking the mods, or note down their tops in their blocknote.
+        But everything changed when the idea of making a discord bot to handle of this came to mind.
+        The idea was to centralise and automatise little thing which was annoying in the community.
+        It started with the automatic clan roles, then tournament storage... and throughout the years evolved into even automatising tournament organisation.</p>
+    <h1>Creator</h1>
+    <a href="/p/508331399149912088">LoicMDF</a>
+    <p>The brain behind all of this.</p>
+    <br>
+    <h1>Graphic Designers</h1>
+    <a th:each="each : ${staff.GraphicDesigners}" th:href="'/p/' + each" th:text="${utils.getUserByID(each).getEffectiveName()}"></a>
+    <p>Those who contributed for the graphic assets, such as cosmetics, logos, leagues, etc...</p>
+    <br>
+    <h1>Translators</h1>
+    <a th:each="each : ${staff.Translators}" th:href="'/p/' + each" th:text="${utils.getUserByID(each).getEffectiveName()}"></a>
+    <p>Those who contributed for the translation of the bot in various languages.</p>
+    <br>
+    <h1>Translators</h1>
+    <a th:each="each : ${staff}" th:href="'/p/' + each" th:text="${utils.getUserByID(each).getEffectiveName()}"></a>
+    <p>Those who contributed for the translation of the bot in various languages.</p>
+</main>
+
+</html>

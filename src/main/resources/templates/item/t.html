@@ -1,0 +1,214 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" th:content="${tournament.Name} + ' | Inazuma Competitive'" />
+    <meta name="twitter:title" th:content="${tournament.Name} + ' | Inazuma Competitive'" />
+    <meta property="og:description" th:content="'View the information of ' + ${tournament.Name} + ', such their participants and winners.'" />
+    <meta name="twitter:description" th:content="'View the information of ' + ${tournament.Name} + ', such their tournaments organised or player stats.'" />
+    <meta property="og:image" th:content="${server.getIconUrl()}" />
+    <meta name="twitter:image" th:content="${server.getIconUrl()}" />
+    <title th:text="${tournament.Name} + ' | Inazuma Competitive'"></title>
+    <link id="tabIcon" rel="icon" th:href="${server.getIconUrl()}" type="image/png">
+    <style>
+        main {
+            background: linear-gradient(to right, rgb(48, 48, 48) 50%, rgb(32, 32, 32) 100%);
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #905000;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .top-section {
+            display: flex;
+            height: 400px;
+            background-color: #A05500;
+            position: relative;
+            overflow: hidden;
+        }
+        .overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: #2f2f2f; /* Dark overlay */
+            clip-path: polygon(0 0, 55% 0, 50% 100%, 0% 100%);
+        }
+        #organisedby, #organisedby a {
+            font: 14px IEItalic, sans-serif;
+        }
+        #organisedby a {
+            color: dodgerblue;
+        }
+        .take-half {
+            display: flex;
+            align-items: center;
+            width: 50%;
+        }
+
+        .particpantImg, .particpantImg2 {
+            border-radius: 4px; width: 75px;
+        }
+        .participantPos, .participantPos2 {
+            font-size: 24px;
+        }
+        .participantDesc, .participantDesc2 {
+            font-size: 18px;
+        }
+        .tournament-section-box {
+            gap: 15px;
+        }
+        .top8er {
+            margin: 40px 40px 40px auto; width: 600px;
+        }
+        .tab-panel {
+            height: auto;
+            overflow-y: hidden;
+        }
+
+        .view, .join {
+            font: 16px IEStrike, sans-serif;
+            margin: 10px 10px 10px auto;
+            display: flex;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            width: 100px; height: 40px;
+            border-radius: 5px; padding: 5px
+        }
+
+        .view {
+            background-color: #c87814;
+        }
+        .view:hover {
+            background-color: #c8a000;
+        }
+
+        .join {
+            background-color: #008000;
+        }
+        .join:hover {
+            background-color: #40c440;
+        }
+
+        .serverinfo {
+            margin-top: auto;
+            display: flex;
+        }
+        @media screen and (max-width: 768px) {
+            .top-section {
+                height: 500px;
+                flex-direction: column;
+            }
+            .particpantImg {
+                border-radius: 4px;width: 40px;
+            }
+            .particpantImg2 {
+                border-radius: 4px;width: 30px;
+            }
+            .participantPos {
+                font-size: 12px;
+            }
+            .participantPos2 {
+                font-size: 8px;
+            }
+            .participantDesc {
+                font-size: 8px;
+            }
+            .participantDesc2 {
+                font-size: 4px;
+            }
+            .tournament-section-box {
+                gap: 4px;
+            }
+            .overlay {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            }
+            .take-half {
+                width: 100%;
+            }
+            .top8er {
+                align-self: center;
+                justify-content: center;
+                margin: auto 0 0 0;
+                width: 100%;
+                z-index: 100;
+            }
+            .serverinfo {
+                margin-top: 50px;
+            }
+        }
+
+        .bubble-btn {
+            font: 11px IEStrike, sans-serif;
+            padding: 0 8px;
+            margin-right: 8px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <section class="top-section">
+        <div class="overlay">
+            <div class="take-half">
+                <img style="border-radius: 50%; margin-right: 10px;" th:src="${server.getIconUrl()}" width="50px" height="50px" alt="">
+                <h4 class="IEBOLD mb-0" style="line-height: 1.25;" id="tournament-name" th:text="${tournament.getName()}"></h4>
+            </div>
+            <div style="display: flex; align-items: center; margin: 5px 0;">
+                <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(0, 0, 255, 0.1);" th:text="${tournament.getParticipantCount() + (tournament.getSignupCap() >= 4 ? '/' + tournament.getSignupCap() : '')}"></p>
+                <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 255, 0, 0.1);" th:text="${tournament.getVSAmount() + 'v' + tournament.getVSAmount()}"></p>
+                <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 0, 0, 0.1);" th:text="${tournament.getType().toString().toUpperCase()}"></p>
+            </div>
+            <p class="IEStrike mb-0" th:text="${#dates.format(tournament.getStartedAtTimeEpochSecond() * 1000, 'dd MMM yyyy HH:mm')} + ${tournament.getCompletedAtTimeEpochSecond() > 0 ? ' - ' + #dates.format(tournament.getCompletedAtTimeEpochSecond() * 1000, 'dd MMM yyyy HH:mm') : ''}"></p>
+            <p class="IEStrike mb-0" id="organisedby" th:utext="'Organised on <a href=&quot;/s/' + ${server.getId()} + '&quot;>' + ${server.getName()} + '</a>'"></p>
+            <div class="serverinfo">
+                <a class="btn view" th:href="${tournament.getFullChallongeURL()}">View</a>
+                <a class="btn join" th:if="${server.getGuild() != null && server.getPermanentInviteLink() != null}" th:href="${server.getPermanentInviteLink()}">Join</a>
+                <div th:if="${server.getGuild() != null}" style="display: flex; flex-direction: column; gap: 5px;">
+                    <p class="IEStrike mb-0" th:text="${'Member Count: ' +server.getGuild().getMemberCount()}"></p>
+                    <p class="IEStrike mb-0" th:text="${'Tournament Count: ' +server.getTournamentCount()}"></p>
+                </div>
+            </div>
+        </div>
+        <img class="top8er" th:src="${'/api/img/server/' + server.getId() + '/' + tournament.getId() + '/img.png'}" alt="">
+    </section>
+    <div class="tabs">
+        <button class="tab-button" th:onclick="|showTab(0)|">Participants</button>
+        <button class="tab-button" th:onclick="|showTab(1)|">Bracket</button>
+    </div>
+    <div class="tab-panels">
+        <div class="tab-panel" style="background-color: #272727">
+            <a th:if="${tournament.getVSAmount() == 1}" class="tournament-section-box" th:each="PA : ${tournament.getParticipants()}" th:href="${PA.getLeader() != null ? '/p/' + PA.getLeaderID() : '#'}">
+                <img class="particpantImg" th:if="${PA.getLeader() != null}" th:src="${PA.getLeader().getEffectiveAvatarUrl()}">
+                <h3 class="IEStrike mb-0 participantPos" th:if="${tournament.isComplete()}" th:text="${utils.formatPosition(PA.Position)}"></h3>
+                <h3 class="IEStrike mb-0 participantDesc" th:text="${PA.getName()}"></h3>
+                <h3 class="IEStrike mb-0 participantDesc" th:text="${'~ Match Diff: +' + PA.getWins() + '/' + PA.getTies() + '/-' + PA.getLoses() + ' | Goals Diff: +' + PA.getGoalsScored() + '/-' + PA.getGoalsTaken()}"></h3>
+            </a>
+            <div th:if="${tournament.getVSAmount() > 1}" style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px;" th:each="PA : ${tournament.getParticipants()}">
+                <a class="tournament-section-box" style="width: 100%; margin-bottom: 0;" th:each="SP : ${PA.getTeammates()}" th:href="${'/p/' + SP.getId()}">
+                    <img class="particpantImg2" th:src="${SP.getEffectiveAvatarUrl()}">
+                    <h4 class="IEStrike mb-0 participantPos2" th:if="${tournament.isComplete()}" th:text="${utils.formatPosition(PA.Position)}"></h4>
+                    <h4 class="IEStrike mb-0 participantDesc2" th:text="${PA.getName()} + ' - '"></h4>
+                    <h4 class="IEStrike mb-0 participantDesc2" th:text="${SP.getEffectiveName()}"></h4>
+                    <h4 class="IEStrike mb-0 participantDesc2" th:text="${'~ Match Diff: +' + PA.getTeamPlayerWins(SP.getIdLong()) + '/' + PA.getTeamPlayerTies(SP.getIdLong()) + '/-' + PA.getTeamPlayerLoses(SP.getIdLong()) + ' | Goals Diff: +' + PA.getTeamPlayerGoalsScored(SP.getIdLong()) + '/-' + PA.getTeamPlayerGoalsTaken(SP.getIdLong())}"></h4>
+                </a>
+            </div>
+        </div>
+        <div class="tab-panel" style="padding: 0;">
+            <iframe style="user-select: none;" th:src="${tournament.FullChallongeURL} + '/module'" width="100%" height="1000" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+        </div>
+    </div>
+</main>
+
+</html>
+<script src="/tabswitcher.js"></script>

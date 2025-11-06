@@ -1,0 +1,109 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+  <meta property="og:title" content="Clans | Inazuma Competitive" />
+  <meta name="twitter:title" content="Clans | Inazuma Competitive">
+  <meta property="og:description" content="View the list of all clans of the community." />
+  <meta name="twitter:description" content="View the list of all clans of the community.">
+
+  <title>Clans | Inazuma Competitive</title>
+  <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+  <style>
+    main {
+      background: linear-gradient(to bottom, rgba(5, 5, 40, 255) 50%, rgba(5, 5, 30, 255) 100%);
+    }
+    header, footer, .dropdown, #loading {
+      background-color: #000060;
+    }
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+
+    .clans-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px;
+    }
+    .clanlist {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 60px;
+      margin-bottom: 20px;
+    }
+    .clan-box {
+      border-radius: 10px;
+      transition: 0.2s;
+      width: 380px;
+      height: 300px;
+      background-size: 260px 260px;
+      background-position-x: 145px;
+      background-position-y: 10px;
+      background-repeat: no-repeat;
+      background-blend-mode: darken;
+    }
+    .clan-box:hover {
+      scale: 101.75%;
+    }
+
+    .clan-description {
+        margin: 3px;
+        font-size: 11px;
+    }
+    @media screen and (max-width: 768px) {
+      .clanlist {
+        gap: 10px;
+      }
+    }
+
+    .bubble-btn {
+        font: 12px IEStrike, sans-serif;
+        padding: 0 2px;
+        margin-right: 5px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+
+<main layout:fragment="content">
+    <section class="clans-section">
+        <div class="IEBOLD fs-2 mb-2">Active Clans</div>
+        <div th:if="${openclans.size() > 0}" class="clanlist">
+            <a class="clan-box" th:each="each : ${openclans}" th:href="@{'/c/' + ${each.ID}}" th:style="'background-image: url(/api/img/clan/' + ${each.ID} + '/emblem.png); border: 5px solid ' + ${each.Colorcode} + ';'">
+                <div th:style="'display: block; height: 100%; padding: 20px; background: linear-gradient(to top, ' + ${utils.darkenColor(each.Colorcode, 0.25)} + 'EE 1%, #00000044 100%); border-radius: 6px;'">
+                    <div class="IEStrike fs-4"><span class="emoji" th:text="${each.getNationality().getCodepoints()}"></span> <span class="IEBOLD" th:text="${each.Name}"></span></div>
+                    <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                        <p class="bubble-btn IEStrike mb-0" th:text="${each.MemberCount + '/50'}"></p>
+                        <p class="IEStrike mb-0" th:text="'Created on: ' + ${#dates.format(each.ID, 'dd/MM/yyyy')}"></p>
+                    </div>
+                    <p class="IEStrike clan-description" th:text="${each.Description.length() > 300 ? each.Description.substring(0,300) + '...' : each.Description}"></p>
+                </div>
+            </a>
+        </div>
+        <div class="IEBOLD fs-2 mb-1" th:if="${openclans.size() == 0}">No open clans found.</div>
+    </section>
+
+    <section class="clans-section">
+        <div class="IEBOLD fs-2 mb-2">Paused Clans</div>
+        <div th:if="${pausedclans.size() > 0}" class="clanlist">
+            <a class="clan-box" th:each="each : ${pausedclans}" th:href="@{'/c/' + ${each.ID}}" th:style="'background-image: url(/api/img/clan/' + ${each.ID} + '/emblem.png); background-size: 260px 260px; background-position-x: 145px; background-position-y: 10px; background-repeat: no-repeat; background-blend-mode: darken; border: 5px solid ' + ${each.Colorcode} + ';'">
+                <div th:style="'display: block; height:100%; padding: 20px; background: linear-gradient(to top, ' + ${utils.darkenColor(each.Colorcode, 0.25)} + 'EE 1%, #00000044 100%); border-radius: 6px;'">
+                    <div class="IEStrike fs-4"><span class="emoji" th:text="${each.getNationality().getCodepoints()}"></span> <span class="IEBOLD" th:text="${each.Name}"></span></div>
+                    <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                        <p class="bubble-btn IEStrike mb-0" th:text="${each.MemberCount + '/50'}"></p>
+                        <p class="IEStrike mb-0" th:text="'Created on: ' + ${#dates.format(each.ID, 'dd/MM/yyyy')}"></p>
+                    </div>
+                    <p class="IEStrike clan-description" th:text="${each.Description.length() > 300 ? each.Description.substring(0,300) + '...' : each.Description}"></p>
+                </div>
+            </a>
+        </div>
+        <div class="IEBOLD fs-2 mb-1" th:if="${pausedclans.size() == 0}">No paused clans found.</div>
+    </section>
+</main>
+
+</html>

@@ -1,0 +1,309 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" content="Tournaments | Inazuma Competitive" />
+    <meta property="og:description" content="View the list of all tournaments of the community." />
+    <meta name="twitter:title" content="Tournaments | Inazuma Competitive">
+    <meta name="twitter:description" content="View the list of all tournaments of the community.">
+    <title>Tournaments | Inazuma Competitive</title>
+    <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+
+    <style>
+        :root {
+            --bg-dark: #202020;
+            --bg-light: #303030;
+            --accent-dark: #905000;
+            --text: #fff;
+            --box-border: orange;
+            --transition: all 0.25s ease;
+        }
+
+        main {
+            background: linear-gradient(to right, var(--bg-light) 50%, var(--bg-dark) 100%);
+            color: var(--text);
+            padding-bottom: 40px;
+        }
+
+        header, footer, .dropdown, #loading {
+            background-color: var(--accent-dark);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        /* Section Titles */
+        .title {
+            padding: 10px;
+            align-self: flex-start;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px #000000;
+        }
+
+        .tournament-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        /* Tournament List Container */
+        .tournamentlist {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px;
+            width: 100%;
+            gap: 15px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .tournamentlist::-webkit-scrollbar {
+            height: 8px;
+        }
+        .tournamentlist::-webkit-scrollbar-thumb {
+            background: rgba(128, 128, 128, 0.5);
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+        .tournamentlist::-webkit-scrollbar-thumb:hover {
+            background: rgba(128, 128, 128, 0.8);
+        }
+
+        /* Tournament Card */
+        .tournament-box {
+            background-color: rgba(40, 40, 40, 1);
+            border: 2px solid var(--box-border);
+            border-radius: 8px;
+            width: 275px;
+            height: 350px;
+            min-width: 275px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            scroll-snap-align: start;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .tournament-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Card Background */
+        .tournament-card {
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(40, 40, 40, 1) 0%, rgba(40, 40, 40, 0) 100%);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center right;
+            border-radius: 8px;
+        }
+
+        /* Header (title + icon) */
+        .tournament-header {
+            display: flex;
+            align-items: center;
+            height: 15%;
+        }
+
+        .tournament-header img {
+            width: 30px;
+            height: 30px;
+            margin-right: 5px;
+        }
+
+        .tournament-header h3 {
+            font-size: 12px;
+            line-height: 1.25;
+        }
+
+        /* Info section */
+        .tournament-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Buttons */
+        .actions {
+            margin-top: auto;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .view, .join {
+            font: 16px IEStrike, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 32px;
+            color: white;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+
+        .view {
+            background-color: #c87814;
+        }
+        .view:hover {
+            background-color: #c8a000;
+        }
+
+        .join {
+            background-color: #008000;
+        }
+        .join:hover {
+            background-color: #40c440;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tournamentlist {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tournament-box {
+                width: 90%;
+                height: auto;
+            }
+
+            .tournament-header h3 {
+                font-size: 14px;
+            }
+        }
+
+        .bubble-btn {
+            font: 11px IEStrike, sans-serif;
+            padding: 0 5px;
+            margin-right: 5px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <section class="tournament-section">
+        <h3 class="IEBOLD title">Open for Registration</h3>
+        <div th:if="${opentournaments.size() > 0}" class="tournamentlist">
+            <div th:each="each : ${opentournaments}" class="tournament-box">
+                <div class="tournament-card"
+                     th:style="'background-image: linear-gradient(to right, rgba(40,40,40,1) 0%, rgba(40,40,40,0) 100%), url(/img/games/' + ${each.getGame().getCode()} + '.png)'">
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-header">
+                        <img th:src="'/img/Challonge.png'">
+                        <h3 class="IEBOLD" th:text="${(each.getName().length() > 40 ? each.getName().substring(0,40) + '...' : each.getName())}"></h3>
+                    </a>
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-info">
+                        <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(0, 0, 255, 0.1);" th:text="${each.getParticipantCount() + (each.getSignupCap() >= 4 ? '/' + each.getSignupCap() : '')}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 255, 0, 0.1);" th:text="${each.getVSAmount() + 'v' + each.getVSAmount()}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 0, 0, 0.1);" th:text="${each.getType().toString().toUpperCase()}"></p>
+                        </div>
+                        <p class="IEStrike mb-0" style="text-shadow: 1px 1px 2px #000000" th:text="'Start At: ' + ${#dates.format(each.getStartAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </a>
+                    <div class="actions">
+                        <a th:if="${each.I.getPermanentInviteLink() != null}" class="btn join" th:href="${each.I.getPermanentInviteLink()}" target="_blank">Join</a>
+                        <a class="btn view" th:href="${each.getFullChallongeURL()}" target="_blank">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="IEBOLD" th:if="${opentournaments.size() == 0}">No tournaments are open for registrations.</h4>
+    </section>
+
+    <section class="tournament-section">
+        <h4 class="IEBOLD title">Ongoing Tournaments</h4>
+        <div th:if="${ongoingtournaments.size() > 0}" class="tournamentlist">
+            <div th:each="each : ${ongoingtournaments}" class="tournament-box">
+                <div class="tournament-card"
+                     th:style="'background-image: linear-gradient(to right, rgba(40,40,40,1) 0%, rgba(40,40,40,0) 100%), url(/img/games/' + ${each.getGame().getCode()} + '.png)'">
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-header">
+                        <img th:src="'/img/Challonge.png'">
+                        <h3 class="IEBOLD" th:text="${(each.getName().length() > 40 ? each.getName().substring(0,40) + '...' : each.getName())}"></h3>
+                    </a>
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-info">
+                        <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(0, 0, 255, 0.1);" th:text="${each.getParticipantCount() + (each.getSignupCap() >= 4 ? '/' + each.getSignupCap() : '')}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 255, 0, 0.1);" th:text="${each.getVSAmount() + 'v' + each.getVSAmount()}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 0, 0, 0.1);" th:text="${each.getType().toString().toUpperCase()}"></p>
+                        </div>
+                        <p class="IEStrike mb-0" style="text-shadow: 1px 1px 2px #000000" th:text="'Started At: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </a>
+                    <div class="actions">
+                        <a th:if="${each.I.getPermanentInviteLink() != null}" class="btn join" th:href="${each.I.getPermanentInviteLink()}" target="_blank">Join</a>
+                        <a class="btn view" th:href="${each.getFullChallongeURL()}" target="_blank">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="IEBOLD" th:if="${ongoingtournaments.size() == 0}">No tournaments are open for registrations.</h4>
+    </section>
+
+    <section class="tournament-section">
+        <h4 class="IEBOLD title">Last Months Tournaments</h4>
+        <div th:if="${lastmonthtournaments.size() > 0}" class="tournamentlist">
+            <div th:each="each : ${lastmonthtournaments}" class="tournament-box">
+                <div class="tournament-card"
+                     th:style="'background-image: linear-gradient(to right, rgba(40,40,40,1) 0%, rgba(40,40,40,0) 100%), url(/img/games/' + ${each.getGame().getCode()} + '.png)'">
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-header">
+                        <img th:src="'/img/Challonge.png'">
+                        <h3 class="IEBOLD" th:text="${(each.getName().length() > 40 ? each.getName().substring(0,40) + '...' : each.getName())}"></h3>
+                    </a>
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-info">
+                        <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(0, 0, 255, 0.1);" th:text="${each.getParticipantCount() + (each.getSignupCap() >= 4 ? '/' + each.getSignupCap() : '')}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 255, 0, 0.1);" th:text="${each.getVSAmount() + 'v' + each.getVSAmount()}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 0, 0, 0.1);" th:text="${each.getType().toString().toUpperCase()}"></p>
+                        </div>
+                        <p class="IEStrike mb-0" style="text-shadow: 1px 1px 2px #000000" th:text="'Started At: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEStrike mb-0" style="text-shadow: 1px 1px 2px #000000" th:text="'Completed At: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </a>
+                    <div class="actions">
+                        <a class="btn view" th:href="${each.getFullChallongeURL()}" target="_blank">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="IEBOLD" th:if="${lastmonthtournaments.size() == 0}">No tournaments are open for registrations.</h4>
+    </section>
+
+    <section class="tournament-section">
+        <h4 class="IEBOLD title">Last Year Tournaments</h4>
+        <div th:if="${lastyeartournaments.size() > 0}" class="tournamentlist">
+            <div th:each="each : ${lastyeartournaments}" class="tournament-box">
+                <div class="tournament-card"
+                     th:style="'background-image: linear-gradient(to right, rgba(40,40,40,1) 0%, rgba(40,40,40,0) 100%), url(/img/games/' + ${each.getGame().getCode()} + '.png)'">
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-header">
+                        <img th:src="'/img/Challonge.png'">
+                        <h3 class="IEBOLD" th:text="${(each.getName().length() > 40 ? each.getName().substring(0,40) + '...' : each.getName())}"></h3>
+                    </a>
+                    <a th:href="'/t/' + ${each.getId()}" class="tournament-info">
+                        <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(0, 0, 255, 0.1);" th:text="${each.getParticipantCount() + (each.getSignupCap() >= 4 ? '/' + each.getSignupCap() : '')}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 255, 0, 0.1);" th:text="${each.getVSAmount() + 'v' + each.getVSAmount()}"></p>
+                            <p class="bubble-btn IEStrike mb-0" style="background-color: rgba(255, 0, 0, 0.1);" th:text="${each.getType().toString().toUpperCase()}"></p>
+                        </div>
+                        <p class="IEStrike mb-0" style="text-shadow: 1px 1px 2px #000000" th:text="'Started At: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEStrike mb-0" style="text-shadow: 1px 1px 2px #000000" th:text="'Completed At: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </a>
+                    <div class="actions">
+                        <a class="btn view" th:href="${each.getFullChallongeURL()}" target="_blank">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="IEBOLD" th:if="${lastyeartournaments.size() == 0}">No tournaments are open for registrations.</h4>
+    </section>
+</main>
+
+</html>

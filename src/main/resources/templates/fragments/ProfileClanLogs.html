@@ -1,0 +1,17 @@
+<h2>Main Clan</h2>
+<a class="tournament-section-box" th:each="CT : ${logs1}" th:href="'/c/' + ${CT.getClanID()}" target="_blank">
+  <img th:if="${CT.getClan().hasEmblem()}" th:src="@{/api/img/clan/{id}/emblem.png(id=${CT.getClanID()})}" style="width: 6%;">
+  <div style="display: block; margin-left: 5px;">
+    <h5 class="IEBOLD" th:text="${CT.getClan().getName()}"></h5>
+    <p class="IEStrike mb-0" th:text="${#dates.format(CT.getTimeJoinedEpochSecond(), 'yyyy/MM/dd HH:mm') + ' ---> ' + #dates.format(CT.getId(), 'yyyy/MM/dd HH:mm') + ' | ' + CT.getDuration(null) + ' | Main Clan'}"></p>
+  </div>
+</a>
+<h2>Reinforcements</h2>
+<a class="tournament-section-box" th:each="CT : ${logs2}" th:href="'/c/' + ${CT.getClanID()}" target="_blank">
+  <img th:if="${CT.getClan().hasEmblem()}" th:src="@{/api/img/clan/{id}/emblem.png(id=${CT.getClanID()})}" style="width: 6%;">
+  <div style="display: block; margin-left: 5px;">
+    <h5 class="IEBOLD" th:text="${CT.getClan().getName()}"></h5>
+    <p class="IEStrike mb-0" th:text="${#dates.format(CT.getTimeJoinedEpochSecond(), 'yyyy/MM/dd HH:mm') + ' ---> ' + #dates.format(CT.getId(), 'yyyy/MM/dd HH:mm') + ' | ' + CT.getDuration(null) + ' | Reinforcement'}"></p>
+  </div>
+</a>
+<h5 class="IEBOLD noItemFound" style="justify-self: center;" th:if="${logs1.isEmpty() && logs2.isEmpty()}">No clan logs yet.</h5>

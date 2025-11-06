@@ -1,0 +1,19 @@
+Wind
+FW
+Boy
+S
+A
+B
+E
+B
+B
+GP: 162
+TP: 139
+M: Eternal Blizzard
+M: Ice Ground
+M: Frosticle
+M: Snowstorm Leopard
+S: -
+S: -
+SP: Chione
+180

@@ -1,0 +1,422 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" th:content="${GLXData.getName()} + ' | Inazuma Competitive'" />
+    <meta name="twitter:title" th:content="${GLXData.getName()} + ' | Inazuma Competitive'">
+    <meta property="og:description" th:content="'View all data about ' + ${GLXData.getName()} + ' in Inazuma Eleven games.'" />
+    <meta name="twitter:description" th:content="'View all data about ' + ${GLXData.getName()} + ' in Inazuma Eleven games.'">
+    <title th:text="${GLXData.getName()} + ' | Inazuma Competitive'"></title>
+    <link id="tabIcon" rel="icon"  th:href="'data:image/png;base64,' + ${imgEncoded}" type="image/png">
+    <style>
+        main {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/img/bg.jpg");
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #7a7a7a;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .profile-layout {
+            display: flex;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 5px solid black;
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url("/img/index/bg2.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right;
+        }
+
+        .profile-image {
+            margin-top: 10px;
+            width: 129px;
+            height: 153px;
+            background: url("/img/index/pfp.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right;
+        }
+
+        .profile-box {
+            padding: 10px;
+            gap: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stats3ds {
+            width: 280px;
+            border-radius: 5px;
+            background: #00000044;
+        }
+        .statsStr {
+            border-radius: 5px;
+            background: #00000044;
+        }
+
+        .bar {
+            margin-top: -5px;
+            height: 4px;
+            background: linear-gradient(to right,rgba(255,25,10), rgb(255,159,10));
+            max-width: 270px;
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+        }
+        .marginleft {
+            margin-left: auto;
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <div class="profile-layout">
+        <div style="display: flex; flex-direction: column;">
+            <div class="flex">
+                <div class="profile-image">
+                    <img style="margin-left: 15px; margin-top: 39px;" width="96" height="96" th:src="'data:image/png;base64,' + ${imgEncoded}" alt="avatar.png" />
+                </div>
+                <div class="flex" style="flex-direction: column; gap: 10px">
+                    <div class="flex">
+                        <h2 class="IEStrike mb-0" th:text="${GLXData.getName()}"></h2>
+                        <h2 class="IEStrike mb-0" th:text="' / ' + ${GLXData.getNameJP()}"></h2>
+                        <h2 class="IEStrike mb-0" th:text="' / ' + ${GLXData.getNameJPJP()}"></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-box">
+                <div class="stats3ds">
+                    <div class="flex" style="background: #00000055; padding: 5px; gap: 5px; border-radius: 5px;">
+                        <img width="25" src="/img/games/IEGO1.png" alt="img.png" />
+                        <h6 class="IEBOLD">Inazuma Eleven GO</h6>
+                    </div>
+                    <h1 th:if="${GO1Data == null}" class="IEBOLD" style="justify-self: center;">-</h1>
+                    <div style="padding: 5px;" th:if="${GO1Data != null}">
+                        <div class="flex" style="gap: 5px">
+                            <img th:src="'/img/index/' + ${GO1Data.getPosition().getName()} + '.png'" alt="img.png"/>
+                            <img th:src="'/img/index/' + ${GO1Data.getElement().getName()} + '.png'" alt="img.png"/>
+                            <img th:src="'/img/index/' + ${GO1Data.getGender().getName()} + '.png'" alt="img.png"/>
+                            <div>
+                                <div class="flex">
+                                    <h5 class="IEStrike mb-0" th:text="'GP:'"></h5>
+                                    <h5 class="IEStrike marginleft" th:text="${GO1Data.getMaxGP(false)}"></h5>
+                                </div>
+                                <div class="bar" style="width: 70px; height: 2px; background: orange;"></div>
+                            </div>
+                            <div>
+                                <div class="flex">
+                                    <h5 class="IEStrike" th:text="'TP:'"></h5>
+                                    <h5 class="IEStrike marginleft" th:text="${GO1Data.getMaxTP(false)}"></h5>
+                                </div>
+                                <div class="bar" style="width: 70px; height: 2px; background: greenyellow"></div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Kick:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getKick(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getKick(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Dribble:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getDribble(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getDribble(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Block:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getBlock(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getBlock(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Catch:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getCatch(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getCatch(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Technique:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getTechnique(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getTechnique(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Speed:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getSpeed(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getSpeed(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Stamina:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getStamina(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getStamina(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Luck:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getLuck(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GO1Data.getLuck(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Freedom:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GO1Data.getFreedom()}"></h3>
+                        </div>
+
+
+                        <div class="flex" th:if="${GO1Data.getMove1() != null}">
+                            <img th:src="'/img/index/' + ${GO1Data.getMove1().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GO1Data.getMove1().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GO1Data.getMove2() != null}">
+                            <img th:src="'/img/index/' + ${GO1Data.getMove2().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GO1Data.getMove2().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GO1Data.getMove3() != null}">
+                            <img th:src="'/img/index/' + ${GO1Data.getMove3().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GO1Data.getMove3().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GO1Data.getMove4() != null}">
+                            <img th:src="'/img/index/' + ${GO1Data.getMove4().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GO1Data.getMove4().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GO1Data.getSummon() != null}">
+                            <img th:src="'/img/index/' + ${GO1Data.getSummon().getType() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GO1Data.getSummon().getName()}"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats3ds">
+                    <div class="flex" style="background: #00000055; padding: 5px; gap: 5px; border-radius: 5px;">
+                        <img width="25" src="/img/games/IEGOCS.png" alt="img.png" />
+                        <h6 class="IEBOLD">Inazuma Eleven GO Chrono Stones</h6>
+                    </div>
+                    <h1 th:if="${CSData == null}" class="IEBOLD" style="justify-self: center;">-</h1>
+                    <div style="padding: 5px;" th:if="${CSData != null}">
+                        <div class="flex" style="gap: 5px">
+                            <img th:src="'/img/index/' + ${CSData.getPosition().getName()} + '.png'" alt="img.png" />
+                            <img th:src="'/img/index/' + ${CSData.getElement().getName()} + '.png'" alt="img.png" />
+                            <img th:src="'/img/index/' + ${CSData.getGender().getName()} + '.png'" alt="img.png" />
+                            <div>
+                                <div class="flex">
+                                    <h5 class="IEStrike" th:text="'GP:'"></h5>
+                                    <h5 class="IEStrike marginleft" th:text="${CSData.getMaxGP(false)}"></h5>
+                                </div>
+                                <div class="bar" style="width: 70px; height: 2px; background: orange;"></div>
+                            </div>
+                            <div>
+                                <div class="flex">
+                                    <h5 class="IEStrike" th:text="'TP:'"></h5>
+                                    <h5 class="IEStrike marginleft" th:text="${CSData.getMaxTP(false)}"></h5>
+                                </div>
+                                <div class="bar" style="width: 70px; height: 2px; background: greenyellow"></div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Kick:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getKick(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getKick(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Dribble:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getDribble(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getDribble(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Block:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getBlock(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getBlock(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Catch:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getCatch(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getCatch(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Technique:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getTechnique(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getTechnique(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Speed:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getSpeed(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getSpeed(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Stamina:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getStamina(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getStamina(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Luck:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getLuck(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${CSData.getLuck(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Freedom:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${CSData.getFreedom()}"></h3>
+                        </div>
+
+
+                        <div class="flex" th:if="${CSData.getMove1() != null}">
+                            <img th:src="'/img/index/' + ${CSData.getMove1().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${CSData.getMove1().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${CSData.getMove2() != null}">
+                            <img th:src="'/img/index/' + ${CSData.getMove2().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${CSData.getMove2().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${CSData.getMove3() != null}">
+                            <img th:src="'/img/index/' + ${CSData.getMove3().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${CSData.getMove3().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${CSData.getMove4() != null}">
+                            <img th:src="'/img/index/' + ${CSData.getMove4().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${CSData.getMove4().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${CSData.getSummon() != null}">
+                            <img th:src="'/img/index/' + ${CSData.getSummon().getType() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${CSData.getSummon().getName()}"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats3ds">
+                    <div class="flex" style="background: #00000055; padding: 5px; gap: 5px; border-radius: 5px;">
+                        <img width="25" src="/img/games/IEGOGLX.png" alt="img.png" />
+                        <h6 class="IEBOLD">Inazuma Eleven GO Galaxy</h6>
+                    </div>
+                    <h1 th:if="${GLXData == null}" class="IEBOLD" style="justify-self: center;">-</h1>
+                    <div style="padding: 5px;" th:if="${GLXData != null}">
+                        <div class="flex" style="gap: 5px">
+                            <img th:src="'/img/index/' + ${GLXData.getPosition().getName()} + '.png'" alt="img.png" />
+                            <img th:src="'/img/index/' + ${GLXData.getElement().getName()} + '.png'" alt="img.png" />
+                            <img th:src="'/img/index/' + ${GLXData.getGender().getName()} + '.png'" alt="img.png" />
+                            <div>
+                                <div class="flex">
+                                    <h5 class="IEStrike" th:text="'GP:'"></h5>
+                                    <h5 class="IEStrike marginleft" th:text="${GLXData.getMaxGP(false)}"></h5>
+                                </div>
+                                <div class="bar" style="width: 70px; height: 2px; background: orange;"></div>
+                            </div>
+                            <div>
+                                <div class="flex">
+                                    <h5 class="IEStrike" th:text="'TP:'"></h5>
+                                    <h5 class="IEStrike marginleft" th:text="${GLXData.getMaxTP(false)}"></h5>
+                                </div>
+                                <div class="bar" style="width: 70px; height: 2px; background: greenyellow"></div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Kick:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getKick(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getKick(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Dribble:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getDribble(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getDribble(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Block:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getBlock(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getBlock(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Catch:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getCatch(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getCatch(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Technique:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getTechnique(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getTechnique(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Speed:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getSpeed(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getSpeed(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Stamina:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getStamina(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getStamina(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Luck:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getLuck(false, false)}"></h3>
+                        </div>
+                        <div class="bar" th:style="'width: ' + ${GLXData.getLuck(false, false)} + 'px;'"></div>
+
+                        <div class="flex">
+                            <h3 class="IEStrike" th:text="'Freedom:'"></h3>
+                            <h3 class="IEStrike marginleft" th:text="${GLXData.getFreedom()}"></h3>
+                        </div>
+
+
+                        <div class="flex" th:if="${GLXData.getMove1() != null}">
+                            <img th:src="'/img/index/' + ${GLXData.getMove1().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GLXData.getMove1().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GLXData.getMove2() != null}">
+                            <img th:src="'/img/index/' + ${GLXData.getMove2().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GLXData.getMove2().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GLXData.getMove3() != null}">
+                            <img th:src="'/img/index/' + ${GLXData.getMove3().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GLXData.getMove3().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GLXData.getMove4() != null}">
+                            <img th:src="'/img/index/' + ${GLXData.getMove4().getMoveType().getName() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GLXData.getMove4().getName()}"></h5>
+                        </div>
+                        <div class="flex" th:if="${GLXData.getSummon() != null}">
+                            <img th:src="'/img/index/' + ${GLXData.getSummon().getType() + '.png'}" alt="img.png">
+                            <h5 class="IEStrike marginleft" th:text="${GLXData.getSummon().getName()}"></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column; width: 40%; padding: 5px; gap: 5px;">
+            <div class="statsStr" style="height: 50%">
+                <div class="flex" style="background: #00000055; padding: 5px; gap: 5px; border-radius: 5px;">
+                    <img width="25" src="/img/games/IEGOSTRXTR.png" alt="img.png" />
+                    <h6 class="IEBOLD">Inazuma Eleven GO Strikers 2013 Xtreme</h6>
+                </div>
+            </div>
+            <div class="statsStr" style="height: 50%">
+                <div class="flex" style="background: #00000055; padding: 5px; gap: 5px; border-radius: 5px;">
+                    <img width="25" src="/img/games/IEVR.png" alt="img.png" />
+                    <h6 class="IEBOLD">Inazuma Eleven Victory Road</h6>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+</html>
+<script src="/tabswitcher.js"></script>

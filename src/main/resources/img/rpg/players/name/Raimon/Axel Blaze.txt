@@ -1,0 +1,19 @@
+Fire
+FW
+Boy
+S
+A
+B
+D
+A+
+B
+GP: 170
+TP: 149
+M: Fire Tornado
+M: Fireball Screw
+M: Ball Lightning
+M: Fire Tornado DD
+S: -
+S: -
+SP: Surtr
+200

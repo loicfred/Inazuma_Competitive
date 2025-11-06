@@ -1,0 +1,19 @@
+Fire
+GK
+Boy
+B
+A
+B
+S
+B
+A
+GP: 150
+TP: 121
+M: Combustion Catch
+M: Shot Break
+M: Pincer Pinch
+M: -
+S: -
+S: -
+SP: -
+60

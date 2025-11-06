@@ -1,0 +1,19 @@
+Wind
+FW
+Boy
+S
+A
+C
+D
+A+
+A
+GP: 153
+TP: 147
+M: Northern Impact
+M: Water Veil
+M: Frozen Steal
+M: Fire Blizzard [W]
+S: -
+S: -
+SP: -
+120

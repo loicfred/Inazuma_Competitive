@@ -1,0 +1,24 @@
+<table id="statsTable" style="width: 100%;">
+    <thead>
+    <tr>
+        <th class="IEStrike" onclick="sortStats(0)">Player</th>
+        <th class="IEStrike" onclick="sortStats(1)">Medals</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="TR : ${players}">
+        <td>
+            <h5 class="IEStrike" th:text="${TR.getAsInt('Count')}"></h5>
+        </td>
+        <td style="text-align: left;">
+            <a th:href="'/p/'+ ${TR.getAsLong('UserID')}" style="display: flex; align-items: center; text-decoration: none; color: white;">
+                <img th:src="${TR.getAsString('AvatarURL')}" alt="">
+                <p class="IEStrike" th:text="${TR.getAsString('FullName')}"></p>
+            </a>
+        </td>
+        <td>
+            <h5 class="IEStrike" th:text="${TR.getAsInt('Medals')}"></h5>
+        </td>
+    </tr>
+    </tbody>
+</table>

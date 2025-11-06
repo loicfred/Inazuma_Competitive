@@ -1,0 +1,146 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" content="Events | Inazuma Competitive" />
+    <meta name="twitter:title" content="Events | Inazuma Competitive">
+    <meta property="og:description" content="View the list of all events of the community." />
+    <meta name="twitter:description" content="View the list of all events of the community.">
+    <title>Events | Inazuma Competitive</title>
+    <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+    <style>
+        main {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url("/img/bg.jpg");
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #5e5e5e;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .clans-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+        }
+        .clanlist {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .clan-box2 {
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            transition: 0.2s;
+            gap: 10px;
+            width: 95%;
+            height: 120px;
+            padding: 2px;
+        }
+        .clan-box2:hover {
+            scale: 100.25%;
+        }
+        .clan-box2 h1 {
+            padding: 2px;
+        }
+        .clan-box2 img {
+            padding: 5px;
+        }
+        .title {
+            font-size: 32px;
+            padding-bottom: 10px
+        }
+
+        @media screen and (max-width: 768px) {
+            .clanlist {
+                gap: 10px;
+            }
+            .title {
+                font-size: 24px;
+            }
+            .clan-box2 {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <section class="clans-section">
+        <h2 class="IEBOLD title">World Cups</h2>
+        <div th:if="${wc.size() > 0}" class="clanlist">
+            <a th:each="each : ${wc}" th:href="@{'/e/' + ${each.getId()}}" class="clan-box2" th:style="'border: 5px solid ' + ${each.getColorcode()} + ';'">
+                <img width="120" height="120" th:src="'/api/img/event/' + ${each.getId()} + '/Logo1.png'" alt="Logo">
+                <h4 class="IEBOLD" style="min-width: 20%" th:text="${each.getName()}"></h4>
+                <div th:style="'flex-direction: column;'">
+                    <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
+                    <div style="display: flex; gap: 5px;">
+                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <h2 th:if="${wc.size() == 0}">World Cups: Coming soon.</h2>
+    </section>
+
+    <section class="clans-section">
+        <h2 class="IEBOLD title">European Championships</h2>
+        <div th:if="${eu.size() > 0}" class="clanlist">
+            <a th:each="each : ${eu}" th:href="@{'/e/' + ${each.getId()}}" class="clan-box2" th:style="'border: 5px solid ' + ${each.getColorcode()} + ';'">
+                <img width="120" height="120" th:src="'/api/img/event/' + ${each.getId()} + '/Logo1.png'" alt="Logo">
+                <h4 class="IEBOLD" style="min-width: 20%" th:text="${each.getName()}"></h4>
+                <div th:style="'flex-direction: column;'">
+                    <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
+                    <div style="display: flex; gap: 5px;">
+                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <h2 th:if="${eu.size() == 0}">European Championships: Coming soon.</h2>
+    </section>
+    <section class="clans-section">
+        <h2 class="IEBOLD title">Clan Cups</h2>
+        <div th:if="${cc.size() > 0}" class="clanlist">
+            <a th:each="each : ${cc}" th:href="@{'/e/' + ${each.getId()}}" class="clan-box2" th:style="'border: 5px solid ' + ${each.getColorcode()} + ';'">
+                <img width="120" height="120" th:src="'/api/img/event/' + ${each.getId()} + '/Logo1.png'" alt="Logo">
+                <h4 class="IEBOLD" style="min-width: 20%" th:text="${each.getName()}"></h4>
+                <div th:style="'flex-direction: column;'">
+                    <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
+                    <div style="display: flex; gap: 5px;">
+                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <h2 th:if="${cc.size() == 0}">Clan Cups: Coming soon.</h2>
+    </section>
+    <section class="clans-section">
+        <h2 class="IEBOLD title">Cup of Africa (CAN)</h2>
+        <div th:if="${can.size() > 0}" class="clanlist">
+            <a th:each="each : ${can}" th:href="@{'/e/' + ${each.getId()}}" class="clan-box2" th:style="'border: 5px solid ' + ${each.getColorcode()} + ';'">
+                <img width="120" height="120" th:src="'/api/img/event/' + ${each.getId()} + '/Logo1.png'" alt="Logo">
+                <h4 class="IEBOLD" style="min-width: 20%" th:text="${each.getName()}"></h4>
+                <div th:style="'flex-direction: column;'">
+                    <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
+                    <div style="display: flex; gap: 5px;">
+                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <h2 th:if="${can.size() == 0}">Cup of Africa (CAN): Coming soon.</h2>
+    </section>
+</main>
+
+</html>

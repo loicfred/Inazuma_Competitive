@@ -1,0 +1,19 @@
+Wood
+MF
+Boy
+A
+A+
+B
+B
+A
+B
+GP: 136
+TP: 142
+M: Gravitation
+M: Gungnir
+M: Doom Spear
+M: Angel Ball
+S: -
+S: -
+SP: -
+120

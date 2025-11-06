@@ -1,0 +1,19 @@
+Earth
+FW
+Boy
+A+
+A
+A
+C
+A+
+A
+GP: 139
+TP: 144
+M: Doom Spear
+M: Doom Rain
+M: Devil Ball
+M: Doom Break
+S: -
+S: -
+SP: -
+140

@@ -1,0 +1,19 @@
+Wood
+DF
+Boy
+C
+B
+A+
+C
+A+
+B
+GP: 150
+TP: 144
+M: Volcano Cut
+M: Illusion Ball
+M: Spacial Portal
+M: Power Charge
+S: -
+S: -
+SP: -
+120

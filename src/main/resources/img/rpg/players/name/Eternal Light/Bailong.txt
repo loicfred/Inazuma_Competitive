@@ -1,0 +1,19 @@
+Wind
+FW
+Boy
+S
+A+
+B
+D
+A+
+B
+GP: 156
+TP: 152
+M: White Hurricane
+M: Warp Step
+M: Dragon Driver
+M: Zero Magnum
+S: -
+S: -
+SP: White Wyvern
+200

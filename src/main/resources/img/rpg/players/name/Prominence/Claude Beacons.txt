@@ -1,0 +1,19 @@
+Fire
+FW
+Boy
+S
+C
+A
+D
+A
+A+
+GP: 159
+TP: 144
+M: Atomic Flare
+M: Fire Veil
+M: Ignite Steal
+M: Fire Blizzard
+S: -
+S: -
+SP: -
+120

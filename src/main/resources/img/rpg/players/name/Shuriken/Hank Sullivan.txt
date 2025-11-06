@@ -1,0 +1,19 @@
+Wood
+MF
+Boy
+B
+A
+B
+C
+B
+C
+GP: 176
+TP: 152
+M: Spider Web
+M: Double Touch
+M: Flurry Dash
+M: -
+S: -
+S: -
+SP: -
+60

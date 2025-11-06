@@ -1,0 +1,361 @@
+
+@font-face {
+    font-family: 'IEBold';
+    src: url('/font/IEBold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'IEStrike';
+    src: url('/font/IEStrike.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'IEItalic';
+    src: url('/font/IEItalic.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+.emoji {
+    font-family: 'Noto Color Emoji', sans-serif;
+}
+
+.IEBOLD {
+    color: white;
+    text-decoration: none;
+    font-family: IEBold, sans-serif;
+    text-shadow: 0 0 4px black;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+.IEStrike {
+    color: white;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    font-family: IEStrike, sans-serif;
+}
+th, td {
+    font-size: 12px;
+}
+.noItemFound {
+    color: gray;
+    font-size: 16px;
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    color: white;
+    background-color: black;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+.spinner {
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top: 5px solid #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+#loading {
+    height: 100vh; display: flex; justify-content: center; align-items: center;
+}
+#main {
+    display: none;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #FFFFFF11;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.tab-button {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    align-items: center;
+    text-shadow: 0 0 4px black;
+    background-color: transparent;
+    font: 12px IEBold, sans-serif;
+    transition: background-color 0.3s ease;
+}
+.tab-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+#edit-button {
+    display: none;
+    text-decoration: none;
+    color: white;
+    border: 1px solid white;
+    font: 14px IEStrike, sans-serif;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 4px 12px;
+    margin: 2px;
+}
+.tab-panels {
+    background-color: #00000055;
+}
+.tab-panel {
+    display: none;
+    flex-direction: column;
+    padding: 10px;
+    height: 100vh;
+    overflow-y: scroll;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+
+.tournament-section-box {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255,255,255,0.1);
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.tournament-section-box:hover {
+    border: 1px solid gray;
+}
+
+
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-group2 {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+label {
+    margin-bottom: 5px;
+}
+input[type="text"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    color: white;
+    box-sizing: border-box;
+    resize: none;
+    background-color: #FFFFFF22;
+}
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+
+
+
+
+/* Toggle switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 50px;
+    height: 25px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #888;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
+
+
+
+.miniswitch {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 40px;
+    height: 20px;
+}
+.miniswitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.minislider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #888;
+    transition: 0.4s;
+    border-radius: 18px;
+}
+.minislider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+input:checked + .minislider:before {
+    transform: translateX(20px);
+}
+
+
+
+
+
+th, td {
+    text-align: center;
+    padding: 2px;
+}
+th {
+    cursor: pointer;
+}
+td a img {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+
+
+
+
+.notice-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 500px;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+}
+.notice-modal-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    align-items: center;
+}
+.notice-message-text {
+    margin: 0;
+}
+.notice-close-btn {
+    font-size: 18px;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.notice-close-btn:hover {
+    color: #ff6666; /* Red on hover */
+}
+
+
+.matchlogimg {
+    height: 30px;
+}
+
+@media screen and (max-width: 768px) {
+    .noItemFound {
+        font-size: 12px;
+    }
+
+
+    .tab-panel {
+        padding: 5px;
+    }
+    .tab-button {
+        padding: 5px 10px;
+        font-size: 8px;
+    }
+    .tabs-media {
+        margin-left: 0;
+    }
+
+    #edit-button {
+        font: 10px IEStrike, sans-serif;
+    }
+
+    .tournament-section-box {
+       border-radius: 5px;
+    }
+
+
+    .nodisplayphone {
+        display: none;
+    }
+    .matchlogimg {
+        height: 15px;
+    }
+    .matchlogname {
+        font-size: 8px;
+    }
+}

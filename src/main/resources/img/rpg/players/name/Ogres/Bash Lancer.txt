@@ -1,0 +1,19 @@
+Wood
+FW
+Boy
+S
+A
+B
+D
+S
+B
+GP: 167
+TP: 157
+M: Doom Spear
+M: In-Line Stampede
+M: Eye of the Storm
+M: Doom Break
+S: -
+S: -
+SP: -
+160

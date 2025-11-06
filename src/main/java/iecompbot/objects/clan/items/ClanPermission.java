@@ -1,0 +1,15 @@
+package iecompbot.objects.clan.items;
+
+public enum ClanPermission {
+ ADMINISTRATOR,
+
+ INVITE_MEMBER,
+ MANAGE_MEMBER,
+ KICK_MEMBER,
+
+ MANAGE_INFORMATION,
+ MANAGE_INTERCLAN,
+ MANAGE_LICENSE,
+ MANAGE_ROLE,
+ MANAGE_RPG
+}

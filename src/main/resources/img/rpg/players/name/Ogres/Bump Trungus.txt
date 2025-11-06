@@ -1,0 +1,19 @@
+Wind
+DF
+Boy
+C
+A
+A+
+C
+A
+A
+GP: 133
+TP: 147
+M: Power Charge
+M: Runaway Train
+M: Pincer Pinch
+M: Crazy Sunlight
+S: -
+S: -
+SP: -
+100

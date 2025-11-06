@@ -1,0 +1,19 @@
+Wood
+DF
+Boy
+A+
+A+
+A
+B
+A
+A
+GP: 170
+TP: 147
+M: Fortissimo Foot
+M: Presto Turn
+M: Athena's Anthem
+M: Einsatz
+S: -
+S: -
+SP: Maestro
+180

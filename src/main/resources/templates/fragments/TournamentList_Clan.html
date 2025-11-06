@@ -1,0 +1,15 @@
+<div class="tournament-section-box" th:each="CT : ${tournaments}">
+    <a style="display: flex; align-items: center;" th:href="${'/t/' + CT.getAsString('ID')}" target="_blank">
+        <img th:src="@{/img/games/{gameCode}.png(gameCode=${CT.getAsString('GameCode')})}" style="width: 5%;">
+        <div style="display: block; margin-left: 5px; min-width: 50%; max-width: 50%;">
+            <h5 class="IEBOLD" th:text="${CT.getAsString('Name')}"></h5>
+            <p class="IEStrike mb-0" th:text="${#dates.format((CT.getAsLong('StartedAtTimeEpochSecond') > 0 ? CT.getAsLong('StartedAtTimeEpochSecond') : CT.getAsLong('StartAtTimeEpochSecond')) * 1000, 'dd MMM yyyy')} + ${CT.getAsLong('CompletedAtTimeEpochSecond') > 0 ? ' - ' + #dates.format(CT.getAsLong('CompletedAtTimeEpochSecond') * 1000, 'dd MMM yyyy') : ''} + ' | Participants: ' + ${CT.getAsString('ParticipantCount')}"></p>
+            <p class="IEStrike mb-0" th:text="'Type: ' + ${CT.getAsString('Type').toString().toUpperCase()} + ' - ' + ${CT.getAsString('VSAmount') + 'v' + CT.getAsString('VSAmount')}"></p>
+        </div>
+        <p class="IEStrike" style="padding-left: 20px;" th:text="${CT.getAsString('Members')}"></p>
+    </a>
+    <a style="text-decoration: none; background-color: darkorange; margin: 5px 5px 5px auto; display: flex; align-items: center; justify-content: center; min-width: 90px; max-width: 90px; height: 40px; border-radius: 5px; padding: 5px" th:href="${CT.getAsString('FullChallongeURL')}" target="_blank">
+        <p class="IEStrike mb-0">View</p>
+    </a>
+</div>
+<h5 class="noItemFound" style="justify-self: center;" th:if="${tournaments.isEmpty()}">No tournaments yet.</h5>

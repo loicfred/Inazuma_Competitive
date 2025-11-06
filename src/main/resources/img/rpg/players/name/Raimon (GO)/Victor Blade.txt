@@ -1,0 +1,19 @@
+Fire
+FW
+Boy
+S
+B
+B
+B
+S
+S
+GP: 170
+TP: 147
+M: Doomsword Slash
+M: Doom Dive Drive
+M: Bicycle Sword
+M: Supernatural Strike
+S: -
+S: -
+SP: Lancelot
+180

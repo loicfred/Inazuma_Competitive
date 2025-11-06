@@ -1,0 +1,35 @@
+<table id="statsTable" style="width: 100%;">
+    <thead>
+    <tr>
+        <th class="IEBOLD" onclick="sortStats(0)">Player</th>
+        <th class="IEBOLD" onclick="sortStats(1)">🥇 Top 1</th>
+        <th class="IEBOLD" onclick="sortStats(2)">🥈 Top 2</th>
+        <th class="IEBOLD" onclick="sortStats(3)">🥉 Top 3</th>
+        <th class="IEBOLD" onclick="sortStats(4)">Wins</th>
+        <th class="IEBOLD" onclick="sortStats(5)">Ties</th>
+        <th class="IEBOLD" onclick="sortStats(6)">Loses</th>
+        <th class="IEBOLD" onclick="sortStats(7)">Goals Scored</th>
+        <th class="IEBOLD" onclick="sortStats(8)">Goals Taken</th>
+        <th class="IEBOLD" onclick="sortStats(9)">Tournaments Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="TR : ${stats}">
+        <td style="text-align: left;">
+            <a th:href="'/p/'+ ${TR.getAsLong('DiscordID')}" style="display: flex; align-items: center; text-decoration: none; color: white;">
+                <img th:src="${TR.getAsString('AvatarURL')}" alt="">
+                <p class="IEStrike mb-0" th:text="${TR.getAsString('FullName')}"></p>
+            </a>
+        </td>
+        <td class="IEStrike" th:text="${TR.getAsInt('T1')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('T2')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('T3')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('Wins')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('Ties')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('Loses')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('GoalsScored')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('GoalsTaken')}"></td>
+        <td class="IEStrike" th:text="${TR.getAsInt('Count')}"></td>
+    </tr>
+    </tbody>
+</table>

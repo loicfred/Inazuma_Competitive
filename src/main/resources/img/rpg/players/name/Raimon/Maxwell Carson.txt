@@ -1,0 +1,19 @@
+Wind
+MF
+Boy
+A
+A
+B
+C
+A
+C
+GP: 130
+TP: 129
+M: Quick Draw
+M: Flurry Dash
+M: Illusion Ball
+M: Dance On Air
+S: -
+S: -
+SP: -
+80

@@ -1,0 +1,19 @@
+Fire
+FW
+Boy
+A+
+A+
+B
+C
+A
+B
+GP: 156
+TP: 147
+M: Atomic Flare
+M: Plasma Cut
+M: Crazy Sunlight
+M: Solar Nexus
+S: -
+S: -
+SP: Sun Deity Apollo
+180

@@ -1,0 +1,395 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERPROFILE">
+
+<head layout:fragment="head">
+    <meta property="og:title" th:content="${clan.Name} + ' | Inazuma Competitive'" />
+    <meta name="twitter:title" th:content="${clan.Name} + ' | Inazuma Competitive'" />
+    <meta property="og:description" th:content="'View the information of ' + ${clan.Name} + ', such as their members and achievements.'" />
+    <meta name="twitter:description" th:content="'View the information of ' + ${clan.Name} + ', such as their members and achievements.'" />
+    <meta property="og:image" th:content="@{'/api/img/clan/' + ${clan.ID} + '/emblem.png'}" />
+    <meta name="twitter:image" th:content="@{'/api/img/clan/' + ${clan.ID} + '/emblem.png'}" />
+    <title th:text="${clan.Name} + ' | Inazuma Competitive'"></title>
+    <link id="tabIcon" rel="icon" th:href="@{'/api/img/clan/' + ${clan.ID} + '/emblem.png'}" type="image/png">
+
+    <style>
+        #cardtop {
+            margin-left: 200px;
+            margin-top: 10px;
+            align-items: center;
+            display: flex;"
+        }
+        .name {
+            font-size: 26px;
+        }
+        #signature {
+            margin: 40px 5px 10px 30px;
+        }
+
+
+
+
+
+
+
+        #tab1-top-left-details {
+            display: flex;
+            flex-wrap: wrap;
+            column-gap: 50px;
+            border-right: 1px solid dimgray;
+        }
+        .tab1-top-left-history {
+            border-top: 1px solid gray;
+            width: 96%;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .tab1-top-left-history p a {
+            font: bold 14px IEStrike, sans-serif;
+            text-decoration: dodgerblue underline;
+            color: dodgerblue;
+        }
+
+
+
+
+        .tab1-top-right-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding-top: 10px;
+            gap: 5px;
+            overflow-y: scroll;
+        }
+        .tab1-top-right-profile_game_box {
+            border-radius: 5px;
+            padding: 5px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid dimgray;
+        }
+        .tab1-top-right-details::-webkit-scrollbar {
+            width: 4px;
+            background: rgba(0, 0, 0, 0);
+        }
+        .tab1-top-right-details::-webkit-scrollbar-thumb {
+            background: rgba(128, 128, 128, 0.5);
+            border-radius: 10px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+       .tab1-top-right-details::-webkit-scrollbar-thumb:hover {
+            background: rgba(128, 128, 128, 0.8);
+        }
+        .member-avatar {
+            width: 70px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .membername {
+            font-size: 20px;
+        }
+        .tab1-achievement-section {
+            border-top: 1px solid gray;
+            margin: 10px;
+        }
+        .tab1-achievement-section-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 10px;
+        }
+
+
+        .formSide {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            padding-left: 20px;
+        }
+
+        @media screen and (max-width: 768px) {
+
+            #cardtop {
+                margin-top: 40px;
+                margin-left: 10px;
+            }
+            .name {
+                font-size: 16px;
+            }
+            #signature {
+                margin: 5px 10px 5px 10px;
+            }
+
+            #tab1-top-left-details {
+                border-right: none;
+            }
+            #tab1-top-left-history p a {
+                font-size: 10px;
+            }
+            .member-avatar {
+                width: 50px;
+            }
+            .membername {
+                font-size: 12px;
+            }
+            .formSide {
+                width: 100%;
+                padding-left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<div layout:fragment="profile_top">
+    <p id="cardtop">
+        <span class="name emoji" th:text="${clan.getNationality().getCodepoints()}"></span> <span class="IEBOLD name" th:text="${clan.Tag} + ' | ' + ${clan.Name}"></span>
+    </p>
+    <p class="IEStrike" id="signature" th:utext="${clan.getDescription()}"></p>
+</div>
+
+<div layout:fragment="profile_tabs">
+    <button class="tab-button" th:onclick="|showTab(0)|">Details & Members</button>
+    <button class="tab-button" th:onclick="|showTab(1)|">Tournaments</button>
+    <button class="tab-button" th:onclick="|showTab(2)|">Matches</button>
+    <button class="tab-button" th:onclick="|showTab(3)|">Interclans</button>
+    <button class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
+</div>
+
+<div layout:fragment="profile_media">
+    <a th:if="${clan.TwitterURL != null}" th:href="${clan.TwitterURL}" target="_blank" class="IEBOLD tab-button">X</a>
+    <a th:if="${clan.YouTubeURL != null}" th:href="${clan.YouTubeURL}" target="_blank" class="IEBOLD tab-button">YouTube</a>
+    <a th:if="${clan.TiktokURL != null}" th:href="${clan.TiktokURL}" target="_blank" class="IEBOLD tab-button">Tiktok</a>
+    <a th:if="${clan.TwitchURL != null}" th:href="${clan.TwitchURL}" target="_blank" class="IEBOLD tab-button">Twitch</a>
+    <a th:if="${clan.WebsiteURL != null}" th:href="${clan.WebsiteURL}" target="_blank" class="IEBOLD tab-button">Website</a>
+    <a th:if="${clan.DiscordURL != null}" th:href="${clan.DiscordURL}" target="_blank" class="IEBOLD tab-button">Discord</a>
+    <a th:if="${clan.InstagramURL != null}" th:href="${clan.InstagramURL}" target="_blank" class="IEBOLD tab-button">Instagram</a>
+</div>
+
+
+<div layout:fragment="profile_tab1">
+    <div id="tab1-top">
+        <div id="tab1-top-left" layout:fragment="profile_left">
+            <div id="tab1-top-left-details">
+                <div style="width: 300px;">
+                    <h5 class="IEBOLD">Information</h5>
+                    <p class="IEStrike mb-0" th:text="'Tag: ' + ${clan.Tag}"></p>
+                    <p class="IEStrike mb-0" th:text="'Name: ' + ${clan.Name}"></p>
+                    <p class="IEStrike" th:text="'Nationality: ' + ${clan.getNationality().getName()}"></p>
+                </div>
+                <div style="width: 300px;">
+                    <h5> </h5>
+                    <p class="IEStrike mb-0" th:text="'Creation time: ' + ${#dates.format(clan.ID, 'dd/MM/yyyy')}"></p>
+                    <p class="IEStrike mb-0" th:text="'Total Tournaments: ' + ${clan.getTournamentsAmount()}"></p>
+                    <p class="IEStrike" th:text="'Status: ' + ${clan.getStatus().toUpperCase()}"></p>
+                </div>
+                <div style="width: 300px;">
+                    <h5 class="IEBOLD">Match Details</h5>
+                    <p class="IEStrike mb-0" th:text="'Activity: ' + ${clan.ClanActivitySQL(null, null).getAsInt('Match Activity')}"></p>
+                    <p class="IEStrike" th:text="'Avg Activity: ' + ${utils.format(clan.ClanActivitySQL(null, null).getAsDouble('Average Match Activity'))}"></p>
+                </div>
+                <div style="width: 300px;">
+                    <h5 class="IEBOLD">Tournament Details</h5>
+                    <p class="IEStrike mb-0" th:text="'Tournament Activity: ' + ${clan.ClanActivitySQL(null, null).getAsInt('Tournament Activity')}"></p>
+                    <p class="IEStrike" th:text="'Avg Tournament Activity: ' + ${utils.format(clan.ClanActivitySQL(null, null).getAsDouble('Average Tournament Activity'))}"></p>
+                </div>
+                <div class="tab1-top-left-history">
+                    <h5 class="IEBOLD">📋 Requirements:</h5>
+                    <p class="IEStrike" th:utext="${clan.getRequirements()}"></p>
+                </div>
+                <div class="tab1-top-left-history">
+                    <h5 class="IEBOLD">🪶 Brief History:</h5>
+                    <p class="IEStrike" th:utext="${clan.getHistory()}"></p>
+                </div>
+            </div>
+        </div>
+        <div id="tab1-top-right" layout:fragment="profile_right">
+            <h4 class="IEBOLD" th:text="'Members (' + ${clan.getMemberCount()} + ')'"></h4>
+            <div class="tab1-top-right-details">
+                <a th:each="each : ${clan.getClanMembers()}" class="tab1-top-right-profile_game_box" th:href="@{'/p/' + ${each.getUserID()}}"
+                   th:style="'display: flex; align-items: center; background-color:' + ${utils.darkenColor(each.getProfile().getColorCode(), 0.25)} + '88; border-radius: 6px 0 0 6px;'">
+                    <img class="member-avatar" th:src="${each.getProfile().getUser().getAvatarUrl()}"/>
+                    <div style="display: block">
+                        <h5><span class="membername emoji" th:text="${each.getHighestRolePosition() == 1 ? '👑' : ''} + ${each.getProfile().getNationality().getCodepoints()}"></span> <span class="IEBOLD membername" th:text="${each.getNumber()} + ' | ' + ${each.getProfile().FullName} + ' (@' + ${each.getProfile().Name} + ')'"></span></h5>
+                        <p class="IEStrike" th:text="'Level ' + ${each.getProfile().Totals().Level} + ' | ' + ${each.listTasksOneLine()}"></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div layout:fragment="profile_bottom">
+        <div class="tab1-achievement-section">
+            <h4 class="IEBOLD" style="padding-top: 10px">🏅 Trophies</h4>
+            <div th:if="${!clan.getTrophies().isEmpty()}" class="tab1-achievement-section-box">
+                <div th:each="TR : ${clan.getTrophies()}" style="width: 300px;">
+                    <h5 class="IEBOLD" style="font-size: 16px;" th:text="'🔥 ' + ${TR.Name}"></h5>
+                    <p class="IEStrike" th:text="${TR.Description}"></p>
+                </div>
+            </div>
+            <h2 class="IEBOLD noItemFound" th:if="${clan.getTrophies().isEmpty()}">No trophies yet.</h2>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="profile_tab2">
+    <div id="tournament-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+    <div id="tab2-tournament-list"></div>
+</div>
+
+<div layout:fragment="profile_tab3">
+    <div id="matches-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+    <table id="matchesTable"></table>
+</div>
+
+<div layout:fragment="profile_tab4">
+    <div id="tab4-clan-log"></div>
+</div>
+
+<div layout:fragment="profile_tab5" th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == clan.getCaptain().getId()}">
+    <div class="clanForm" style="display: flex;">
+        <form class="formSide" id="FORM_UPDATE_1">
+            <h4 class="IEBOLD">Modify Information</h4>
+            <div class="form-group2">
+                <label class="IEStrike" for="editnationality">Nationality</label>
+                <select name="nationality" id="editnationality" style="background-color: black;">
+                    <option th:each="nation : ${clan.getNationality().getNationalities()}"
+                            th:value="${nation.getName()}"
+                            th:text="${nation.getCodepoints() + ' ' + nation.getName()}"
+                            th:selected="${nation.getName() == clan.getNationality().getName()}">
+                    </option>
+                </select>
+            </div>
+        </form>
+
+        <div class="formSide" id="FORM_UPDATE_2">
+            <h4 class="IEBOLD">Modify Members</h4>
+            <div class="tab1-top-right-details">
+                <div th:each="each : ${clan.getClanMembers()}">
+                    <div class="tab1-top-right-profile_game_box"
+                         th:onclick="'toggleBox(' + ${each.getId()} + ')'"
+                         th:style="'display: flex; align-items: center; background-color:' + ${utils.darkenColor(each.getProfile().getColorCode(), 0.25)} + '88; border-radius: 6px 0 0 6px; cursor: pointer;'">
+                        <img class="member-avatar" th:src="${each.getProfile().getUser().getAvatarUrl()}" />
+                        <div style="display: block" th:id="'edit-' + ${each.getId()}">
+                            <h5>
+                                <span class="membername emoji" th:text="${each.getHighestRolePosition() == 1 ? '👑' : ''} + ${each.getProfile().getNationality().getCodepoints()}"></span> 
+                                <span class="IEBOLD membername" th:text="${each.Number} + ' | ' + ${each.getProfile().FullName} + ' (@' + ${each.getProfile().Name} + ')'"></span>
+                            </h5>
+                            <p class="IEStrike" th:text="${'Number:' + each.getNumber() + ' | ' + each.listTasksOneLine()}"></p>
+                        </div>
+                        <h5 class="IEBOLD" style="margin-left: auto; color: gray;">...</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
+<script>
+    generateSwitches('tournament-switches', 'Tourn', commonItems, 'showTournaments');
+    function showTournaments(selected) {
+        const pathParts = window.location.pathname.split("/");
+        const s = pathParts[pathParts.length - 1];
+        if (document.querySelector("input[name='Tourn-ALL']").checked === true && selected === "Tourn-ALL") {
+            document.querySelector("input[name='Tourn-IEGOGLX']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOCS']").checked = false;
+            document.querySelector("input[name='Tourn-IEGO1']").checked = false;
+            document.querySelector("input[name='Tourn-IEVRBETA']").checked = false;
+            document.querySelector("input[name='Tourn-IEVR']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOSTR']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOSTRXTR']").checked = false;
+            fetch(`/c/tournament-list?c=${encodeURIComponent(s)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("tab2-tournament-list").innerHTML = html;
+                });
+        } else {
+            document.querySelector("input[name='Tourn-ALL']").checked = false;
+            // List of checkbox values to check
+            const gameKeys = [
+                "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+            ];
+
+            // Get checked values
+            const selectedGames = gameKeys.filter(key => {
+                return document.querySelector(`input[name='Tourn-${key}']`)?.checked;
+            });
+
+            // Join them in a comma-separated string
+            const g = selectedGames.join(",");
+
+            fetch(`/c/tournament-list?c=${encodeURIComponent(s)}&g=${encodeURIComponent(g)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("tab2-tournament-list").innerHTML = html;
+                });
+        }
+    }
+    showTournaments("Tourn-ALL");
+</script>
+<script>
+    generateSwitches('matches-switches', 'Match', commonItems, 'showMatches');
+    function showMatches(selected) {
+        const pathParts = window.location.pathname.split("/");
+        const s = pathParts[pathParts.length - 1];
+        if (document.querySelector("input[name='Match-ALL']").checked === true && selected === "Match-ALL") {
+            document.querySelector("input[name='Match-IEGOGLX']").checked = false;
+            document.querySelector("input[name='Match-IEGOCS']").checked = false;
+            document.querySelector("input[name='Match-IEGO1']").checked = false;
+            document.querySelector("input[name='Match-IEVRBETA']").checked = false;
+            document.querySelector("input[name='Match-IEVR']").checked = false;
+            document.querySelector("input[name='Match-IEGOSTR']").checked = false;
+            document.querySelector("input[name='Match-IEGOSTRXTR']").checked = false;
+            fetch(`/c/match-log?p=${encodeURIComponent(s)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("matchesTable").innerHTML = html;
+                });
+        } else {
+            document.querySelector("input[name='Match-ALL']").checked = false;
+            // List of checkbox values to check
+            const gameKeys = [
+                "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+            ];
+
+            // Get checked values
+            const selectedGames = gameKeys.filter(key => {
+                return document.querySelector(`input[name='Match-${key}']`)?.checked;
+            });
+
+            // Join them in a comma-separated string
+            const g = selectedGames.join(",");
+
+            fetch(`/c/match-log?p=${encodeURIComponent(s)}&g=${encodeURIComponent(g)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("matchesTable").innerHTML = html;
+                });
+        }
+    }
+    showMatches("Match-ALL");
+    let MatchesSortDirection = [];
+    function sortMatchLogs(colIndex) {
+        const table = document.getElementById("matchesTable");
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        // Toggle direction
+        MatchesSortDirection[colIndex] = !MatchesSortDirection[colIndex];
+        const direction = MatchesSortDirection[colIndex] ? 1 : -1;
+
+        rows.sort((a, b) => {
+            const aText = a.cells[colIndex].innerText.trim();
+            const bText = b.cells[colIndex].innerText.trim();
+
+            const aNum = parseFloat(aText.replace(/[^\d.-]/g, ''));
+            const bNum = parseFloat(bText.replace(/[^\d.-]/g, ''));
+
+            // If numeric sort
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return (aNum - bNum) * direction;
+            }
+
+            // Else string sort
+            return aText.localeCompare(bText) * direction;
+        });
+
+        rows.forEach(row => tbody.appendChild(row)); // Re-append in new order
+    }
+</script>

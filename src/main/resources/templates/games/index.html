@@ -1,0 +1,87 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" content="Player Index | Inazuma Competitive" />
+    <meta name="twitter:title" content="Player Index | Inazuma Competitive">
+    <meta property="og:description" content="Find the data about any players of Inazuma Eleven games." />
+    <meta name="twitter:description" content="Find the data about any players of Inazuma Eleven games.">
+    <title>Player Index | Inazuma Competitive</title>
+    <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+
+    <style>
+        main {
+            background: darkblue;
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #7a7a7a;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        #player-search-bar {
+            width: 80%;
+            padding: 10px;
+            margin: 50px 50px 0;
+            font-size: 16px;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .box-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin: 50px;
+        }
+
+        .box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid white;
+            background: #1111AA77;
+            text-align: center;
+            border-radius: 8px;
+            width: 120px;
+            height: 120px;
+        }
+
+        @media (max-width: 800px) {
+            .box-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .box-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<main layout:fragment="content" style="align-items: center;">
+    <input type="text" placeholder="Search..." id="player-search-bar" />
+    <div class="box-container">
+        <a class="box" th:href="${'/games/index/' + box.getId()}" th:each="box : ${players}">
+            <img style="width: 90px; height: 90px" th:src="'data:image/png;base64,' + ${box.imgEncoded}" alt="avatar.png" />
+            <p class="IEStrike mb-0" th:text="${box.getName().length() > 18 ? box.getName().substring(0,16) + '...' : box.getName()}"></p>
+        </a>
+    </div>
+    <script>
+        document.addEventListener("keypress", function(event) {
+            if (event.target.id === "player-search-bar" && event.key === "Enter") {
+                const searchInput = document.getElementById("player-search-bar");
+                if (searchInput) {
+                    const query = searchInput.value.trim();
+                    if (query) window.location.href = "/games/index?s=" + query;
+                }
+            }
+        });
+        document.getElementById('player-search-bar').value = new URLSearchParams(window.location.search).get('s');
+    </script>
+</main>
+
+</html>

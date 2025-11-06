@@ -1,0 +1,19 @@
+Wood
+FW
+Boy
+S
+A
+A+
+D
+A
+C
+GP: 156
+TP: 155
+M: Black Ash
+M: Eye of the Storm
+M: Side Swipe
+M: Zero Magnum
+S: -
+S: -
+SP: Black Butcher
+200

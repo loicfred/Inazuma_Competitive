@@ -1,0 +1,19 @@
+Fire
+MF
+Boy
+A
+S
+B
+C
+A
+C
+GP: 119
+TP: 167
+M: Flurry Dash
+M: Ice Ground
+M: Frosticle
+M: Northern Impact
+S: -
+S: -
+SP: White Pawn
+180

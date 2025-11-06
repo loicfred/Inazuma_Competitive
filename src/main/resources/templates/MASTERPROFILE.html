@@ -1,0 +1,153 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <style>
+        main {
+            color: white;
+            border-bottom: 2px solid black;
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0,0,0,0.75)), url("/img/bg.jpg");
+        }
+        div a {
+            color: white;
+            text-decoration: none;
+        }
+
+
+        #container-box {
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            min-width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        #main-panel {
+            flex: 3;
+            border: 3px solid black;
+            margin-left: 25px;
+            margin-right: 25px;
+            margin-top: 60px;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            flex-wrap: wrap;
+        }
+        #icon {
+            width: 140px;
+            height: 140px;
+            left: 70px;
+            top: 5px;
+            border-radius: 50%;
+            border: 3px solid black;
+            position: absolute;
+            background-color: transparent;
+            z-index: 1;
+        }
+
+
+
+        #tab1-top {
+            display: flex;
+            max-height: 500px;
+        }
+        #tab1-top-left {
+            width: 50%;
+            margin-right: 10px;
+            padding-left: 10px;
+            overflow-y: scroll;
+        }
+        #tab1-top-right {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        #tab1-top-left::-webkit-scrollbar, .tab-panel::-webkit-scrollbar {
+            width: 4px;
+            background: rgba(0, 0, 0, 0);
+        }
+        #tab1-top-left::-webkit-scrollbar-thumb, .tab-panel::-webkit-scrollbar-thumb {
+            background: rgba(128, 128, 128, 0.5);
+            border-radius: 10px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        #tab1-top-left::-webkit-scrollbar-thumb:hover, .tab-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(128, 128, 128, 0.8);
+        }
+
+
+
+        footer {
+            display: none;
+        }
+        @media screen and (max-width: 768px) {
+            #main-panel {
+                margin-left: 5px;
+                margin-right: 5px;
+                border-top-left-radius: 15px;
+                border-top-right-radius: 15px;
+            }
+            #icon {
+                width: 100px;
+                height: 100px;
+                left: 20px;
+            }
+
+
+            #tab1-top {
+                display: block;
+                max-height: none;
+            }
+            #tab1-top-left, #tab1-top-right {
+                width: 100%;
+            }
+        }
+    </style>
+    <style th:text="'input:checked + .slider, input:checked + .minislider { background-color: ' + ${ColorTheme} + ';}'"></style>
+    <style th:text="'header, footer, .dropdown, #loading { background-color: ' + ${utils.darkenColor(ColorTheme, 0.25)} + '}'"></style>
+</head>
+
+<main layout:fragment="content">
+    <div class="container" id="container-box">
+        <img id="icon" th:src="${AvatarURL}" alt="profile.png">
+        <div id="main-panel" th:style="'background-color:' + ${utils.darkenColor(ColorTheme, 0.25)}">
+            <div layout:fragment="profile_top">
+            </div>
+
+            <div class="tabs">
+                <div style="display: flex;" layout:fragment="profile_tabs">
+                </div>
+                <div style="display: flex; margin-left: auto;" layout:fragment="profile_media">
+                </div>
+            </div>
+
+            <div class="tab-panels">
+                <div class="tab-panel" layout:fragment="profile_tab1">
+                </div>
+
+                <div class="tab-panel" layout:fragment="profile_tab2">
+                </div>
+
+                <div class="tab-panel" layout:fragment="profile_tab3">
+                </div>
+
+                <div class="tab-panel" layout:fragment="profile_tab4">
+                </div>
+
+                <div class="tab-panel" layout:fragment="profile_tab5">
+                </div>
+
+                <div class="tab-panel" layout:fragment="profile_tab6">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="notice-modal" id="notice-messageModal">
+        <div class="notice-modal-content">
+            <p class="IEBOLD notice-message-text mb-0" id="notice-messageText"></p>
+            <span class="IEBOLD notice-close-btn" id="notice-closeModal">X</span>
+        </div>
+    </div>
+    <script src="/tabswitcher.js"></script>
+</main>
+</html>

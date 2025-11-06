@@ -1,0 +1,128 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" th:content="${search} + ' | Inazuma Competitive'" />
+    <meta name="twitter:title" th:content="${search} + ' | Inazuma Competitive'">
+    <meta property="og:description" th:content="'View all search results of the query ' + ${search} + '.'" />
+    <meta name="twitter:description" th:content="'View all search results of the query ' + ${search} + '.'">
+    <title th:text="${search} + ' | Inazuma Competitive'"></title>
+    <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+    <style>
+        main {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url("/img/bg.jpg");
+            background-size: cover;
+            color: white;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        header, footer {
+            background-color: #110342;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .results {
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            border-bottom: 2px solid #444;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-item-icon {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .btn-custom {
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-custom:hover {
+            opacity: 0.9;
+        }
+
+        .btn-join {
+            background-color: #28a745;
+        }
+
+        .btn-view {
+            background-color: #ff8c00;
+        }
+
+        @media (max-width: 768px) {
+            .search-item-icon {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+
+<main layout:fragment="content" class="py-4">
+    <div class="container results">
+        <!-- EVENTS -->
+        <section th:if="${events.size() > 0}" class="mb-5">
+            <h2 class="IEBOLD section-title" th:text="'Events: ' + ${events.size()}"></h2>
+            <div class="row g-3">
+                <div class="col-md-6" th:each="each : ${events}">
+                    <div class="card p-3 h-100">
+                        <div class="d-flex align-items-start">
+                            <img class="search-item-icon me-3" th:src="'/api/img/event/' + ${each.getId()} + '/Logo1.png'">
+                            <div>
+                                <h5 class="IEBOLD mb-1" th:text="${each.getName()}"></h5>
+                                <small class="IEStrike" th:text="${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd MMM yyyy')} + ' - ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd MMM yyyy')}"></small>
+                            </div>
+                        </div>
+                        <p class="IEStrike mt-2 mb-0 small text-light" th:text="${each.getDescription()}"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USERS -->
+        <section th:if="${profiles.size() > 0}" class="mb-5">
+            <h2 class="IEBOLD section-title" th:text="'Users: ' + ${profiles.size()}"></h2>
+            <div class="row g-3">
+                <div class="col-md-6" th:each="each : ${profiles}">
+                    <a th:href="@{'/p/' + ${each.getId()}}" class="card p-3 d-flex flex-row align-items-center">
+                        <img class="search-item-icon me-3" th:src="${each.AvatarURL}">
+                        <div>
+                            <h5 class="IEBOLD mb-1" th:text="${each.FullName} + ' (@' + ${each.Name} + ')'"></h5>
+                            <small class="IEStrike text-light" th:text="${each.Signature}"></small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+</html>

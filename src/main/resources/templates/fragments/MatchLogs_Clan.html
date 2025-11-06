@@ -1,0 +1,76 @@
+<table id="matchesTable" style="width: 100%; border-collapse: collapse;">
+  <thead>
+  <tr>
+    <th class="IEStrike" onclick="sortMatchLogs(0)">Game</th>
+    <th class="IEStrike" onclick="sortMatchLogs(1)">Date</th>
+    <th class="IEStrike nodisplayphone" onclick="sortMatchLogs(2)">Place</th>
+    <th class="IEStrike" style="text-align: right" onclick="sortMatchLogs(3)"></th>
+    <th class="IEStrike" style="width: 5%" onclick="sortMatchLogs(4)"></th>
+    <th class="IEStrike" onclick="sortMatchLogs(5)"></th> <!-- VS Image -->
+    <th class="IEStrike" style="width: 5%" onclick="sortMatchLogs(6)"></th>
+    <th class="IEStrike" style="text-align: left" onclick="sortMatchLogs(7)"></th>
+    <th class="IEStrike" onclick="sortMatchLogs(8)">Result</th>
+    <th class="IEStrike nodisplayphone" style="width: 20%" onclick="sortMatchLogs(9)">Tournament</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="log : ${logs}">
+    <!-- Game Icon -->
+    <td>
+      <img th:src="@{/img/games/{gameCode}.png(gameCode=${log.getAsString('GameCode')})}" class="matchlogimg">
+    </td>
+
+    <!-- Match Date -->
+    <td class="IEStrike matchlogname" th:text="${#dates.format(log.getAsLong('ID'), 'yyyy/MM/dd HH:mm')}"></td>
+
+    <!-- Match Place -->
+    <td class="nodisplayphone">
+      <a th:if="${log.getAsLong('ServerID') > 0}" th:href="'/s/' + ${log.getAsLong('ServerID')}">
+        <p class="IEStrike mb-0 matchlogname" th:text="${utils.StopString(log.getAsString('ServerName'), 20)}"></p>
+      </a>
+      <h5 class="IEStrike matchlogname" th:if="${log.getAsLong('ServerID') == 0}" th:text="${utils.StopString(log.getAsString('ServerName'), 20)}"></h5>
+    </td>
+
+    <!-- Player 1 Name -->
+    <td>
+      <h5 class="IEBOLD matchlogname" style="text-align: right" th:text="${utils.StopString((myid == log.getAsLong('P1ClanID') ? log.getAsString('P1Name') : log.getAsString('P2Name')), 16)}"></h5>
+    </td>
+
+    <!-- Player 1 Score -->
+    <td>
+      <h5 class="IEBOLD" th:text="${myid == log.getAsLong('P1ClanID') ? log.getAsInt('P1Score') : log.getAsInt('P2Score')}"></h5>
+    </td>
+    <!-- VS Image -->
+    <td>
+      <img class="matchlogimg" th:src="'/img/match/' + ${(game.getByCode(log.getAsString('GameCode')).isVR() ? 'VS3.png' : (game.get(log.getAsString('GameCode')).isStrikers() ? 'VS2.png' : 'VS.png'))}">
+    </td>
+
+    <!-- Player 2 Score -->
+    <td>
+      <h5 class="IEBOLD" th:text="${myid == log.getAsLong('P1ClanID') ? log.getAsInt('P2Score') : log.getAsInt('P1Score')}"></h5>
+    </td>
+    <!-- Player 2 Name -->
+    <td>
+      <a th:href="'/p/' + ${myid == log.getAsLong('P1ClanID') ? log.getAsString('P2ID') : log.getAsString('P1ID')}">
+        <h5 class="IEBOLD matchlogname" style="text-align: left" th:text="${utils.StopString((myid == log.getAsLong('P1ClanID') ? log.getAsString('P2Name') : log.getAsString('P1Name')), 16)}"></h5>
+      </a>
+    </td>
+
+    <!-- Result Icon -->
+    <td>
+      <img class="matchlogimg"
+           th:src="'/img/match/' + ${
+               (myid == log.getAsLong('P1ClanID') ? (log.getAsInt('P1Score') > log.getAsInt('P2Score') ? 'Win.png' :
+                  (log.getAsInt('P1Score') < log.getAsInt('P2Score') ? 'Lose.png' : 'Tie.png')) :
+                 (log.getAsInt('P2Score') > log.getAsInt('P1Score') ? 'Win.png' :
+                  (log.getAsInt('P2Score') < log.getAsInt('P1Score') ? 'Lose.png' : 'Tie.png')))}">
+    </td>
+    <!-- Tournament -->
+    <td class="nodisplayphone">
+      <p class="IEStrike mb-0" th:text="${log.getAsString('Tournament')}"></p>
+    </td>
+
+  </tr>
+  </tbody>
+</table>
+<h5 class="IEBOLD noItemFound" style="text-align: center;" th:if="${logs.isEmpty()}">No match log found.</h5>

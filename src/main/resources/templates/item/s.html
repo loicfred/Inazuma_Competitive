@@ -1,0 +1,747 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERPROFILE">
+
+<head layout:fragment="head">
+  <meta property="og:title" th:content="${server.Name} + ' | Inazuma Competitive'" />
+  <meta name="twitter:title" th:content="${server.Name} + ' | Inazuma Competitive'" />
+  <meta property="og:description" th:content="'View the information of ' + ${server.Name} + ', such their tournaments organised or player stats.'" />
+  <meta name="twitter:description" th:content="'View the information of ' + ${server.Name} + ', such their tournaments organised or player stats.'" />
+  <meta property="og:image" th:content="${server.IconUrl}" />
+  <meta name="twitter:image" th:content="${server.IconUrl}" />
+  <title th:text="${server.Name} + ' | Inazuma Competitive'"></title>
+  <link id="tabIcon" rel="icon" th:href="${server.IconUrl}" type="image/png">
+  <style>
+    main {
+      color: white;
+      border-bottom: 2px solid black;
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0,0,0,0.75)), url("/img/bg.jpg");
+    }
+    footer {
+      display: none;
+    }
+    div a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      position: relative;
+    }
+    #main-panel {
+      flex: 3;
+      border: 3px solid black;
+      margin-left: 25px;
+      margin-right: 25px;
+      margin-top: 60px;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      flex-wrap: wrap;
+    }
+    #icon {
+      width: 140px;
+      height: 140px;
+      left: 70px;
+      top: 5px;
+      border-radius: 50%;
+      border: 3px solid black;
+      position: absolute;
+      background-color: transparent;
+      z-index: 1;
+    }
+    #cardtop {
+      margin-left: 200px;
+      margin-top: 5px;
+      align-items: center;
+      display: flex;"
+    }
+    .clanlink {
+      font: 11px IEStrike, sans-serif;
+      padding-right: 5px;
+    }
+    #nameBox {
+      display: flex;
+      flex-direction: column;
+    }
+    .name {
+      font-size: 26px;
+    }
+    #signature {
+      margin: 5px 5px 10px 30px;
+    }
+    .clanbutton {
+      display: flex;
+      margin-right: 5px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 5px;
+      border: 1px solid rgba(0, 0, 0, 0.75);
+    }
+    .clanbutton:hover {
+      text-decoration: underline;
+    }
+
+
+
+
+
+    #tab1-top {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
+    #tab1-top-history {
+      border-top: 1px solid gray;
+      width: 100%;
+      padding-top: 10px;
+      margin-top: 10px
+    }
+    #tab1-top-history p a {
+      font: bold 14px IEStrike, sans-serif;
+      text-decoration: dodgerblue underline;
+      color: dodgerblue;
+    }
+
+    .tab1-tournament-section {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid gray;
+      padding: 10px;
+      gap: 5px;
+    }
+    .tab1-tournament-section-box {
+      display: flex;
+      align-items: center;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 5px;
+      border: 1px gray solid;
+    }
+
+
+
+    .tab-panel::-webkit-scrollbar {
+      width: 4px;
+      background: rgba(0, 0, 0, 0);
+    }
+    .tab-panel::-webkit-scrollbar-thumb {
+      background: rgba(128, 128, 128, 0.5);
+      border-radius: 10px;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .tab-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(128, 128, 128, 0.8);
+    }
+
+    .join {
+      border: 1px solid black;
+      margin: 0 25px 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #248045;
+      width: 120px; height: 60px;
+      border-radius: 5px; padding: 5px;
+    }
+    .join:hover {
+      border: 1px solid white;
+    }
+    .join p {
+      padding: 5px;
+      font: 16px IEBold, sans-serif;
+      text-shadow: none;
+      justify-content: center;
+    }
+
+
+
+
+    .formSide {
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      padding-left: 20px;
+    }
+    .servtoggler {
+      display: flex;
+      width: 33%;
+      padding-top: 10px;
+      padding-right: 10px;
+      align-items: center;
+    }
+
+    @media screen and (max-width: 768px) {
+      #main-panel {
+        margin-left: 5px;
+        margin-right: 5px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+      #cardtop {
+        margin-left: 10px;
+        margin-top: -20px;
+      }
+      #icon {
+        width: 100px;
+        height: 100px;
+        left: 20px;
+      }
+      #nameBox {
+        margin-top: 60px;
+      }
+      .name {
+        font-size: 16px;
+      }
+      #signature {
+        margin: 5px 10px 5px 10px;
+      }
+
+
+
+      #tab1-top {
+        display: block;
+        height: auto;
+      }
+      #tab1-top-history p a {
+        font-size: 10px;
+      }
+
+      #serverForm {
+        flex-direction: column;
+      }
+      .formSide {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        padding-left: 10px;
+      }
+      .servtoggler {
+        width: 50%;
+      }
+
+
+      .join {
+        width: 80px; height: 40px;
+        border-radius: 3px;
+        padding: 3px
+      }
+      .join p {
+        font-size: 12px;
+      }
+
+
+      td a img {
+        width: 30px;
+        height: 30px;
+        padding: 3px;
+        border-radius: 3px;
+      }
+    }
+  </style>
+</head>
+
+<div layout:fragment="profile_top">
+    <div id="cardtop">
+        <div id="nameBox">
+            <div style="display: flex; align-items: center;">
+                <span class="name emoji" th:text="${server.Nationality.getCodepoints()}"></span> <span class="IEBOLD name" th:text="${server.Name}"></span>
+            </div>
+            <div style="display: flex; margin-top: -2px; align-items: center;">
+                <a th:href="'/p/' + ${server.Owner.getId()}" class="clanbutton">
+                    <img th:src="${server.Owner.getEffectiveAvatarUrl()}" style="width: 22px; height: 22px; padding: 2px; border-radius: 25%"><h5 class="IEStrike clanlink" th:text="'👑 ' + ${server.Owner.getEffectiveName()}"></h5>
+                </a>
+            </div>
+        </div>
+        <a style="color: white; text-decoration: none;" class="join" th:href="${server.PermanentInviteLink}" target="_blank">
+            <h4 class="IEBold">Join Server</h4>
+        </a>
+    </div>
+    <h5 class="IEStrike" id="signature" th:utext="${server.Description}"></h5>
+</div>
+
+<div layout:fragment="profile_tabs">
+    <button class="tab-button" th:onclick="|showTab(0)|">Details & Games Statistics</button>
+    <button class="tab-button" th:onclick="|showTab(1)|">Tournaments</button>
+    <button class="tab-button" th:onclick="|showTab(2)|">Matches</button>
+    <button class="tab-button" th:onclick="|showTab(3)|">Statistics</button>
+    <button class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
+</div>
+
+<div layout:fragment="profile_media">
+    <a th:if="${server.TwitterURL != null}" th:href="${server.TwitterURL}" target="_blank" class="tab-button">X</a>
+    <a th:if="${server.YouTubeURL != null}" th:href="${server.YouTubeURL}" target="_blank" class="tab-button">YouTube</a>
+    <a th:if="${server.TiktokURL != null}" th:href="${server.TiktokURL}" target="_blank" class="tab-button">Tiktok</a>
+    <a th:if="${server.TwitchURL != null}" th:href="${server.TwitchURL}" target="_blank" class="tab-button">Twitch</a>
+    <a th:if="${server.WebsiteURL != null}" th:href="${server.WebsiteURL}" target="_blank" class="tab-button">Website</a>
+    <a th:if="${server.InstagramURL != null}" th:href="${server.InstagramURL}" target="_blank" class="tab-button">Instagram</a>
+</div>
+
+<div layout:fragment="profile_tab1">
+    <div id="tab1-top">
+        <div style="display: flex; flex-wrap: wrap; column-gap: 40px;">
+            <div>
+                <h3 class="IEBOLD">Information</h3>
+                <h5 class="IEStrike" th:text="'Name: ' + ${server.Name}"></h5>
+                <h5 class="IEStrike" th:text="'Member Count: ' + ${server.MemberCount}"></h5>
+                <h5 class="IEStrike" th:text="'Creation Date: ' + ${#dates.format(server.CreatedAtTimeEpochSecond * 1000, 'dd/MM/yyyy')}"></h5>
+                <h5 class="IEStrike" th:text="'Server Owner: ' + ${server.Owner.getEffectiveName() + ' (@' + server.Owner.getName() + ')'}"></h5>
+            </div>
+            <div>
+                <h3 class="IEBOLD">Match Details</h3>
+                <h5 class="IEStrike" th:text="'Total Matches: ' + ${server.MatchesCount}"></h5>
+                <h5 class="IEStrike" th:text="'Activity: ' + ${server.getAct().getAsInt('Match Activity')}"></h5>
+                <h5 class="IEStrike" th:text="'Average Activity: ' + ${utils.format(server.getAct().getAsDouble('Average Match Activity'))}"></h5>
+            </div>
+            <div>
+                <h3 class="IEBOLD">Tournament Details</h3>
+                <h5 class="IEStrike" th:text="'Total Tournaments: ' + ${server.TournamentCount}"></h5>
+                <h5 class="IEStrike" th:text="'Tournament Activity: ' + ${server.getAct().getAsInt('Tournament Activity')}"></h5>
+                <h5 class="IEStrike" th:text="'Average Tournament Activity: ' + ${utils.format(server.getAct().getAsDouble('Average Tournament Activity'))}"></h5>
+            </div>
+        </div>
+        <div id="tab1-top-history">
+            <h3 class="IEBOLD">🪶 Brief History:</h3>
+            <h5 class="IEStrike" th:utext="${server.History}"></h5>
+        </div>
+    </div>
+
+    <div class="tab1-tournament-section">
+        <h3 class="IEBOLD">🏆 Active Tournaments</h3>
+        <a class="tab1-tournament-section-box" th:each="CT : ${server.getActiveTournaments()}" th:href="${CT.FullChallongeURL}" target="_blank">
+            <img th:src="@{/img/games/{gameCode}.png(gameCode=${CT.GameCode})}" style="width: 7.5%; margin-right: 5px;">
+            <div style="display: block">
+                <h3 class="IEBOLD" th:text="${CT.Name}"></h3>
+                <h5 class="IEStrike" th:text="'Participants: ' + ${CT.ParticipantCount} + ' | ' + ${CT.Type.toUpperCase()} + ' | ' + ${#dates.format(CT.StartAtTimeEpochSecond * 1000, 'dd MMM yyyy HH:mm')}"></h5>
+            </div>
+        </a>
+        <h3 class="IEBOLD noItemFound" th:if="${server.getActiveTournaments().isEmpty()}">No tournaments currently.</h3>
+    </div>
+</div>
+
+<div layout:fragment="profile_tab2">
+    <div id="tournament-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+    <div id="tab2-tournament-list"></div>
+</div>
+
+<div layout:fragment="profile_tab3">
+    <div id="matches-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+    <table id="matchesTable"></table>
+</div>
+
+<div layout:fragment="profile_tab4">
+    <div id="stats-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+    <table id="statsTable" style="width: 100%;"></table>
+</div>
+
+<div layout:fragment="profile_tab5">
+    <form id="serverForm" style="display: flex">
+        <div class="formSide" id="serverFormSide1">
+            <h3 class="IEBOLD">Clan Settings</h3>
+            <div class="form-group2" id="clanarea">
+                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
+                    <label class="IEStrike" for="editclanrole">Automatic Clan Roles</label>
+                    <label class="switch" style="margin-left: auto;">
+                        <input type="checkbox" name="editclanrole" id="editclanrole" th:checked="${server.areClanRolesAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
+                    <label class="IEStrike" for="editclantag">Automatic Clan Tags</label>
+                    <label class="switch" style="margin-left: auto;">
+                        <input type="checkbox" name="editclantag" id="editclantag" th:checked="${server.areClanTagsAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <h3 class="IEBOLD">Tournament Settings</h3>
+            <div class="form-group2" id="tournamentarea">
+                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
+                    <label class="IEStrike" for="editwinneroles">Automatic Winner Roles</label>
+                    <label class="switch" style="margin-left: auto;">
+                        <input type="checkbox" name="editwinneroles" id="editwinneroles" th:checked="${server.areWinnerRolesAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
+                    <label class="IEStrike" for="editadminonlyscore">Only admins allow to accept scores</label>
+                    <label class="switch" style="margin-left: auto;">
+                        <input type="checkbox" name="editadminonlyscore" id="editadminonlyscore" th:checked="${server.AdminAcceptOnly}">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group2">
+                <label class="IEStrike" for="invitelink">Permanent Invite Link</label>
+                <input type="text" id="invitelink" th:value="${server.PermanentInviteLink}" minlength="24" name="invitelink">
+            </div>
+
+            <div class="form-group2">
+                <label class="IEStrike" for="edithistory">History</label>
+                <textarea id="edithistory" name="edithistory" th:text="${server.History}" maxlength="1024" rows="8"></textarea>
+            </div>
+        </div>
+
+        <div class="formSide" id="serverFormSide2">
+
+            <h3 class="IEBOLD">Leaderboard Settings</h3>
+            <div class="form-group" id="leaderboardarea">
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardvrbeta" id="boardvrbeta" th:checked="${server.isVRBetaBoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardvrbeta">IE VR Beta</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardvr" id="boardvr" th:checked="${server.isVROHBoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardvr">IE VR</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardgalaxy" id="boardgalaxy" th:checked="${server.isGalaxyBoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardgalaxy">IE GO Galaxy</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardcs" id="boardcs" th:checked="${server.isCSBoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardcs">IE GO CS</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardgo1" id="boardgo1" th:checked="${server.isGO1BoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardgo1">IE GO1</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardsd" id="boardsd" th:checked="${server.isSDBoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardsd">IE SD</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardie3" id="boardie3" th:checked="${server.isIE3BoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardie3">IE3</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardie2" id="boardie2" th:checked="${server.isIE2BoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardie2">IE2</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardie1" id="boardie1" th:checked="${server.isIE1BoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardie1">IE1</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardstrikers" id="boardstrikers" th:checked="${server.isStrikersBoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardstrikers">IE GO Strikers 2013</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="boardxtreme" id="boardxtreme" th:checked="${server.isXtremeBoardAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="boardxtreme">IE GO Strikers Xtreme</label>
+                </div>
+            </div>
+
+
+
+            <h3 class="IEBOLD">Ranking Settings</h3>
+            <div class="form-group" id="rankarea">
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="globalrank" id="globalrank" th:checked="${server.areGlobalRankAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="globalrank">Global Ranks</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankvrbeta" id="rankvrbeta" th:checked="${server.areVRBetaRanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankvrbeta">IE VR Beta</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankvr" id="rankvr" th:checked="${server.areVROHRanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankvr">IE VR</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankgalaxy" id="rankgalaxy" th:checked="${server.areGalaxyRanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankgalaxy">IE GO Galaxy</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankcs" id="rankcs" th:checked="${server.areCSRanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankcs">IE GO CS</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankgo1" id="rankgo1" th:checked="${server.areGO1RanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankgo1">IE GO1</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="ranksd" id="ranksd" th:checked="${server.areSDRanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="ranksd">IE SD</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankie3" id="rankie3" th:checked="${server.areIE3RanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankie3">IE3</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankie2" id="rankie2" th:checked="${server.areIE2RanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankie2">IE2</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankie1" id="rankie1" th:checked="${server.areIE1RanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankie1">IE1</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankstrikers" id="rankstrikers" th:checked="${server.areStrikersRanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankstrikers">IE GO Strikers 2013</label>
+                </div>
+                <div class="servtoggler">
+                    <label class="switch">
+                        <input type="checkbox" name="rankxtreme" id="rankxtreme" th:checked="${server.areXtremeRanksAllowed}">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="IEStrike" for="rankxtreme">IE GO Strikers Xtreme</label>
+                </div>
+            </div>
+
+            <div class="form-group2">
+                <button type="submit" class="submit-btn" id="submit-btn" style="margin-left: auto; width: 200px; height: 40px">Save Changes</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+</html>
+<script>
+  generateSwitches('tournament-switches', 'Tourn', commonItems, 'showTournaments');
+  function showTournaments(selected) {
+    const pathParts = window.location.pathname.split("/");
+    const s = pathParts[pathParts.length - 1];
+    if (document.querySelector("input[name='Tourn-ALL']").checked === true && selected === "Tourn-ALL") {
+      document.querySelector("input[name='Tourn-IEGOGLX']").checked = false;
+      document.querySelector("input[name='Tourn-IEGOCS']").checked = false;
+      document.querySelector("input[name='Tourn-IEGO1']").checked = false;
+      document.querySelector("input[name='Tourn-IEVRBETA']").checked = false;
+      document.querySelector("input[name='Tourn-IEVR']").checked = false;
+      document.querySelector("input[name='Tourn-IEGOSTR']").checked = false;
+      document.querySelector("input[name='Tourn-IEGOSTRXTR']").checked = false;
+      fetch(`/s/tournament-list?s=${encodeURIComponent(s)}`)
+              .then(res => res.text())
+              .then(html => {
+                document.getElementById("tab2-tournament-list").innerHTML = html;
+              });
+    } else {
+      document.querySelector("input[name='Tourn-ALL']").checked = false;
+      // List of checkbox values to check
+      const gameKeys = [
+        "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+      ];
+
+      // Get checked values
+      const selectedGames = gameKeys.filter(key => {
+        return document.querySelector(`input[name='Tourn-${key}']`)?.checked;
+      });
+
+      // Join them in a comma-separated string
+      const g = selectedGames.join(",");
+
+      fetch(`/s/tournament-list?s=${encodeURIComponent(s)}&g=${encodeURIComponent(g)}`)
+              .then(res => res.text())
+              .then(html => {
+                document.getElementById("tab2-tournament-list").innerHTML = html;
+              });
+    }
+  }
+  showTournaments("Tourn-ALL");
+</script>
+<script>
+  generateSwitches('matches-switches', 'Match', commonItems, 'showMatches');
+  function showMatches(selected) {
+    const pathParts = window.location.pathname.split("/");
+    const s = pathParts[pathParts.length - 1];
+    if (document.querySelector("input[name='Match-ALL']").checked === true && selected === "Match-ALL") {
+      document.querySelector("input[name='Match-IEGOGLX']").checked = false;
+      document.querySelector("input[name='Match-IEGOCS']").checked = false;
+      document.querySelector("input[name='Match-IEGO1']").checked = false;
+      document.querySelector("input[name='Match-IEVRBETA']").checked = false;
+      document.querySelector("input[name='Match-IEVR']").checked = false;
+      document.querySelector("input[name='Match-IEGOSTR']").checked = false;
+      document.querySelector("input[name='Match-IEGOSTRXTR']").checked = false;
+      fetch(`/s/match-log?p=${encodeURIComponent(s)}`)
+              .then(res => res.text())
+              .then(html => {
+                document.getElementById("matchesTable").innerHTML = html;
+              });
+    } else {
+      document.querySelector("input[name='Match-ALL']").checked = false;
+      // List of checkbox values to check
+      const gameKeys = [
+        "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+      ];
+
+      // Get checked values
+      const selectedGames = gameKeys.filter(key => {
+        return document.querySelector(`input[name='Match-${key}']`)?.checked;
+      });
+
+      // Join them in a comma-separated string
+      const g = selectedGames.join(",");
+
+      fetch(`/s/match-log?p=${encodeURIComponent(s)}&g=${encodeURIComponent(g)}`)
+              .then(res => res.text())
+              .then(html => {
+                document.getElementById("matchesTable").innerHTML = html;
+              });
+    }
+  }
+  showMatches("Match-ALL");
+  let MatchesSortDirection = [];
+  function sortMatchLogs(colIndex) {
+    const table = document.getElementById("matchesTable");
+    const tbody = table.tBodies[0];
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    // Toggle direction
+    MatchesSortDirection[colIndex] = !MatchesSortDirection[colIndex];
+    const direction = MatchesSortDirection[colIndex] ? 1 : -1;
+
+    rows.sort((a, b) => {
+      const aText = a.cells[colIndex].innerText.trim();
+      const bText = b.cells[colIndex].innerText.trim();
+
+      const aNum = parseFloat(aText.replace(/[^\d.-]/g, ''));
+      const bNum = parseFloat(bText.replace(/[^\d.-]/g, ''));
+
+      // If numeric sort
+      if (!isNaN(aNum) && !isNaN(bNum)) {
+        return (aNum - bNum) * direction;
+      }
+
+      // Else string sort
+      return aText.localeCompare(bText) * direction;
+    });
+
+    rows.forEach(row => tbody.appendChild(row)); // Re-append in new order
+  }
+</script>
+<script>
+  generateSwitches('stats-switches', 'Stats', commonItems, 'showStats');
+  function showStats(selected) {
+    const pathParts = window.location.pathname.split("/");
+    const s = pathParts[pathParts.length - 1]; // e.g., "508331399149912088"
+    if (document.querySelector("input[name='Stats-ALL']").checked === true && selected === "Stats-ALL") {
+      document.querySelector("input[name='Stats-IEGOGLX']").checked = false;
+      document.querySelector("input[name='Stats-IEGOCS']").checked = false;
+      document.querySelector("input[name='Stats-IEGO1']").checked = false;
+      document.querySelector("input[name='Stats-IEVRBETA']").checked = false;
+      document.querySelector("input[name='Stats-IEVR']").checked = false;
+      document.querySelector("input[name='Stats-IEGOSTR']").checked = false;
+      document.querySelector("input[name='Stats-IEGOSTRXTR']").checked = false;
+      fetch(`/s/tournament-stats?s=${encodeURIComponent(s)}`)
+              .then(res => res.text())
+              .then(html => {
+                document.getElementById("statsTable").innerHTML = html;
+              });
+    } else {
+      document.querySelector("input[name='Stats-ALL']").checked = false;
+      // List of checkbox values to check
+      const gameKeys = [
+        "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+      ];
+
+      // Get checked values
+      const selectedGames = gameKeys.filter(key => {
+        return document.querySelector(`input[name='Stats-${key}']`)?.checked;
+      });
+
+      // Join them in a comma-separated string
+      const g = selectedGames.join(",");
+
+      fetch(`/s/tournament-stats?s=${encodeURIComponent(s)}&g=${encodeURIComponent(g)}`)
+              .then(res => res.text())
+              .then(html => {
+                document.getElementById("statsTable").innerHTML = html;
+              });
+    }
+  }
+  showStats("Stats-ALL");
+  let StatsSortDirection = [];
+  function sortStats(colIndex) {
+    const table = document.getElementById("statsTable");
+    const tbody = table.tBodies[0];
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    // Toggle direction
+    StatsSortDirection[colIndex] = !StatsSortDirection[colIndex];
+    const direction = StatsSortDirection[colIndex] ? 1 : -1;
+
+    rows.sort((a, b) => {
+      const aText = a.cells[colIndex].innerText.trim();
+      const bText = b.cells[colIndex].innerText.trim();
+
+      const aNum = parseFloat(aText.replace(/[^\d.-]/g, ''));
+      const bNum = parseFloat(bText.replace(/[^\d.-]/g, ''));
+
+      // If numeric sort
+      if (!isNaN(aNum) && !isNaN(bNum)) {
+        return (aNum - bNum) * direction;
+      }
+
+      // Else string sort
+      return aText.localeCompare(bText) * direction;
+    });
+
+    rows.forEach(row => tbody.appendChild(row)); // Re-append in new order
+  }
+</script>

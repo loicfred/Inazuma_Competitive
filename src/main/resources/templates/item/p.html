@@ -1,0 +1,438 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERPROFILE">
+
+<head layout:fragment="head">
+    <meta property="og:title" th:content="${profile.FullName} + ' | Inazuma Competitive'" />
+    <meta name="twitter:title" th:content="${profile.FullName} + ' | Inazuma Competitive'">
+    <meta property="og:description" th:content="'Check out the profile of ' + ${profile.FullName} + ' to view their games, tournaments and matches.'" />
+    <meta name="twitter:description" th:content="'Check out the profile of ' + ${profile.FullName} + ' to view their games, tournaments and matches.'" />
+    <meta property="og:image" th:content="${profile.AvatarURL}" />
+    <meta name="twitter:image" th:content="${profile.AvatarURL}">
+    <title th:text="${profile.FullName} + ' | Inazuma Competitive'"></title>
+    <link id="tabIcon" rel="icon" th:href="${profile.AvatarURL}" type="image/png">
+
+    <style>
+        #league {
+            margin-left: auto;
+            margin-right: 20px;
+            width: 75px
+        }
+        #cardtop {
+            margin-left: 200px;
+            margin-top: 5px;
+            align-items: center;
+            display: flex;"
+        }
+        .clanlink {
+            font: 11px IEStrike, sans-serif;
+            padding-right: 3px;
+            padding-left: 3px;
+        }
+        #nameBox {
+            display: flex;
+            flex-direction: column;
+        }
+        .name {
+            font-size: 26px;
+        }
+        #signature {
+            margin: 5px 5px 10px 30px;
+        }
+
+
+        .clanbutton {
+            display: flex;
+            margin-right: 5px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.75);
+        }
+        .clanbutton:hover {
+            text-decoration: underline;
+        }
+
+
+
+
+        #tab1-top-left-details {
+            display: flex;
+            flex-wrap: wrap;
+            column-gap: 50px;
+            border-right: 1px solid dimgray;
+        }
+        #tab1-top-left-history {
+            border-top: 1px solid gray;
+            width: 96%;
+            padding-top: 10px;
+            margin-top: 10px
+        }
+        #tab1-top-left-history p a {
+            font: bold 14px IEStrike, sans-serif;
+            text-decoration: dodgerblue underline;
+            color: dodgerblue;
+        }
+
+
+        #tab1-top-right-details {
+            flex-grow: 1;
+            padding-top: 10px;
+            gap: 5px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
+        }
+        .tab1-top-right-profile_game_box {
+            border-radius: 5px;
+            padding: 5px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid dimgray;
+        }
+        #tab1-top-right-details::-webkit-scrollbar {
+            width: 4px;
+            background: rgba(0, 0, 0, 0);
+        }
+        #tab1-top-right-details::-webkit-scrollbar-thumb {
+            background: rgba(128, 128, 128, 0.5);
+            border-radius: 10px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        #tab1-top-right-details::-webkit-scrollbar-thumb:hover {
+            background: rgba(128, 128, 128, 0.8);
+        }
+
+        .tab1-achievement-section {
+            border-top: 1px solid gray;
+            margin: 10px;
+        }
+        .tab1-achievement-section-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 10px;
+        }
+
+
+
+        .formSide {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            padding-left: 20px;
+        }
+
+        @media screen and (max-width: 768px) {
+
+            #cardtop {
+                margin-left: 10px;
+                margin-top: -20px;
+            }
+            #league {
+                margin-left: auto;
+                margin-right: 5px;
+                width: 50px
+            }
+
+            #nameBox {
+                margin-top: 60px;
+            }
+            .name {
+                font-size: 16px;
+            }
+            #signature {
+                margin: 5px 10px 5px 10px;
+            }
+
+            #tab1-top-left-details {
+                border-right: none;
+            }
+            #tab1-top-left-history p a {
+                font-size: 10px;
+            }
+
+            #profileForm {
+                flex-direction: column;
+            }
+            .formSide {
+                width: 100%;
+                padding-left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<div layout:fragment="profile_top">
+    <div id="cardtop">
+        <div id="nameBox">
+            <div style="display: flex; align-items: center;">
+                <p class="mb-0"><span class="name emoji" th:text="${profile.getNationality().getCodepoints()}"></span> <span class="IEBOLD name" th:text="${profile.FullName} + ' (@' + ${profile.Name} + ')'"></span></p>
+            </div>
+            <div style="display: flex; margin-top: -2px; align-items: center;">
+                <a th:if="${!profile.getClanMembers().isEmpty()}" th:each="CM : ${profile.getClanMembers()}" th:href="'/c/' + ${CM.ClanID}" class="clanbutton">
+                    <img th:if="${CM.getClan().hasEmblem()}" th:src="@{/api/img/clan/{id}/emblem.png(id=${CM.ClanID})}" style="width: 22px; height: 22px; padding: 2px 2px 2px 2px;"><p class="clanlink mb-0" th:text="${CM.getClan().getName()}"></p>
+                </a>
+            </div>
+        </div>
+        <img id="league" th:src="@{/api/img/league/{id}.png(id=${profile.Totals().getLeague().getId()})}" alt="league.png">
+    </div>
+    <p class="IEStrike" id="signature" th:utext="${profile.Signature}"></p>
+</div>
+
+<div layout:fragment="profile_tabs">
+    <button class="tab-button" th:onclick="|showTab(0)|">Details & Games Statistics</button>
+    <button class="tab-button" th:onclick="|showTab(1)|">Tournaments</button>
+    <button class="tab-button" th:onclick="|showTab(2)|">Matches</button>
+    <button class="tab-button" th:onclick="|showTab(3)|">Clans</button>
+    <button th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == profile.getId()}" class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
+</div>
+
+<div layout:fragment="profile_media">
+    <a th:if="${profile.TwitterURL != null}" th:href="${profile.TwitterURL}" target="_blank" class="IEBOLD tab-button">X</a>
+    <a th:if="${profile.YouTubeURL != null}" th:href="${profile.YouTubeURL}" target="_blank" class="IEBOLD tab-button">YouTube</a>
+    <a th:if="${profile.TiktokURL != null}" th:href="${profile.TiktokURL}" target="_blank" class="IEBOLD tab-button">Tiktok</a>
+    <a th:if="${profile.TwitchURL != null}" th:href="${profile.TwitchURL}" target="_blank" class="IEBOLD tab-button">Twitch</a>
+    <a th:if="${profile.WebsiteURL != null}" th:href="${profile.WebsiteURL}" target="_blank" class="IEBOLD tab-button">Website</a>
+    <a th:if="${profile.DiscordURL != null}" th:href="${profile.DiscordURL}" target="_blank" class="IEBOLD tab-button">Discord</a>
+    <a th:if="${profile.InstagramURL != null}" th:href="${profile.InstagramURL}" target="_blank" class="IEBOLD tab-button">Instagram</a>
+</div>
+
+
+<div layout:fragment="profile_tab1">
+    <div id="tab1-top">
+        <div id="tab1-top-left" layout:fragment="profile_left">
+            <div id="tab1-top-left-details">
+                <div style="width: 300px;">
+                    <h5 class="IEBOLD" th:text="'Level ' + ${profile.Totals().Level}"></h5>
+                    <p class="IEStrike mb-0" th:text="'Match Difference: +' + ${profile.Totals().getWins()} + '/' + ${profile.Totals().getTies()} + '/-' + ${profile.Totals().getLoses()}"></p>
+                    <p class="IEStrike mb-0" th:text="'Goal Difference: +' + ${profile.Totals().getGoalsScored()} + '/-' + ${profile.Totals().getGoalsTaken()}"></p>
+                    <p class="IEStrike" th:text="'Total Quests: ' + ${profile.Totals().TotalQuests}"></p>
+                </div>
+                <div style="width: 300px;">
+                    <h5 class="IEBOLD">Match Details</h5>
+                    <p class="IEStrike mb-0" th:text="'Total Medals: ' + ${profile.Totals().getTotalMedals()} + ' 🏅'"></p>
+                    <p class="IEStrike mb-0" th:text="'Activity: ' + ${profile.getActivity(null, null).getAsInt('Match Activity')}"></p>
+                    <p class="IEStrike" th:text="'Avg Activity: ' + ${utils.format(profile.getActivity(null, null).getAsDouble('Average Match Activity'))}"></p>
+                </div>
+                <div style="width: 500px;">
+                    <h5 class="IEBOLD">Tournament Details</h5>
+                    <p class="IEStrike mb-0" th:text="'Total Tournaments: ' + ${profile.Totals().getTotalTournaments()}"></p>
+                    <p class="IEStrike mb-0" th:text="'Tournament Activity: ' + ${profile.getActivity(null, null).getAsInt('Tournament Activity')}"></p>
+                    <p class="IEStrike" th:text="'Avg Tournament Activity: ' + ${utils.format(profile.getActivity(null, null).getAsDouble('Average Tournament Activity'))}"></p>
+                </div>
+
+                <div id="tab1-top-left-history">
+                    <h5 class="IEBOLD">🪶 Brief History:</h5>
+                    <p class="IEStrike mb-0" th:utext="${profile.History}"></p>
+                </div>
+            </div>
+        </div>
+        <div id="tab1-top-right" layout:fragment="profile_right">
+            <h4 class="IEBOLD" th:text="'Games Statistics'"></h4>
+            <div id="tab1-top-right-details">
+                <div th:each="PG : ${profile.getPGs()}" class="tab1-top-right-profile_game_box">
+                    <div style="display: flex; align-items: center;">
+                        <img th:src="@{/img/games/{gameCode}.png(gameCode=${PG.GameCode})}" style="width: 40px; height: 40px; margin-right: 10px;">
+                        <h5 class="IEBOLD" th:text="${PG.getGame().getFullName()}"></h5>
+                    </div>
+                    <p class="IEStrike mb-0" th:text="'Medals: ' + ${PG.Medals} + ' 🏅'"></p>
+                    <p class="IEStrike mb-0" th:text="'Match Difference: ' + '+' + ${PG.Wins} + '/' + ${PG.Ties} + '/-' + ${PG.Loses} + ' | Goal Difference: +' + ${PG.GoalsScored} + '/-' + ${PG.GoalsTaken}"></p>
+                    <p class="IEStrike mb-0" th:text="'Highest Streak: ' + ${PG.HighestWinStreak}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div layout:fragment="profile_bottom">
+        <div class="tab1-achievement-section">
+            <h4 class="IEBOLD" style="padding-top: 10px">🏅 Achievements</h4>
+            <div th:if="${!profile.getAchievements().isEmpty()}" class="tab1-achievement-section-box">
+                <div th:each="PA : ${profile.getAchievements()}" style="width: 300px;">
+                    <h5 class="IEBOLD" style="font-size: 16px;" th:text="'🔥 ' + ${PA.getName()}"></h5>
+                    <p th:each="O : ${PA.getObjectives().list()}" class="IEStrike" th:text="${O.getDescription()}"></p>
+                </div>
+            </div>
+            <h2 class="IEBOLD noItemFound" th:if="${profile.getAchievements().isEmpty()}">No achievements yet.</h2>
+        </div>
+        <div class="tab1-achievement-section">
+            <h4 class="IEBOLD" style="padding-top: 10px">🏆 Trophies</h4>
+            <div th:if="${!profile.getTrophies().isEmpty()}" class="tab1-achievement-section-box">
+                <div th:each="TR : ${profile.getTrophies()}" style="width: 300px;">
+                    <h5 class="IEBOLD" style="font-size: 16px;" th:text="'🔥 ' + ${TR.Name}"></h5>
+                    <p class="IEStrike" th:text="${TR.Description}"></p>
+                </div>
+            </div>
+            <h2 class="IEBOLD noItemFound" th:if="${profile.getTrophies().isEmpty()}">No trophies yet.</h2>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="profile_tab2">
+    <div id="tournament-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+    <div id="tab2-tournament-list"></div>
+</div>
+
+<div layout:fragment="profile_tab3">
+    <div id="matches-switches" style="display: flex; flex-wrap: wrap; align-items: center;"></div>
+    <table id="matchesTable"></table>
+</div>
+
+<div layout:fragment="profile_tab4">
+    <div id="tab4-clan-log"></div>
+</div>
+
+<div layout:fragment="profile_tab5" th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == profile.getId()}">
+    <form id="profileForm" style="display: flex" th:action="${'/p/' + profile.ID + '/update'}" th:object="${profile}" method="post" >
+        <input id="profileid" type="hidden" th:field="*{ID}" />
+        <div class="formSide" id="FORM_UPDATE_1">
+            <label th:text="Signature" class="IEStrike mb-3">
+                <textarea th:field="*{Signature}" th:text="${profile.getSignature()}" maxlength="128" rows="2"></textarea>
+            </label>
+
+            <label th:text="ColorCode" class="IEStrike mb-3" style="display: flex; align-items: center; width: 100%; padding-right: 10px;">
+                <input class="ms-auto" type="color" th:field="*{ColorCode}" th:value="${profile.getColorCode() == null ? '' : profile.getColorCode()}">
+            </label>
+
+            <label th:text="Birthday" class="IEStrike mb-3">
+                <textarea th:field="*{BirthdayEpochSecond}" th:text="${profile.getBirthday()}"></textarea>
+                <input type="date" th:field="*{BirthdayEpochSecond}" th:value="${profile.BirthdayEpochSecond != null ? #dates.format(profile.BirthdayEpochSecond * 1000, 'yyyy-MM-dd') : ''}">
+            </label>
+
+            <div class="mb-3">
+                <label th:text="Nationality" class="IEStrike" for="editnationality"></label>
+                <select th:field="*{NationalityName}" name="nationality" id="editnationality" style="background-color: black;">
+                    <option th:each="nation : ${profile.getNationality().getNationalities()}"
+                            th:value="${nation.getName()}"
+                            th:text="${nation.getCodepoints() + ' ' + nation.getName()}"
+                            th:selected="${nation.getName() == profile.getNationality().getName()}">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="formSide" id="FORM_UPDATE_2">
+
+        </div>
+    </form>
+</div>
+
+</html>
+<script>
+    generateSwitches('tournament-switches', 'Tourn', commonItems, 'showTournaments');
+    function showTournaments(selected) {
+        const pathParts = window.location.pathname.split("/");
+        const s = pathParts[pathParts.length - 1];
+        if (document.querySelector("input[name='Tourn-ALL']").checked === true && selected === "Tourn-ALL") {
+            document.querySelector("input[name='Tourn-IEGOGLX']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOCS']").checked = false;
+            document.querySelector("input[name='Tourn-IEGO1']").checked = false;
+            document.querySelector("input[name='Tourn-IEVRBETA']").checked = false;
+            document.querySelector("input[name='Tourn-IEVR']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOSTR']").checked = false;
+            document.querySelector("input[name='Tourn-IEGOSTRXTR']").checked = false;
+            fetch(`/p/tournament-list?p=${encodeURIComponent(s)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("tab2-tournament-list").innerHTML = html;
+                });
+        } else {
+            document.querySelector("input[name='Tourn-ALL']").checked = false;
+            // List of checkbox values to check
+            const gameKeys = [
+                "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+            ];
+
+            // Get checked values
+            const selectedGames = gameKeys.filter(key => {
+                return document.querySelector(`input[name='Tourn-${key}']`)?.checked;
+            });
+
+            // Join them in a comma-separated string
+            const g = selectedGames.join(",");
+
+            fetch(`/p/tournament-list?p=${encodeURIComponent(s)}&g=${encodeURIComponent(g)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("tab2-tournament-list").innerHTML = html;
+                });
+        }
+    }
+    showTournaments("Tourn-ALL");
+</script>
+<script>
+    generateSwitches('matches-switches', 'Match', commonItems, 'showMatches');
+    function showMatches(selected) {
+        const pathParts = window.location.pathname.split("/");
+        const s = pathParts[pathParts.length - 1];
+        if (document.querySelector("input[name='Match-ALL']").checked === true && selected === "Match-ALL") {
+            document.querySelector("input[name='Match-IEGOGLX']").checked = false;
+            document.querySelector("input[name='Match-IEGOCS']").checked = false;
+            document.querySelector("input[name='Match-IEGO1']").checked = false;
+            document.querySelector("input[name='Match-IEVRBETA']").checked = false;
+            document.querySelector("input[name='Match-IEVR']").checked = false;
+            document.querySelector("input[name='Match-IEGOSTR']").checked = false;
+            document.querySelector("input[name='Match-IEGOSTRXTR']").checked = false;
+            fetch(`/p/match-log?p=${encodeURIComponent(s)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("matchesTable").innerHTML = html;
+                });
+        } else {
+            document.querySelector("input[name='Match-ALL']").checked = false;
+            // List of checkbox values to check
+            const gameKeys = [
+                "IEGOGLX", "IEGOCS", "IEGO1", "IEVRBETA", "IEVR", "IEGOSTR", "IEGOSTRXTR"
+            ];
+
+            // Get checked values
+            const selectedGames = gameKeys.filter(key => {
+                return document.querySelector(`input[name='Match-${key}']`)?.checked;
+            });
+
+            // Join them in a comma-separated string
+            const g = selectedGames.join(",");
+
+            fetch(`/p/match-log?p=${encodeURIComponent(s)}&g=${encodeURIComponent(g)}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("matchesTable").innerHTML = html;
+                });
+        }
+    }
+    showMatches("Match-ALL");
+    let MatchesSortDirection = [];
+    function sortMatchLogs(colIndex) {
+        const table = document.getElementById("matchesTable");
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        // Toggle direction
+        MatchesSortDirection[colIndex] = !MatchesSortDirection[colIndex];
+        const direction = MatchesSortDirection[colIndex] ? 1 : -1;
+
+        rows.sort((a, b) => {
+            const aText = a.cells[colIndex].innerText.trim();
+            const bText = b.cells[colIndex].innerText.trim();
+
+            const aNum = parseFloat(aText.replace(/[^\d.-]/g, ''));
+            const bNum = parseFloat(bText.replace(/[^\d.-]/g, ''));
+
+            // If numeric sort
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return (aNum - bNum) * direction;
+            }
+
+            // Else string sort
+            return aText.localeCompare(bText) * direction;
+        });
+
+        rows.forEach(row => tbody.appendChild(row)); // Re-append in new order
+    }
+</script>
+<script>
+    function showClanLogs() {
+        const pathParts = window.location.pathname.split("/");
+        const s = pathParts[pathParts.length - 1];
+        fetch(`/p/clan-log?p=${encodeURIComponent(s)}`)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("tab4-clan-log").innerHTML = html;
+            });
+    }
+    showClanLogs();
+</script>

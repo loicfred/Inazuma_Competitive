@@ -1,0 +1,607 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="MASTERCONTENT">
+
+<head layout:fragment="head">
+    <meta property="og:title" content="CS Calculator | Inazuma Competitive" />
+    <meta name="twitter:title" content="CS Calculator | Inazuma Competitive">
+    <meta property="og:description" content="This is used to calculate the value of your players in Inazuma Eleven GO Chrono Stones." />
+    <meta name="twitter:description" content="This is used to calculate the value of your players in Inazuma Eleven GO Chrono Stones.">
+    <title>CS Calculator | Inazuma Competitive</title>
+    <link id="tabIcon" rel="icon" href="/img/avatar.png" type="image/png">
+    <style>
+        main {
+            background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("/img/cs.png");
+        }
+        header, footer, .dropdown, #loading {
+            background-color: #004433;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        select, input[type="number"], .form-check-input {
+            padding: 6px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            border: 1px solid #373737;
+            background-color: #222222;
+            color: #FFFFFF;
+            border-radius: 4px;
+        }
+
+        .form-check-input {
+            width: 20%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #000000CC;
+        }
+
+        .duel-type {
+            width: 100%;
+            display: flex;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .duel-type select {
+            width: auto;
+        }
+
+        .panels {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            width: 90%;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            flex: 1 1 45%;
+            border: 1px solid #474747;
+            padding: 16px;
+            border-radius: 8px;
+            background-color: #353535CC;
+        }
+
+        .panel h5 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .col-half {
+            flex: 1 1 48%;
+            display: flex;
+            gap: 10px;
+        }
+
+
+        button {
+            background: #202020;
+            border-radius: 5px;
+            border: 1px solid gray;
+            color: white;
+            font: 12px IEBOLD, sans-serif;
+        }
+
+        #p1realvaluec, #p2realvaluec, #p1basevaluec, #p2basevaluec, #p1realmovevaluec, #p2realmovevaluec, #p1totalvaluec, #p2totalvaluec
+        , #p1realvalue, #p2realvalue, #p1realmovevalue, #p2realmovevalue {
+            font-size: 12px;
+        }
+        #p1basevalue, #p2basevalue, #p1totalvalue, #p2totalvalue {
+            font-size: 20px;
+        }
+
+        #leftvalues {
+            margin-left: auto;
+            width: 45%;
+        }
+        #rightvalues {
+            margin-right: auto;
+            width: 45%;
+        }
+
+        .talent-label {
+            width: 18.75%;
+        }
+        .stats-label {
+            width: 30%;
+        }
+        @media (max-width: 768px) {
+            .panels {
+                flex-direction: column;
+            }
+            .panel {
+                max-width: 100%;
+            }
+
+            .duel-type {
+                flex-direction: column;
+            }
+            #leftvalues, #rightvalues {
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%
+            }
+
+            #p1realvaluec, #p2realvaluec, #p1basevaluec, #p2basevaluec, #p1realmovevaluec, #p2realmovevaluec, #p1totalvaluec, #p2totalvaluec
+            , #p1realvalue, #p2realvalue, #p1realmovevalue, #p2realmovevalue {
+                font-size: 8px;
+            }
+            #p1basevalue, #p2basevalue, #p1totalvalue, #p2totalvalue {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <div class="container">
+        <!-- Duel Type Dropdown -->
+        <div class="duel-type">
+            <div id="leftvalues">
+                <div style="display: flex; gap: 3px; align-items: center; text-align: left;"><p id="p1realvaluec">Real Value:</p><p class="IEStrike" id="p1realvalue">0</p></div>
+                <div style="display: flex; gap: 3px; align-items: center; text-align: left;"><p id="p1basevaluec">Base Value:</p><p class="IEStrike" id="p1basevalue">0</p></div>
+                <div style="display: flex; gap: 3px; align-items: center; text-align: left;"><p id="p1realmovevaluec">Real Move Value:</p><p class="IEStrike" id="p1realmovevalue">0</p></div>
+                <div style="display: flex; gap: 3px; align-items: center; text-align: left;"><p id="p1totalvaluec">Total Value:</p><p class="IEStrike" id="p1totalvalue">0</p></div>
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <select style="margin-bottom: 5px;" id="duelType" name="duelType">
+                    <option th:each="type : ${duelTypes}" th:value="${type}" th:text="${type}"></option>
+                </select>
+                <button style="height: 50%; padding: 4px 8px 4px 8px" type="button" onclick="calculate()">Calculate</button>
+            </div>
+
+            <div id="rightvalues">
+                <div style="display: flex; gap: 3px; align-items: center; text-align: right;"><p style="margin-left: auto;" class="IEStrike" id="p2realvalue">0</p><p id="p2realvaluec">:Real Value</p></div>
+                <div style="display: flex; gap: 3px; align-items: center; text-align: right;"><p style="margin-left: auto;" class="IEStrike" id="p2basevalue">0</p><p id="p2basevaluec">:Base Value</p></div>
+                <div style="display: flex; gap: 3px; align-items: center; text-align: right;"><p style="margin-left: auto;" class="IEStrike" id="p2realmovevalue">0</p><p id="p2realmovevaluec">:Real Move Value</p></div>
+                <div style="display: flex; gap: 3px; align-items: center; text-align: right;"><p style="margin-left: auto;" class="IEStrike" id="p2totalvalue">0</p><p id="p2totalvaluec">:Total Value</p></div>
+            </div>
+        </div>
+        <!-- Two-Sided Panel -->
+        <div class="panels">
+            <!-- Player 1 -->
+            <div class="panel">
+                <h2 class="IEBOLD">Player 1</h2>
+                <form>
+                    <div class="col-half">
+                        <label class="IEStrike stats-label" for="p1_element">Element:</label>
+                        <select id="p1_element" name="p1_element">
+                            <option th:each="elem : ${elements}" th:value="${elem}" th:text="${elem}"></option>
+                        </select>
+                        <label class="IEStrike stats-label" for="p1_gender">Gender:</label>
+                        <select id="p1_gender" name="p1_gender">
+                            <option th:each="gd : ${genders}" th:value="${gd}" th:text="${gd}"></option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-half" th:each="stat, iter : ${stats}" th:if="${iter.index < 4}">
+                            <label class="IEStrike stats-label" th:for="${'p1_' + stat}" th:id="${'p1_' + stat}" th:text="${stat}"></label>
+                            <input type="number" th:id="${'p1_' + stat}" th:name="${'p1_' + stat}" value="100" min="0">
+                        </div>
+                        <div class="col-half" th:each="stat, iter : ${stats}" th:if="${iter.index >= 4}">
+                            <label class="IEStrike stats-label" th:for="${'p1_' + stat}" th:id="${'p1_' + stat}" th:text="${stat}"></label>
+                            <input type="number" th:id="${'p1_' + stat}" th:name="${'p1_' + stat}" value="1" min="0">
+                        </div>
+                    </div>
+
+                    <div class="col-half">
+                        <label class="IEStrike talent-label" for="p1_move">Move:</label>
+                        <select id="p1_move" name="p1_move">
+                            <option th:each="m : ${moves}" th:value="${m}" th:text="${m}"></option>
+                        </select>
+                        <label style="width: 10%" class="IEStrike stats-label" th:for="${'p1_move_lvl'}" th:text="${'Level'}"></label>
+                        <input style="width: 10%" type="number" th:id="${'p1_move_lvl'}" th:name="${'p1_move_lvl'}" th:value="6" min="1" max="6">
+                    </div>
+
+                    <div class="col-half" th:each="i : ${#numbers.sequence(1,4)}">
+                        <label class="IEStrike talent-label" th:for="${'p1_talent' + i}" th:text="${'Talent ' + i + ':'}"></label>
+                        <select th:id="${'p1_talent' + i}" th:name="${'p1_talent' + i}">
+                            <option th:each="t : ${talents}" th:value="${t}" th:text="${t}">Talent</option>
+                        </select>
+                    </div>
+
+                    <div class="col-half">
+                        <label class="IEStrike stats-label" for="p1_spirit">Spirit:</label>
+                        <select id="p1_spirit" name="p1_spirit">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+
+                        <label style="width: 20%" class="IEStrike stats-label" th:for="${'p1_spirit_lvl'}" th:text="${'Level'}"></label>
+                        <input class="IEStrike" type="number" th:id="${'p1_spirit_lvl'}" th:name="${'p1_spirit_lvl'}" th:value="6" min="1" max="6">
+
+                        <label style="width: 15%" class="IEStrike" for="p1_fsp">FSP:</label>
+                        <input class="talent-label" type="number" id="p1_fsp" name="p1_fsp" min="0">
+
+                        <input type="checkbox" id="p1_armored" name="p1_armored" value="true" class="form-check-input">
+                        <label style="width: 30%" class="IEStrike" for="p1_armored">Armored</label>
+                    </div>
+
+                    <div class="col-half">
+                        <label class="IEStrike talent-label" for="p1_support1">Support 1:</label>
+                        <select id="p1_support1" name="p1_support1">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+                    <div class="col-half">
+                        <label class="IEStrike talent-label" for="p1_support2">Support 2:</label>
+                        <select id="p1_support2" name="p1_support2">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+                    <div class="col-half">
+                        <label class="IEStrike talent-label" for="p1_support3">Support 3:</label>
+                        <select id="p1_support3" name="p1_support3">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-half">
+                        <input type="checkbox" id="p1_mixi" name="p1_mixi" value="true" class="form-check-input">
+                        <label class="IEStrike" for="p1_mixi">has Miximax</label>
+                        <input type="checkbox" id="p1_volley" name="p1_volley" value="true" class="form-check-input">
+                        <label class="IEStrike" for="p1_volley">is Volley</label>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Player 2 -->
+            <div class="panel">
+                <h2 class="IEBOLD">Player 2</h2>
+                <form>
+                    <div class="col-half">
+                        <label class="IEStrike stats-label" for="p2_element">Element:</label>
+                        <select id="p2_element" name="p2_element">
+                            <option th:each="elem : ${elements}" th:value="${elem}" th:text="${elem}"></option>
+                        </select>
+                        <label class="IEStrike stats-label" for="p2_gender">Gender:</label>
+                        <select id="p2_gender" name="p2_gender">
+                            <option th:each="gd : ${genders}" th:value="${gd}" th:text="${gd}"></option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-half" th:each="stat, iter : ${stats}" th:if="${iter.index < 4}">
+                            <label class="IEStrike stats-label" th:for="${'p2_' + stat}" th:id="${'p2_' + stat}" th:text="${stat}"></label>
+                            <input class="IEStrike" type="number" th:id="${'p2_' + stat}" th:name="${'p2_' + stat}" value="100" min="0">
+                        </div>
+                        <div class="col-half" th:each="stat, iter : ${stats}" th:if="${iter.index >= 4}">
+                            <label class="IEStrike stats-label" th:for="${'p2_' + stat}" th:id="${'p2_' + stat}" th:text="${stat}"></label>
+                            <input class="IEStrike" type="number" th:id="${'p2_' + stat}" th:name="${'p2_' + stat}" value="1" min="0">
+                        </div>
+                    </div>
+
+                    <div class="col-half" >
+                        <label class="IEStrike talent-label" for="p2_move">Move:</label>
+                        <select id="p2_move" name="p2_move">
+                            <option th:each="m : ${moves}" th:value="${m}" th:text="${m}"></option>
+                        </select>
+                        <label style="width: 10%" class="IEStrike stats-label" th:for="${'p2_move_lvl'}" th:text="${'Level'}"></label>
+                        <input class="IEStrike" style="width: 10%" type="number" th:id="${'p2_move_lvl'}" th:name="${'p2_move_lvl'}" th:value="6" min="1" max="6">
+                    </div>
+
+                    <div class="col-half" th:each="i : ${#numbers.sequence(1,4)}">
+                        <label class="IEStrike talent-label" th:for="${'p2_talent' + i}" th:text="${'Talent ' + i + ':'}"></label>
+                        <select th:id="${'p2_talent' + i}" th:name="${'p2_talent' + i}">
+                            <option th:each="t : ${talents}" th:value="${t}" th:text="${t}">Talent</option>
+                        </select>
+                    </div>
+
+                    <div class="col-half">
+                        <label class="IEStrike stats-label" for="p2_spirit">Spirit:</label>
+                        <select id="p2_spirit" name="p2_spirit">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+
+                        <label style="width: 20%" class="IEStrike stats-label" th:for="${'p2_spirit_lvl'}" th:text="${'Level'}"></label>
+                        <input class="IEStrike" type="number" th:id="${'p2_spirit_lvl'}" th:name="${'p2_spirit_lvl'}" th:value="6" min="1" max="6">
+
+                        <label style="width: 15%" class="IEStrike" for="p2_fsp">FSP:</label>
+                        <input class="talent-label" type="number" id="p2_fsp" name="p2_fsp" min="0">
+
+                        <input type="checkbox" id="p2_armored" name="p2_armored" value="true" class="form-check-input">
+                        <label style="width: 30%" class="IEStrike" for="p2_armored">Armored</label>
+                    </div>
+
+                    <div class="col-half">
+                        <label class="IEStrike talent-label" for="p2_support1">Support 1:</label>
+                        <select id="p2_support1" name="p2_support1">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+                    <div class="col-half">
+                        <label class="IEStrike talent-label" for="p2_support2">Support 2:</label>
+                        <select id="p2_support2" name="p2_support2">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+                    <div class="col-half">
+                        <label class="IEStrike talent-label" for="p2_support3">Support 3:</label>
+                        <select id="p2_support3" name="p2_support3">
+                            <option th:each="s : ${spirits}" th:value="${s}" th:text="${s}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-half">
+                        <input type="checkbox" id="p2_mixi" name="p2_mixi" value="true" class="form-check-input">
+                        <label class="IEStrike" for="p2_mixi">has Miximax</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+</html>
+<script>
+    function calculate() {
+        const payload = {};
+
+        // Collect all input, select, and textarea values
+        const elements = document.querySelectorAll('input, select, textarea');
+        elements.forEach(el => {
+            if (!el.name) return;
+            if (el.type === 'checkbox') {
+                payload[el.name] = el.checked;
+            } else {
+                payload[el.name] = el.value;
+            }
+        });
+
+        fetch('/calculator/cs/c', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Calculation result:', data);
+                const [rv1, rv2, bv1, bv2, rmv1, rmv2, tv1, tv2, rvformula1, rvformula2, bvformula1, bvformula2, rmvformula1, rmvformula2, tvformula1, tvformula2] = data.split(" /// ");
+                document.getElementById("p1realvaluec").textContent = "Real Value: " + rvformula1 + " =";
+                document.getElementById("p2realvaluec").textContent = "= " + rvformula2 + ": Real Value";
+                document.getElementById("p1realvalue").textContent = rv1;
+                document.getElementById("p2realvalue").textContent = rv2;
+
+                document.getElementById("p1basevaluec").textContent = "Base Value: " + bvformula1 + " =";
+                document.getElementById("p2basevaluec").textContent = "= " + bvformula2 + ": Base Value";
+                document.getElementById("p1basevalue").textContent = bv1;
+                document.getElementById("p2basevalue").textContent = bv2;
+
+                document.getElementById("p1realmovevaluec").textContent = "Real Move Value: " + rmvformula1 + " =";
+                document.getElementById("p2realmovevaluec").textContent = "= " + rmvformula2 + ": Real Move Value";
+                document.getElementById("p1realmovevalue").textContent = rmv1;
+                document.getElementById("p2realmovevalue").textContent = rmv2;
+
+                document.getElementById("p1totalvaluec").textContent = "Total Value: " + tvformula1 + " =";
+                document.getElementById("p2totalvaluec").textContent = "= " + tvformula2 + ": Total Value";
+                document.getElementById("p1totalvalue").textContent = tv1;
+                document.getElementById("p2totalvalue").textContent = tv2;
+            })
+            .catch(error => {
+                console.error('Error during calculation:', error);
+            });
+    }
+</script>
+<script>
+    dualType();
+    document.getElementById("duelType").addEventListener("change", function () {
+        dualType();
+    });
+    function dualType() {
+        const payload = {};
+
+        // Collect all input, select, and textarea values
+        const element = document.getElementById('duelType');
+        payload[element.name] = element.value;
+
+
+        fetch('/calculator/cs/dualtype', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                const p1MoveSelect = document.getElementById("p1_move");
+                p1MoveSelect.innerHTML = "";
+                data.p1Move.forEach(move => {
+                    const option = document.createElement("option");
+                    option.value = move;
+                    option.textContent = move;
+                    p1MoveSelect.appendChild(option);
+                });
+
+                const p2MoveSelect = document.getElementById("p2_move");
+                p2MoveSelect.innerHTML = "";
+                data.p2Move.forEach(move => {
+                    const option = document.createElement("option");
+                    option.value = move;
+                    option.textContent = move;
+                    p2MoveSelect.appendChild(option);
+                });
+
+                const p1Stat = document.getElementById("p1_K/D/B/C");
+                const p2Stat = document.getElementById("p2_K/D/B/C");
+                p1Stat.textContent = data.p1Stat;
+                p2Stat.textContent = data.p2Stat;
+            })
+            .catch(error => {
+                console.error('Error during calculation:', error);
+            });
+    }
+</script>
+<script>
+    document.getElementById("p1_move").addEventListener("change", function () {
+        p1_moveChange();
+    });
+    function p1_moveChange() {
+        const payload = {};
+
+        // Collect all input, select, and textarea values
+        const element = document.getElementById('p1_move');
+        payload[element.name] = element.value;
+
+
+        fetch('/calculator/cs/move1', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                const lvl = document.getElementById("p1_move_lvl");
+                lvl.value = data.level;
+                lvl.max = data.level;
+            })
+            .catch(error => {
+                console.error('Error during calculation:', error);
+            });
+    }
+    document.getElementById("p2_move").addEventListener("change", function () {
+        p2_moveChange();
+    });
+    function p2_moveChange() {
+        const payload = {};
+
+        // Collect all input, select, and textarea values
+        const element = document.getElementById('p2_move');
+        payload[element.name] = element.value;
+
+
+        fetch('/calculator/cs/move2', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                const lvl = document.getElementById("p2_move_lvl");
+                lvl.value = data.level;
+                lvl.max = data.level;
+            })
+            .catch(error => {
+                console.error('Error during calculation:', error);
+            });
+    }
+</script>
+<script>
+    document.getElementById("p1_spirit").addEventListener("change", function () {
+        p1_spiritChange();
+    });
+    document.getElementById("p1_spirit_lvl").addEventListener("change", function () {
+        p1_spiritChange();
+    });
+    function p1_spiritChange() {
+        const payload = {};
+
+        const element = document.getElementById('p1_spirit');
+        const element2 = document.getElementById('p1_spirit_lvl');
+        const element3 = document.getElementById('duelType');
+        payload[element.name] = element.value;
+        payload[element2.name] = element2.value;
+        payload[element3.name] = element3.value;
+
+
+        fetch('/calculator/cs/spirit1', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                const p1Fsp = document.getElementById("p1_fsp");
+                p1Fsp.value = data.fsp;
+                p1Fsp.max = data.fsp;
+
+                const support1 = document.getElementById("p1_support1");
+                support1.value = " ";
+                support1.disabled = data.hasSpirit;
+
+                const armor = document.getElementById("p1_armored");
+                if (data.canUseMove === false) {
+                    armor.checked = true;
+                    armor.disabled = true;
+                } else {
+                    armor.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error during calculation:', error);
+            });
+    }
+    document.getElementById("p2_spirit").addEventListener("change", function () {
+        p2_spiritChange();
+    });
+    document.getElementById("p2_spirit_lvl").addEventListener("change", function () {
+        p2_spiritChange();
+    });
+    function p2_spiritChange() {
+        const payload = {};
+
+        const element = document.getElementById('p2_spirit');
+        const element2 = document.getElementById('p2_spirit_lvl');
+        const element3 = document.getElementById('duelType');
+        payload[element.name] = element.value;
+        payload[element2.name] = element2.value;
+        payload[element3.name] = element3.value;
+
+
+        fetch('/calculator/cs/spirit2', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                const p2Fsp = document.getElementById("p2_fsp");
+                p2Fsp.value = data.fsp;
+                p2Fsp.max = data.fsp;
+
+                const support1 = document.getElementById("p2_support1");
+                support1.value = " ";
+                support1.disabled = data.hasSpirit;
+
+                const armor = document.getElementById("p2_armored");
+                if (data.canUseMove === false) {
+                    armor.checked = true;
+                    armor.disabled = true;
+                } else {
+                    armor.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error during calculation:', error);
+            });
+    }
+</script>

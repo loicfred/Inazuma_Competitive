@@ -1,0 +1,19 @@
+Fire
+GK
+Boy
+A
+B
+C
+S
+A
+A
+GP: 147
+TP: 142
+M: Shoot Break
+M: Gravity Point
+M: Entropic Arrows
+M: -
+S: Critical!
+S: -
+SP: White King
+180
