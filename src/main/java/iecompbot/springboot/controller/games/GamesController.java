@@ -54,7 +54,6 @@ public class GamesController {
         return "games/player";
     }
 
-
     @GetMapping("/calculator/galaxy")
     public String showDuelPanelGLX(Model model) {
         List<String> S = new ArrayList<>(List.of(" "));
