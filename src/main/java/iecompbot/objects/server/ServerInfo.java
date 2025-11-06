@@ -40,6 +40,7 @@ import static iecompbot.img.ImgUtilities.getHexValue;
 import static iecompbot.interaction.Automation.hasPermissionInChannel;
 import static iecompbot.interaction.GuildReady.RefreshAllLeaderboards;
 import static iecompbot.interaction.GuildReady.RefreshAllPrivateCMDs;
+import static iecompbot.objects.Retrieval.getUserByID;
 import static iecompbot.springboot.config.AppConfig.cacheService;
 import static my.utilities.util.Utilities.*;
 import static my.utilities.var.Constants.ProgramZoneId;
@@ -136,6 +137,10 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     }
     public String getOwnerID() {
         return OwnerID;
+    }
+    private transient User owner;
+    public User getOwner() {
+        return owner == null ? owner = getUserByID(getOwnerID()) : owner;
     }
     public String getWebsiteURL() {
         return WebsiteURL;

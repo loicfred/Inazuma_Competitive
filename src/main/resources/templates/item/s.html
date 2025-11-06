@@ -23,32 +23,6 @@
       text-decoration: none;
     }
 
-    .container {
-      display: flex;
-      flex-direction: row;
-      position: relative;
-    }
-    #main-panel {
-      flex: 3;
-      border: 3px solid black;
-      margin-left: 25px;
-      margin-right: 25px;
-      margin-top: 60px;
-      border-top-left-radius: 30px;
-      border-top-right-radius: 30px;
-      flex-wrap: wrap;
-    }
-    #icon {
-      width: 140px;
-      height: 140px;
-      left: 70px;
-      top: 5px;
-      border-radius: 50%;
-      border: 3px solid black;
-      position: absolute;
-      background-color: transparent;
-      z-index: 1;
-    }
     #cardtop {
       margin-left: 200px;
       margin-top: 5px;
@@ -117,20 +91,6 @@
     }
 
 
-
-    .tab-panel::-webkit-scrollbar {
-      width: 4px;
-      background: rgba(0, 0, 0, 0);
-    }
-    .tab-panel::-webkit-scrollbar-thumb {
-      background: rgba(128, 128, 128, 0.5);
-      border-radius: 10px;
-      transition: transform 0.3s ease, background 0.3s ease;
-    }
-    .tab-panel::-webkit-scrollbar-thumb:hover {
-      background: rgba(128, 128, 128, 0.8);
-    }
-
     .join {
       border: 1px solid black;
       margin: 0 25px 0 auto;
@@ -169,20 +129,9 @@
     }
 
     @media screen and (max-width: 768px) {
-      #main-panel {
-        margin-left: 5px;
-        margin-right: 5px;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-      }
       #cardtop {
         margin-left: 10px;
         margin-top: -20px;
-      }
-      #icon {
-        width: 100px;
-        height: 100px;
-        left: 20px;
       }
       #nameBox {
         margin-top: 60px;
@@ -242,15 +191,15 @@
     <div id="cardtop">
         <div id="nameBox">
             <div style="display: flex; align-items: center;">
-                <span class="name emoji" th:text="${server.Nationality.getCodepoints()}"></span> <span class="IEBOLD name" th:text="${server.Name}"></span>
+                <span class="name emoji" th:text="${server.getNationality().getCodepoints()}"></span> <span class="IEBOLD name" th:text="${server.Name}"></span>
             </div>
             <div style="display: flex; margin-top: -2px; align-items: center;">
-                <a th:href="'/p/' + ${server.Owner.getId()}" class="clanbutton">
-                    <img th:src="${server.Owner.getEffectiveAvatarUrl()}" style="width: 22px; height: 22px; padding: 2px; border-radius: 25%"><h5 class="IEStrike clanlink" th:text="'👑 ' + ${server.Owner.getEffectiveName()}"></h5>
+                <a th:href="'/p/' + ${server.getOwnerID()}" class="clanbutton">
+                    <img th:src="${server.getOwner().getEffectiveAvatarUrl()}" style="width: 22px; height: 22px; padding: 2px; border-radius: 25%"><h5 class="IEStrike clanlink" th:text="'👑 ' + ${server.getOwner().getEffectiveName()}"></h5>
                 </a>
             </div>
         </div>
-        <a style="color: white; text-decoration: none;" class="join" th:href="${server.PermanentInviteLink}" target="_blank">
+        <a style="color: white; text-decoration: none;" class="join" th:href="${server.getPermanentInviteLink()}" target="_blank">
             <h4 class="IEBold">Join Server</h4>
         </a>
     </div>
@@ -262,7 +211,7 @@
     <button class="tab-button" th:onclick="|showTab(1)|">Tournaments</button>
     <button class="tab-button" th:onclick="|showTab(2)|">Matches</button>
     <button class="tab-button" th:onclick="|showTab(3)|">Statistics</button>
-    <button class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
+    <button th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == server.getOwnerID()}" class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
 </div>
 
 <div layout:fragment="profile_media">
@@ -278,41 +227,41 @@
     <div id="tab1-top">
         <div style="display: flex; flex-wrap: wrap; column-gap: 40px;">
             <div>
-                <h3 class="IEBOLD">Information</h3>
-                <h5 class="IEStrike" th:text="'Name: ' + ${server.Name}"></h5>
-                <h5 class="IEStrike" th:text="'Member Count: ' + ${server.MemberCount}"></h5>
-                <h5 class="IEStrike" th:text="'Creation Date: ' + ${#dates.format(server.CreatedAtTimeEpochSecond * 1000, 'dd/MM/yyyy')}"></h5>
-                <h5 class="IEStrike" th:text="'Server Owner: ' + ${server.Owner.getEffectiveName() + ' (@' + server.Owner.getName() + ')'}"></h5>
+                <h5 class="IEBOLD">Information</h5>
+                <p class="IEStrike mb-0" th:text="'Name: ' + ${server.Name}"></p>
+                <p class="IEStrike mb-0" th:text="'Member Count: ' + ${server.MemberCount}"></p>
+                <p class="IEStrike mb-0" th:text="'Creation Date: ' + ${#dates.format(server.getGuild().getTimeCreated().toEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                <p class="IEStrike mb-0" th:text="'Server Owner: ' + ${server.getOwner().getEffectiveName() + ' (@' + server.getOwner().getName() + ')'}"></p>
             </div>
             <div>
-                <h3 class="IEBOLD">Match Details</h3>
-                <h5 class="IEStrike" th:text="'Total Matches: ' + ${server.MatchesCount}"></h5>
-                <h5 class="IEStrike" th:text="'Activity: ' + ${server.getAct().getAsInt('Match Activity')}"></h5>
-                <h5 class="IEStrike" th:text="'Average Activity: ' + ${utils.format(server.getAct().getAsDouble('Average Match Activity'))}"></h5>
+                <h5 class="IEBOLD">Match Details</h5>
+                <p class="IEStrike mb-0" th:text="'Total Matches: ' + ${server.getMatchesCount()}"></p>
+                <p class="IEStrike mb-0" th:text="'Activity: ' + ${act.getAsInt('Match Activity')}"></p>
+                <p class="IEStrike mb-0" th:text="'Average Activity: ' + ${utils.format(act.getAsDouble('Average Match Activity'))}"></p>
             </div>
             <div>
-                <h3 class="IEBOLD">Tournament Details</h3>
-                <h5 class="IEStrike" th:text="'Total Tournaments: ' + ${server.TournamentCount}"></h5>
-                <h5 class="IEStrike" th:text="'Tournament Activity: ' + ${server.getAct().getAsInt('Tournament Activity')}"></h5>
-                <h5 class="IEStrike" th:text="'Average Tournament Activity: ' + ${utils.format(server.getAct().getAsDouble('Average Tournament Activity'))}"></h5>
+                <h5 class="IEBOLD">Tournament Details</h5>
+                <p class="IEStrike mb-0" th:text="'Total Tournaments: ' + ${server.getTournamentCount()}"></p>
+                <p class="IEStrike mb-0" th:text="'Tournament Activity: ' + ${act.getAsInt('Tournament Activity')}"></p>
+                <p class="IEStrike mb-0" th:text="'Average Tournament Activity: ' + ${utils.format(act.getAsDouble('Average Tournament Activity'))}"></p>
             </div>
         </div>
         <div id="tab1-top-history">
-            <h3 class="IEBOLD">🪶 Brief History:</h3>
-            <h5 class="IEStrike" th:utext="${server.History}"></h5>
+            <h5 class="IEBOLD">🪶 Brief History:</h5>
+            <p class="IEStrike mb-0" th:utext="${server.History}"></p>
         </div>
     </div>
 
     <div class="tab1-tournament-section">
         <h3 class="IEBOLD">🏆 Active Tournaments</h3>
-        <a class="tab1-tournament-section-box" th:each="CT : ${server.getActiveTournaments()}" th:href="${CT.FullChallongeURL}" target="_blank">
-            <img th:src="@{/img/games/{gameCode}.png(gameCode=${CT.GameCode})}" style="width: 7.5%; margin-right: 5px;">
+        <a class="tab1-tournament-section-box" th:each="CT : ${server.getActiveChallonges()}" th:href="${CT.FullChallongeURL}" target="_blank">
+            <img th:src="@{/img/games/{gameCode}.png(gameCode=${CT.getGame().getCode()})}" style="width: 7.5%; margin-right: 5px;">
             <div style="display: block">
-                <h3 class="IEBOLD" th:text="${CT.Name}"></h3>
-                <h5 class="IEStrike" th:text="'Participants: ' + ${CT.ParticipantCount} + ' | ' + ${CT.Type.toUpperCase()} + ' | ' + ${#dates.format(CT.StartAtTimeEpochSecond * 1000, 'dd MMM yyyy HH:mm')}"></h5>
+                <h5 class="IEBOLD" th:text="${CT.getName()}"></h5>
+                <p class="IEStrike mb-0" th:text="'Participants: ' + ${CT.getParticipantCount()} + ' | ' + ${CT.getType().toString().toUpperCase()} + ' | ' + ${#dates.format(CT.getStartedAtTimeEpochSecond() * 1000, 'dd MMM yyyy HH:mm')}"></p>
             </div>
         </a>
-        <h3 class="IEBOLD noItemFound" th:if="${server.getActiveTournaments().isEmpty()}">No tournaments currently.</h3>
+        <h3 class="IEBOLD noItemFound" th:if="${server.getActiveChallonges().isEmpty()}">No tournaments currently.</h3>
     </div>
 </div>
 

@@ -9,7 +9,6 @@ import iecompbot.objects.server.ServerInfo;
 import iecompbot.objects.server.tournament.BaseTournament;
 import iecompbot.objects.server.tournament.challonge.server.SChallonge_Tournament;
 import iecompbot.springboot.Utils;
-import iecompbot.springboot.projection.P_ServerInfo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -29,6 +28,7 @@ import java.util.List;
 
 import static iecompbot.Main.MainDirectory;
 import static iecompbot.objects.BotManagers.BOTSTAFF;
+import static iecompbot.springboot.data.DatabaseObject.doQuery;
 import static iecompbot.springboot.data.DatabaseObject.getAllWhere;
 
 @Controller
@@ -123,7 +123,9 @@ public class HomeController {
     @GetMapping("/s/{id}")
     public String servers(@PathVariable long id, Model model) throws Exception {
         ServerInfo S = ServerInfo.get(id);
-        model.addAttribute("server", new P_ServerInfo(S));
+        S.RefreshGuildInformation();
+        model.addAttribute("server", S);
+        model.addAttribute("act", doQuery("CALL DisplayServerActivity(?,?,?,?)", id, null, 30, 3).orElse(null));
         model.addAttribute("utils", new Utils());
         return "item/s";
     }

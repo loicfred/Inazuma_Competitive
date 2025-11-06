@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.List;
 
 import static iecompbot.Main.DiscordAccount;
-import static iecompbot.springboot.data.DatabaseObject.doQuery;
 
 public class P_ServerInfo {
 
@@ -137,7 +136,4 @@ public class P_ServerInfo {
         this.MatchesCount = serverInfo.getMatchesCount();
     }
 
-    public DatabaseObject.Row getAct() {
-        return Act == null ? Act = doQuery("CALL DisplayServerActivity(?,?,?,?)", ID, null, 30, 3).orElse(null) : Act;
-    }
 }
