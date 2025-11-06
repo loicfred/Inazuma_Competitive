@@ -36,14 +36,14 @@ import static iecompbot.springboot.data.DatabaseObject.getAllWhere;
 public class HomeController {
 
     @GetMapping("/")
-    public String index(Model model, @AuthenticationPrincipal OAuth2User principal) throws Exception {
+    public String index(Model model, @AuthenticationPrincipal OAuth2User principal) {
         if (principal != null) model.addAttribute("discordUser", principal.getAttributes());
         model.addAttribute("utils", new Utils());
         model.addAttribute("tournaments", SChallonge_Tournament.getActiveChallonges(false).stream().filter(C -> C.getParticipantCount() >= 8 && C.getInscriptionChannelInviteLink() != null).toList());
         return "index";
     }
     @GetMapping("/home")
-    public String home(Model model, @AuthenticationPrincipal OAuth2User principal) throws Exception {
+    public String home(Model model, @AuthenticationPrincipal OAuth2User principal) {
         return index(model, principal);
     }
     @GetMapping("/help")
@@ -55,18 +55,18 @@ public class HomeController {
         return "leaderboard";
     }
     @GetMapping("/error")
-    public String error() throws Exception {
+    public String error() {
         return "error";
     }
     @GetMapping("/about")
-    public String about(Model model) throws Exception {
+    public String about(Model model) {
         model.addAttribute("staff", BOTSTAFF);
         model.addAttribute("utils", new Retrieval());
         return "about";
     }
 
     @GetMapping("/events")
-    public String events(Model model) throws Exception {
+    public String events(Model model) {
         model.addAttribute("wc", Event.getWCs());
         model.addAttribute("cc", Event.getCCs());
         model.addAttribute("eu", Event.getEUs());
@@ -75,14 +75,14 @@ public class HomeController {
         return "list/events";
     }
     @GetMapping("/clans")
-    public String clans(Model model) throws Exception {
+    public String clans(Model model) {
         model.addAttribute("openclans", Clan.listOpen());
         model.addAttribute("pausedclans", Clan.listPaused());
         model.addAttribute("utils", new Utils());
         return "list/clans";
     }
     @GetMapping("/tournaments")
-    public String tournaments(Model model) throws Exception {
+    public String tournaments(Model model) {
         List<SChallonge_Tournament> Ts1 = SChallonge_Tournament.getActiveChallonges(true);
         List<SChallonge_Tournament> Ts2 = SChallonge_Tournament.list(false);
         model.addAttribute("opentournaments", Ts1.stream().sorted(Comparator.comparingLong(BaseTournament::getStartAtTimeEpochSecond)).filter(SChallonge_Tournament::isPending).toList());
@@ -93,7 +93,7 @@ public class HomeController {
         return "list/tournaments";
     }
     @GetMapping("/servers")
-    public String servers(Model model) throws Exception {
+    public String servers(Model model) {
         List<ServerInfo> I = ServerInfo.list().stream().filter(S -> S.getPermanentInviteLink() != null && S.getGuild() != null).sorted(Comparator.comparingInt((ServerInfo S) -> S.TournamentCount).reversed()).toList();
         model.addAttribute("servers", I);
         model.addAttribute("utils", new Utils());
@@ -101,7 +101,7 @@ public class HomeController {
     }
 
     @GetMapping("/p/{id}")
-    public String profile(@PathVariable String id, Model model) throws Exception {
+    public String profile(@PathVariable String id, Model model) {
         Profile P = Profile.get(id);
         P.RefreshProfileInformation(null);
         model.addAttribute("utils", new Utils());
@@ -121,16 +121,18 @@ public class HomeController {
         return "item/c";
     }
     @GetMapping("/s/{id}")
-    public String servers(@PathVariable long id, Model model) throws Exception {
+    public String servers(@PathVariable long id, Model model) {
         ServerInfo S = ServerInfo.get(id);
         S.RefreshGuildInformation();
-        model.addAttribute("server", S);
-        model.addAttribute("act", doQuery("CALL DisplayServerActivity(?,?,?,?)", id, null, 30, 3).orElse(null));
         model.addAttribute("utils", new Utils());
+        model.addAttribute("server", S);
+        model.addAttribute("AvatarURL", S.getGuild().getIconUrl());
+        model.addAttribute("ColorTheme", S.DominantColorcode);
+        model.addAttribute("act", doQuery("CALL DisplayServerActivity(?,?,?,?)", id, null, 30, 3).orElse(null));
         return "item/s";
     }
     @GetMapping("/t/{id}")
-    public String tournaments(@PathVariable long id, Model model) throws Exception {
+    public String tournaments(@PathVariable long id, Model model) {
         SChallonge_Tournament T = SChallonge_Tournament.get(id);
         model.addAttribute("tournament", T);
         model.addAttribute("server", ServerInfo.get(T.ServerID));
@@ -150,7 +152,7 @@ public class HomeController {
 
 
     @GetMapping("/search")
-    public String search(Model model, @RequestParam("s") String search) throws Exception {
+    public String search(Model model, @RequestParam("s") String search) {
         List<Event> E = search != null ? getAllWhere(Event.class, """
                         Name LIKE ? OR Description LIKE ? OR ID = ?
                         ORDER BY CASE

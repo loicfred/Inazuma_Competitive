@@ -191,7 +191,7 @@
     <div id="cardtop">
         <div id="nameBox">
             <div style="display: flex; align-items: center;">
-                <span class="name emoji" th:text="${server.getNationality().getCodepoints()}"></span> <span class="IEBOLD name" th:text="${server.Name}"></span>
+                <p class="mb-0"><span class="name emoji" th:text="${server.getNationality().getCodepoints()}"></span> <span class="IEBOLD name" th:text="${server.Name}"></span></p>
             </div>
             <div style="display: flex; margin-top: -2px; align-items: center;">
                 <a th:href="'/p/' + ${server.getOwnerID()}" class="clanbutton">
@@ -200,10 +200,10 @@
             </div>
         </div>
         <a style="color: white; text-decoration: none;" class="join" th:href="${server.getPermanentInviteLink()}" target="_blank">
-            <h4 class="IEBold">Join Server</h4>
+            <p class="IEBold">Join Server</p>
         </a>
     </div>
-    <h5 class="IEStrike" id="signature" th:utext="${server.Description}"></h5>
+    <p class="IEStrike" id="signature" th:utext="${server.Description}"></p>
 </div>
 
 <div layout:fragment="profile_tabs">
