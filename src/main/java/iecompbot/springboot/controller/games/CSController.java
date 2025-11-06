@@ -5,11 +5,9 @@ import ie.enums.Element;
 import ie.enums.Gender;
 import ie.games.ds.cs.*;
 import ie.games.ds.object.slotmove.summon.Spirit;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,27 +18,6 @@ import static my.utilities.json.JSONItem.GSON;
 @RestController
 @CrossOrigin(origins = "*")
 public class CSController {
-
-    @GetMapping("/calculator/cs")
-    public String showDuelPanelCS(Model model) {
-        List<String> S = new ArrayList<>(List.of(" "));
-        S.addAll(InazumaCSDB.retrieveItems("Spirit").select("Name").get().stream().map(TR -> TR.getAsString("Name")).toList());
-
-        List<String> S2 = new ArrayList<>(List.of(" "));
-        S2.addAll(InazumaCSDB.retrieveItems("Skill").select("Name").where("Action LIKE '%Add%' OR Action LIKE '%Multiplier%'").get().stream().map(TR -> TR.getAsString("Name")).toList());
-        S2.sort(Comparator.comparing((String s) -> s.toLowerCase().replace(" ", "")));
-
-        model.addAttribute("talents", S2);
-        model.addAttribute("moves", List.of(""));
-        model.addAttribute("spirits", S);
-        model.addAttribute("duelTypes", List.of(DuelType.SHOT_CATCH, DuelType.DRIBBLE_BLOCK, DuelType.SHOT_SHOTBLOCK)); // or fetch from service
-        model.addAttribute("stats", List.of("MaxGP", "GP", "MaxTP", "TP", "K/D/B/C", "Technique"));
-
-        model.addAttribute("elements", Element.values());
-        model.addAttribute("genders", Gender.values());
-
-        return "games/calculatorcs";
-    }
 
 
     @PutMapping("/cs/players")
