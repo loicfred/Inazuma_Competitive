@@ -1,4 +1,7 @@
 # Project exclude paths
 /target/
+/.idea/artifacts/
+/.idea/httpRequests/
+/.idea/inspectionProfiles/
 /logs/
 defaults.json
