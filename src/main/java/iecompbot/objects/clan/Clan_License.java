@@ -6,15 +6,15 @@ import iecompbot.springboot.data.DatabaseObject;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Clan_License extends DatabaseObject<Clan_License> {
-    public long ClanID;
+    public long ID;
     public long CardBackground = 40001;
     public long CardForeground = 50001;
     public long CardRay = 60001;
     public long CardStrike = 70001;
     public long Sponsor = 871133534184681523L;
 
-    public long getClanID() {
-        return ClanID;
+    public long getID() {
+        return ID;
     }
     public long getSponsor() {
         return Sponsor;
@@ -52,11 +52,11 @@ public class Clan_License extends DatabaseObject<Clan_License> {
 
     private Clan_License() {}
     public Clan_License(long clanID){
-        this.ClanID = clanID;
+        this.ID = clanID;
         Write();
     }
     public static Clan_License get(long id) {
-        return getWhere(Clan_License.class, "ClanID = ?", id).orElseGet(() -> new Clan_License(id));
+        return getWhere(Clan_License.class, "ID = ?", id).orElseGet(() -> new Clan_License(id));
     }
 
 }
