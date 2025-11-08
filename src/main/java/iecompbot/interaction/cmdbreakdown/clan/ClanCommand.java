@@ -19,7 +19,7 @@ public class ClanCommand extends CommandBreakdown {
         super("");
         this.clan = clan;
         if (clan != null) {
-            this.ClanID = clan.getId();
+            this.ClanID = clan.getID();
         }
     }
 

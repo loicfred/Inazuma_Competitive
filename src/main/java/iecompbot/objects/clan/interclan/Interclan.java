@@ -46,8 +46,8 @@ public class Interclan extends DatabaseObject<Interclan> {
     public Interclan() {}
     public Interclan(long ID, Clan hoster, Clan joiner, String matchingRule, int amountRule) {
         this.ID = ID;
-        HosterID = hoster.getId();
-        JoinerID = joiner.getId();
+        HosterID = hoster.getID();
+        JoinerID = joiner.getID();
         State = TournamentState.UNDERWAY.toString();
         MatchingRule = matchingRule;
         AmountRule = amountRule;
@@ -118,9 +118,9 @@ public class Interclan extends DatabaseObject<Interclan> {
     }
 
     public Clan getOpposingClanOf(Clan clan) {
-        if (clan.getId() == getHoster().getId()) {
+        if (clan.getID() == getHoster().getID()) {
             return getJoiner();
-        } else if (clan.getId() == getJoiner().getId()) {
+        } else if (clan.getID() == getJoiner().getID()) {
             return getHoster();
         }
         return null;
@@ -255,16 +255,16 @@ public class Interclan extends DatabaseObject<Interclan> {
     }
 
     public static List<Interclan> get(Clan C) {
-        return getAllWhere(Interclan.class, "HosterID = ? OR JoinerID = ?", C.getId(), C.getId());
+        return getAllWhere(Interclan.class, "HosterID = ? OR JoinerID = ?", C.getID(), C.getID());
     }
     public static List<Interclan> listOnGoing() {
         return getAllWhere(Interclan.class, "State = ?", TournamentState.UNDERWAY.toString());
     }
     public static List<Interclan> getOngoing(Clan C) {
-        return getAllWhere(Interclan.class, "State = ? AND (HosterID = ? OR JoinerID = ?)", TournamentState.UNDERWAY.toString(), C.getId(), C.getId());
+        return getAllWhere(Interclan.class, "State = ? AND (HosterID = ? OR JoinerID = ?)", TournamentState.UNDERWAY.toString(), C.getID(), C.getID());
     }
     public static Interclan getOngoing(Clan C1, Clan C2) {
-        return getWhere(Interclan.class,"State = ? AND ((HosterID = ? AND JoinerID = ?) OR (JoinerID = ? AND HosterID = ?))", TournamentState.UNDERWAY.toString(), C1.getId(), C2.getId(), C1.getId(), C2.getId()).orElse(null);
+        return getWhere(Interclan.class,"State = ? AND ((HosterID = ? AND JoinerID = ?) OR (JoinerID = ? AND HosterID = ?))", TournamentState.UNDERWAY.toString(), C1.getID(), C2.getID(), C1.getID(), C2.getID()).orElse(null);
     }
     public static Interclan get(long Id) {
         return getById(Interclan.class, Id).orElse(null);

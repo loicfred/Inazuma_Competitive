@@ -85,7 +85,7 @@
         <div th:if="${servers.size() > 0}" class="serverlist">
             <div th:each="each : ${servers}" class="server-box" th:style="'background: linear-gradient(to right, rgba(40, 5, 5, 255) 1%, rgba(0, 0, 0, 0) 100%), url(' + '\'' + ${each.IconUrl} + '\'' + '); background-size: 300px 300px; background-position-x: 125px; background-repeat: no-repeat; border: 5px solid ' + ${each.DominantColorcode} + ';'">
                 <div th:style="'display: flex; flex-direction: column; height: 100%; padding: 20px; background: linear-gradient(to top, ' + ${utils.darkenColor(each.DominantColorcode, 0.25)} + 'FF 1%, #00000044 100%); border-radius: 6px;'">
-                    <a th:href="'/s/' + ${each.getId()}">
+                    <a th:href="'/s/' + ${each.getID()}">
                         <div class="IEStrike fs-4"><span class="emoji" th:text="${each.getNationality().getCodepoints()}"></span> <span class="IEBOLD" th:text="${each.getGuild().getName().length() > 32 ? each.getGuild().getName().substring(0,32) + '...' : each.getGuild().getName()}"></span></div>
                         <div style="display: flex; align-items: center; margin-bottom: 3px;">
                             <p class="bubble-btn IEStrike mb-0" th:text="${each.MemberCount}"></p>

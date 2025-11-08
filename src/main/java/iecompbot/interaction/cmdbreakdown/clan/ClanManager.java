@@ -41,19 +41,19 @@ public class ClanManager extends ClanCommand {
     public ClanManager(Clan clan) {
         super("");
         this.clan = clan;
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
     public ClanManager(Clan clan, User me) {
         super("");
         this.clan = clan;
         this.MyID = me.getIdLong();
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
     public ClanManager(SlashCommandInteractionEvent event) {
         super("");
         this.MyID = event.getUser().getIdLong();
         this.clan = Clan.getClanOfUser(this.MyID);
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
 
     public String Command(String cmd) {

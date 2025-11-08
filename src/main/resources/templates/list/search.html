@@ -112,7 +112,7 @@
             <h2 class="IEBOLD section-title" th:text="'Users: ' + ${profiles.size()}"></h2>
             <div class="row g-3">
                 <div class="col-md-6" th:each="each : ${profiles}">
-                    <a th:href="@{'/p/' + ${each.getId()}}" class="card p-3 d-flex flex-row align-items-center">
+                    <a th:href="@{'/p/' + ${each.getID()}}" class="card p-3 d-flex flex-row align-items-center">
                         <img class="search-item-icon me-3" th:src="${each.AvatarURL}">
                         <div>
                             <h5 class="IEBOLD mb-1" th:text="${each.FullName} + ' (@' + ${each.Name} + ')'"></h5>

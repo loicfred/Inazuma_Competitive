@@ -33,9 +33,9 @@ public class UpdateController {
         if (ID != null && Long.parseLong(ID.toString()) == clan.getCaptain().getId() || isClanManager(Long.parseLong(ID.toString()))) {
             clan.UpdateOnly("Name", "Tag", "Description", "Requirements", "History",
                     "WebsiteURL", "DiscordURL", "TwitchURL", "YouTubeURL", "TiktokURL", "InstagramURL");
-            return "redirect:/c/" + clan.getId() + "?success";
+            return "redirect:/c/" + clan.getID() + "?success";
         }
-        return "redirect:/c/" + clan.getId() + "?noperm";
+        return "redirect:/c/" + clan.getID() + "?noperm";
     }
     @PostMapping("/s/update")
     public String updateServer(@AuthenticationPrincipal OAuth2User principal, ServerInfo server) {

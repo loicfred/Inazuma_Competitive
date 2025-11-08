@@ -27,13 +27,13 @@ public class ClanMemberInteractCommand extends ClanCommand {
     public ClanMemberInteractCommand(Clan clan) {
         super("");
         this.clan = clan;
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
     public ClanMemberInteractCommand(SlashCommandInteractionEvent event) {
         super("");
         this.MyID = event.getUser().getIdLong();
         this.clan = Clan.getClanOfUser(this.MyID);
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
 
     public String Command(String cmd) {

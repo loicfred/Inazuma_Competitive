@@ -189,7 +189,7 @@ public class ClanRole extends DatabaseObject<ClanRole> {
         return getAllWhere(ClanRole.class, "ClanID = ?", clanid);
     }
     public static List<ClanRole> of(Clan clan) {
-        return of(clan.getId());
+        return of(clan.getID());
     }
 
 }

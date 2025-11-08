@@ -28,20 +28,20 @@ public class ClanRoleManager extends ClanCommand {
     public ClanRoleManager(Clan clan) {
         super("");
         this.clan = clan;
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
     public ClanRoleManager(Clan clan, User me, ClanRole CR) {
         super("");
         this.clan = clan;
         this.MyID = me.getIdLong();
         this.ClanRoleID = CR.getId();
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
     public ClanRoleManager(SlashCommandInteractionEvent event) {
         super("");
         this.MyID = event.getUser().getIdLong();
         this.clan = Clan.getClanOfUser(this.MyID);
-        if (clan != null) {this.ClanID = clan.getId();}
+        if (clan != null) {this.ClanID = clan.getID();}
     }
 
     public String Command(String cmd) {

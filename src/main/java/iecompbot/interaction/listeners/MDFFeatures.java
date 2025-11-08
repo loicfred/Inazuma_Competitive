@@ -424,8 +424,8 @@ public class MDFFeatures extends ListenerAdapter {
                                 IC.setState(TournamentState.COMPLETE);
                                 IC.Update();
                                 InterclanCommand CMD = new InterclanCommand(event);
-                                CMD.HostClan = C1.getId();
-                                CMD.JoinClan = C2.getId();
+                                CMD.HostClan = C1.getID();
+                                CMD.JoinClan = C2.getID();
                                 InterclanViewer(IC, M);
                                 Button BTN1 = Button.primary(CMD.Command("interclan-add-duel"), "Add Duel");
                                 Button BTN2 = Button.primary(CMD.Command("interclan-set-date"), "Set Date");

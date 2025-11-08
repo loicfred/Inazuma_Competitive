@@ -910,12 +910,12 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
 
         public Role getClanRole(Clan clan, boolean create) {
             if (I.areClanRolesAllowed && clan.isEligibleForRole()) {
-                DatabaseObject.Row TR = getClanRolesTR().stream().filter(tr -> tr.getAsLong("ClanID") == clan.getId()).findAny().orElse(null);
+                DatabaseObject.Row TR = getClanRolesTR().stream().filter(tr -> tr.getAsLong("ClanID") == clan.getID()).findAny().orElse(null);
                 Role R = null;
                 if (TR != null) {
                     try {R = I.getGuild().getRoleById(TR.getAsLong("RoleID"));
                         if (R == null) {
-                            doUpdate("DELETE FROM serverinfo_clanrole WHERE ServerID = ? AND ClanID = ?", ID, clan.getId());
+                            doUpdate("DELETE FROM serverinfo_clanrole WHERE ServerID = ? AND ClanID = ?", ID, clan.getID());
                             TR = null;
                         }
                     } catch (Exception ignored) {}
@@ -925,7 +925,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                     } catch (Exception ignored) {}
                 }
                 if (R == null && create && clan.areMembersInGuild(I.getGuild())) R = createRole(clan.getName(), clan.getEmojiFormatted(), clan.getColor(), clan.hasEmblem() ? Icon.from(clan.getEmblem()) : null);
-                if (TR == null && R != null) doUpdate("INSERT INTO serverinfo_clanrole (ID, ServerID, ClanID, RoleID) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE RoleID = ?", Instant.now().toEpochMilli(), ID, clan.getId(), R.getIdLong(), R.getIdLong());
+                if (TR == null && R != null) doUpdate("INSERT INTO serverinfo_clanrole (ID, ServerID, ClanID, RoleID) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE RoleID = ?", Instant.now().toEpochMilli(), ID, clan.getID(), R.getIdLong(), R.getIdLong());
                 return R;
             }
             return null;

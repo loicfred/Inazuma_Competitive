@@ -1227,7 +1227,7 @@ public class Profile extends DatabaseObject<Profile> {
 
         List<SelectOption> options = new ArrayList<>();
         for (Clan C : getClansOfUser(CMD.ID)) {
-            options.add(SelectOption.of(TL(M,"clan-number"), "pf-manage-number-" + C.getId()).withDescription(TL(M,"edit-clan-number-description", C.getName())).withEmoji(C.getEmoji().retrieve()));
+            options.add(SelectOption.of(TL(M,"clan-number"), "pf-manage-number-" + C.getID()).withDescription(TL(M,"edit-clan-number-description", C.getName())).withEmoji(C.getEmoji().retrieve()));
         }
         options.add(SelectOption.of(TL(M,"Color"), "pf-manage-color").withDescription(TL(M,"edit-colorcode-description")).withEmoji(Emoji.fromUnicode("U+1F3A8")));
         options.add(SelectOption.of(TL(M,"Signature"), "pf-manage-bio").withDescription(TL(M,"edit-signature-description")).withEmoji(Emoji.fromUnicode("U+1F4DD")));

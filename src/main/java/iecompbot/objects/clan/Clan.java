@@ -122,7 +122,7 @@ public class Clan extends DatabaseObject<Clan> {
     public long Sponsor = 871133534184681523L;
 
 
-    public long getId() {
+    public long getID() {
         return ID;
     }
     public String getName() {
@@ -131,8 +131,14 @@ public class Clan extends DatabaseObject<Clan> {
     public String getTag() {
         return Tag;
     }
+    public String getColorCode() {
+        return Colorcode;
+    }
     public Color getColor() {
         return Color.decode(Colorcode);
+    }
+    public String getNationalityName() {
+        return NationalityName;
     }
     public Nationality getNationality() {
         return Nat == null ? Nat = Nationality.get(NationalityName) : Nat;
@@ -153,7 +159,7 @@ public class Clan extends DatabaseObject<Clan> {
         return Requirements;
     }
     public Instant getTimeCreated() {
-        return Instant.ofEpochMilli(getId());
+        return Instant.ofEpochMilli(getID());
     }
     public long getDateDeletedEpochSecond() {
         return DateDeletedEpochSecond;
@@ -220,6 +226,10 @@ public class Clan extends DatabaseObject<Clan> {
     public void setColor(Color color) {
         Colorcode = getHexValue(color);
     }
+    public void setNationalityName(String nationality) {
+        Nat = Nationality.get(nationality);
+        NationalityName = Nat.getName();
+    }
     public void setNationality(Nationality nationality) {
         NationalityName = nationality.getName();
         Nat = nationality;
@@ -276,7 +286,7 @@ public class Clan extends DatabaseObject<Clan> {
         TiktokURL = CutString(tiktokURL, 256);
     }
     public int updateMemberCount() {
-        MemberCount = Count(ClanMember.class, "ClanID = ?", getId());
+        MemberCount = Count(ClanMember.class, "ClanID = ?", getID());
         UpdateOnly("MemberCount");
         return MemberCount;
     }
@@ -342,24 +352,24 @@ public class Clan extends DatabaseObject<Clan> {
         }
 
 
-        ClanRole Captain = new ClanRole(createdClan.getId(), "Clan Captain");
+        ClanRole Captain = new ClanRole(createdClan.getID(), "Clan Captain");
         Captain.setPermission1(ClanPermission.ADMINISTRATOR);
         Captain.setBuiltin();
         Captain.Update();
 
-        ClanRole CoCap = new ClanRole(createdClan.getId(), "Co-Captain");
+        ClanRole CoCap = new ClanRole(createdClan.getID(), "Co-Captain");
         CoCap.setPermission1(ClanPermission.ADMINISTRATOR);
         CoCap.setBuiltin();
         CoCap.Update();
 
 
         Profile Capt = Profile.get(captain);
-        new ClanMember(createdClan.getId(), Capt.getID(), "00", captain.getEffectiveName(), List.of(Captain), null);
+        new ClanMember(createdClan.getID(), Capt.getID(), "00", captain.getEffectiveName(), List.of(Captain), null);
         new File(MainDirectory + "/clans/" + ID + "/").mkdirs();
         LogClanUpdatesClanCreate(captain);
 
         Wait(1000);
-        List<ClanMember> clanMembers = members.stream().map(U -> new ClanMember(createdClan.getId(), Profile.get(U).getID(), "00", U.getEffectiveName(), new ArrayList<>(), null)).collect(Collectors.toList());
+        List<ClanMember> clanMembers = members.stream().map(U -> new ClanMember(createdClan.getID(), Profile.get(U).getID(), "00", U.getEffectiveName(), new ArrayList<>(), null)).collect(Collectors.toList());
         LogClanUpdatesNewMembers(clanMembers);
 
         sendPrivateMessage(captain, TL(Capt, "clan-register-accept"));
@@ -861,18 +871,18 @@ public class Clan extends DatabaseObject<Clan> {
     // Warn
     public transient List<Clan_Warn> ClanWarns = null;
     public List<Clan_Warn> getClanWarns() {
-        return ClanWarns == null ?  ClanWarns = Clan_Warn.get(getId()) : ClanWarns;
+        return ClanWarns == null ?  ClanWarns = Clan_Warn.get(getID()) : ClanWarns;
     }
     public Clan_Warn addWarn(long userID, String name, String description, int hours, double powerloss) {
-        return new Clan_Warn(getId(), userID, name, description, hours, powerloss);
+        return new Clan_Warn(getID(), userID, name, description, hours, powerloss);
     }
 
     public transient List<Clan_Log> ClanLogs = null;
     public List<Clan_Log> getClanLogs(int page, int amountperpage) {
-        return ClanLogs == null ? ClanLogs = Clan_Log.get(getId(), page, amountperpage) : ClanLogs;
+        return ClanLogs == null ? ClanLogs = Clan_Log.get(getID(), page, amountperpage) : ClanLogs;
     }
     public Clan_Log AddClanLog(User editor, String name, String description) {
-        return new Clan_Log(getId(), editor.getIdLong(), name, description);
+        return new Clan_Log(getID(), editor.getIdLong(), name, description);
     }
 
 
@@ -984,10 +994,10 @@ public class Clan extends DatabaseObject<Clan> {
 
 
     public int getReinforcementCount() {
-        return Count(ClanMember.class, "ClanID = ? AND NOT isMainClan", getId());
+        return Count(ClanMember.class, "ClanID = ? AND NOT isMainClan", getID());
     }
     public List<ClanMember> getClanMembers() {
-        return ClanMembers == null ? ClanMembers = ClanMember.ofClan(getId()) : ClanMembers;
+        return ClanMembers == null ? ClanMembers = ClanMember.ofClan(getID()) : ClanMembers;
     }
     public ClanMember getMemberById(User user) {
         ClanMember M = getMemberById(user.getIdLong());
@@ -995,22 +1005,22 @@ public class Clan extends DatabaseObject<Clan> {
         return M;
     }
     public ClanMember getMemberById(long id) {
-        ClanMember M = ClanMember.ofClan(getId(), id);
-        return M != null ? M : new ClanMember(getId(), id);
+        ClanMember M = ClanMember.ofClan(getID(), id);
+        return M != null ? M : new ClanMember(getID(), id);
     }
 
     public ClanMember getCaptain() {
-        return cacheService.getCachedCaptain(getId());
+        return cacheService.getCachedCaptain(getID());
     }
     public ClanRole getCaptainRole() {
-        return getWhere(ClanRole.class,"ClanID = ? AND Name = ? AND isBuiltin = ?", getId(), "Clan Captain", true).orElse(null);
+        return getWhere(ClanRole.class,"ClanID = ? AND Name = ? AND isBuiltin = ?", getID(), "Clan Captain", true).orElse(null);
     }
 
     public List<Clan_Trophy> getTrophies() {
-        return Clan_Trophy.get(getId());
+        return Clan_Trophy.get(getID());
     }
     public List<DatabaseObject.Row> getAllTrophies(int page, int amountperpage) {
-        return doQueryAll("CALL DisplayClanTrophies(?,?,?);", getId(), page, amountperpage);
+        return doQueryAll("CALL DisplayClanTrophies(?,?,?);", getID(), page, amountperpage);
     }
 
     public boolean hasEmblem() {
@@ -1018,7 +1028,7 @@ public class Clan extends DatabaseObject<Clan> {
     }
 
     public String getEmblemURL() {
-        return DefaultURL + "/api/img/clan/" + getId() + "/emblem.png";
+        return DefaultURL + "/api/img/clan/" + getID() + "/emblem.png";
     }
     public static MessageCreateData InviteMember(User receiver, User inviter, ClanInviteCommand CMD) {
         try {
@@ -1083,7 +1093,7 @@ public class Clan extends DatabaseObject<Clan> {
         clanprofile.setColor(getColor());
         clanprofile.setDescription(getDescription());
 
-        clanprofile.setTitle((":white_check_mark: ") + getTag() + " | " + getName(), DefaultURL + "/c/" + getId());
+        clanprofile.setTitle((":white_check_mark: ") + getTag() + " | " + getName(), DefaultURL + "/c/" + getID());
 
 
         String flag = getNationality().getFlag().getFormatted();
@@ -1211,8 +1221,8 @@ public class Clan extends DatabaseObject<Clan> {
                         false);
 
             }
-            DatabaseObject.Row MostPowerful = doQuery("CALL DisplayMostPowerful(?,?,?);", getId(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(","))).orElse(null);
-            DatabaseObject.Row MostActive = doQuery("CALL DisplayMostActive(?,?,?,?,?);", getId(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), 30, 3).orElse(null);
+            DatabaseObject.Row MostPowerful = doQuery("CALL DisplayMostPowerful(?,?,?);", getID(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(","))).orElse(null);
+            DatabaseObject.Row MostActive = doQuery("CALL DisplayMostActive(?,?,?,?,?);", getID(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), 30, 3).orElse(null);
 
             E.addField(TL(M, "Players"),
                     "> **" + TL(M,"most-powerful") + ": " + (MostPowerful.getAsDouble("Power") < 0.2 ? TL(M, "None") : getUserByID(MostPowerful.getAsLong("UserID")).getAsMention() + " (" + BotEmoji.get("POW") + " " + POWERDECIMAL.format(MostPowerful.getAsDouble("Power")) + ")") + "**\n" +
@@ -1251,7 +1261,7 @@ public class Clan extends DatabaseObject<Clan> {
         SChallonge_Tournament CT;
 
         int AmountPerPages = 10;
-        List<DatabaseObject.Row> TRs = DatabaseObject.doQueryAll("CALL DisplayClanTournaments(?,?,?,?,?,?);", getId(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), PGCMD.Page, AmountPerPages, true); // userid, serverid, gamelist, page, amountPerPage, allow private
+        List<DatabaseObject.Row> TRs = DatabaseObject.doQueryAll("CALL DisplayClanTournaments(?,?,?,?,?,?);", getID(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), PGCMD.Page, AmountPerPages, true); // userid, serverid, gamelist, page, amountPerPage, allow private
         for (DatabaseObject.Row TR : TRs) {
             G = Game.get(TR.getAsString("GameCode"));
             name = TR.getAsString("Name");
@@ -1272,10 +1282,10 @@ public class Clan extends DatabaseObject<Clan> {
                         else if (CP.getPosition() == 0) medal = "(Out) ";
                         else medal = "(" + CP.getPosition() + "th) ";
                         C = CP.getLeaderPf().getClanAtTime(CT.getCompletedAtTime());
-                        if (C != null && C.getId() == getId()) {
+                        if (C != null && C.getID() == getID()) {
                             playersLine = playersLine + (playersLine.length() < 5 ? "└" : "─");
                             C = getClanOfUser(CP.getLeaderID());
-                            if (C != null && C.getId() == getId()) {
+                            if (C != null && C.getID() == getID()) {
                                 playersLine = playersLine + medal + CP.getLeader().getEffectiveName();
                             } else {
                                 playersLine = playersLine + "~~" + medal + CP.getLeader().getEffectiveName() + "~~";
@@ -1304,7 +1314,7 @@ public class Clan extends DatabaseObject<Clan> {
         }
 
         MSG.EnableGames(GMCMD, 0, 3);
-        MSG.EnablePagination(PGCMD, 25, doQueryValue(Integer.class, "SELECT GetClanTournamentsCount(?,?,?,?) AS 'Count'", getId(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), true).orElse(0));
+        MSG.EnablePagination(PGCMD, 25, doQueryValue(Integer.class, "SELECT GetClanTournamentsCount(?,?,?,?) AS 'Count'", getID(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), true).orElse(0));
 
         M.editOriginal(MSG.build()).queue();
     }
@@ -1324,7 +1334,7 @@ public class Clan extends DatabaseObject<Clan> {
 
         List<ActionRow> ARs = new ArrayList<>();
         List<SelectOption> Pages = new ArrayList<>();
-        int totalAmount = Math.min(1250, doQueryValue(Integer.class,"SELECT GetClanLogsCount(?) AS 'Count'", getId()).orElse(0));
+        int totalAmount = Math.min(1250, doQueryValue(Integer.class,"SELECT GetClanLogsCount(?) AS 'Count'", getID()).orElse(0));
         for (int i = 0; i < Math.ceil((double) totalAmount/AmountPerPages); i++) {
             if (Pages.size() < 25) {
                 Pages.add(SelectOption.of(TL(M,"Page") + " " + (i + 1) + "...", "" + (i + 1))
@@ -1369,7 +1379,7 @@ public class Clan extends DatabaseObject<Clan> {
 
         List<ActionRow> ARs = new ArrayList<>();
         List<SelectOption> Pages = new ArrayList<>();
-        int totalAmount = Math.min(1250, doQueryValue(Integer.class,"SELECT GetClanTrophiesCount(?) AS 'Count'", getId()).orElse(0));
+        int totalAmount = Math.min(1250, doQueryValue(Integer.class,"SELECT GetClanTrophiesCount(?) AS 'Count'", getID()).orElse(0));
         for (int i = 0; i < Math.ceil((double) totalAmount/AmountPerPages); i++) {
             if (Pages.size() < 25) {
                 Pages.add(SelectOption.of(TL(M,"Page") + " " + (i + 1) + "...", "" + (i + 1))
@@ -1397,9 +1407,9 @@ public class Clan extends DatabaseObject<Clan> {
                 options.add(SelectOption.of(getName() + " vs. " + IC.getOpposingClanOf(this).getName(), IC.getId() + "")
                         .withDescription(IC.getCompletedTime("dd/MM/yyyy") + " | " + IC.getRuleVSString() + " | " + IC.getMatchingRule()));
             }
-            if (IC.getHoster().getId() == getId()) {
+            if (IC.getHoster().getID() == getID()) {
                 S = S + "__" + IC.getCompletedTime("dd/MM/yyyy") + ":__ **" + IC.getHoster().getName() + "** vs. **" + IC.getJoiner().getName() + "**\n";
-            } else if (IC.getJoiner().getId() == getId()) {
+            } else if (IC.getJoiner().getID() == getID()) {
                 S = S + "__" + IC.getCompletedTime("dd/MM/yyyy") + ":__ **" + IC.getJoiner().getName() + "** vs. **" + IC.getHoster().getName() + "**\n";
             }
         }
@@ -1499,10 +1509,10 @@ public class Clan extends DatabaseObject<Clan> {
                 ViewClan(M);
                 break;
             case "Power & Activity":
-                ViewPowerDetails(M, new FilterCommand(getId(), "clan-power-filter"), new GamesCommand(getId(), "clan-power-game"));
+                ViewPowerDetails(M, new FilterCommand(getID(), "clan-power-filter"), new GamesCommand(getID(), "clan-power-game"));
                 break;
             case "Tournament List":
-                ViewTournaments(M, new PageViewerCommand(getId(), "clan-tourn-cp"), new FilterCommand(getId(), "clan-tourn-filter"), new GamesCommand(getId(), "clan-tourn-game"));
+                ViewTournaments(M, new PageViewerCommand(getID(), "clan-tourn-cp"), new FilterCommand(getID(), "clan-tourn-filter"), new GamesCommand(getID(), "clan-tourn-game"));
                 break;
             case "Vault":
                 ViewVault(M);
@@ -1511,11 +1521,11 @@ public class Clan extends DatabaseObject<Clan> {
                 ViewInterclan(M);
                 break;
             case "Clan Rewards":
-                ViewTrophies(M, new PageViewerCommand(getId(), "clan-troph-cp"));
+                ViewTrophies(M, new PageViewerCommand(getID(), "clan-troph-cp"));
                 break;
             case "Clan Logs":
                 if (CMD.getMe().hasPermission(M, ClanPermission.MANAGE_INFORMATION)) {
-                    ViewClanLogs(M, new PageViewerCommand(getId(), "clan-logs-cp"));
+                    ViewClanLogs(M, new PageViewerCommand(getID(), "clan-logs-cp"));
                 } else {
                     M.editOriginal(TL(M, "clan-manage-fail-permission", "MANAGE_INFORMATION")).queue();
                 }
@@ -1978,15 +1988,32 @@ public class Clan extends DatabaseObject<Clan> {
         return POWERDECIMAL.format(ClanPowerSQL(null,null).getAsDouble("Total Power"));
     }
     public DatabaseObject.Row ClanPowerSQL(Long serverId, String gamecode) {
-        return doQuery("CALL DisplayClanPower(?,?,?)", getId(), serverId, gamecode).orElse(null);
+        return doQuery("CALL DisplayClanPower(?,?,?)", getID(), serverId, gamecode).orElse(null);
     }
 
     private transient DatabaseObject.Row activity;
     public DatabaseObject.Row ClanActivitySQL(Long serverId, String gamecode) {
-        return activity == null ? activity = doQuery("CALL DisplayClanActivity(?,?,?,?,?)", getId(), serverId, gamecode, 30, 3).orElse(null) : activity;
+        return activity == null ? activity = doQuery("CALL DisplayClanActivity(?,?,?,?,?)", getID(), serverId, gamecode, 30, 3).orElse(null) : activity;
     }
 
     public int getTournamentsAmount() {
         return doQueryAll("CALL DisplayClanTournaments(?,?,?,?,?,?);", ID, null,  null, 1, 999, false).size();
+    }
+
+
+    private void setID(Long ID) {
+        this.ID = ID;
+    }
+    private void setName(String name) {
+        Name = name;
+    }
+    private void setTag(String tag) {
+        Tag = tag;
+    }
+    private String getColorcode() {
+        return Colorcode;
+    }
+    private void setColorcode(String colorcode) {
+        Colorcode = colorcode;
     }
 }

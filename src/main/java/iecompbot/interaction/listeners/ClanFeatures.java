@@ -160,8 +160,8 @@ public class ClanFeatures extends ListenerAdapter {
                             case "interclan-request" -> {
                                 event.deferReply().queue(M -> {
                                     InterclanCommand CMD = new InterclanCommand(event);
-                                    CMD.HostClan = Clan.getClanOfUser(event.getUser()).getId();
-                                    CMD.JoinClan = Clan.get(event.getOption("clan").getAsString()).getId();
+                                    CMD.HostClan = Clan.getClanOfUser(event.getUser()).getID();
+                                    CMD.JoinClan = Clan.get(event.getOption("clan").getAsString()).getID();
                                     CMD.RuleMatches = event.getOption("rule-matches").getAsInt();
                                     CMD.RuleDistribution = event.getOption("rule-distribution").getAsString();
                                     slashInterclanRequest(M, CMD);
@@ -660,7 +660,7 @@ public class ClanFeatures extends ListenerAdapter {
                                                 event.deferEdit().setComponents(ActionRow.of(net.dv8tion.jda.api.components.buttons.Button.secondary("nothing", TL(event, "Processing")).asDisabled())).queue(M -> {
                                                     try {
 
-                                                        ClanMember CM = new ClanMember(C.getId(), CMD.MemberID, "00", receiver.getEffectiveName(), new ArrayList<>(), CMD.Contract);
+                                                        ClanMember CM = new ClanMember(C.getID(), CMD.MemberID, "00", receiver.getEffectiveName(), new ArrayList<>(), CMD.Contract);
                                                         CM.updateMainClan(!CMD.isReinforcement);
 
                                                         Profile pf = CM.getProfile();
@@ -815,7 +815,7 @@ public class ClanFeatures extends ListenerAdapter {
                                     try {
                                         InterclanCommand CMD = new InterclanCommand(event.getComponentId());
                                         CMD.HostClan = Long.parseLong(event.getValues().getFirst());
-                                        if (CMD.getJoinClan() == null) M.editOriginalEmbeds(ClanChoice(M, "Interclaning " + CMD.getJoinClan().getName()).build()).setComponents(listClanChoices(CMD, "clan-choice-ic-join", Clan.listOpenPaused().stream().filter(c -> c.getId() != CMD.HostClan).collect(Collectors.toList()))).queue();
+                                        if (CMD.getJoinClan() == null) M.editOriginalEmbeds(ClanChoice(M, "Interclaning " + CMD.getJoinClan().getName()).build()).setComponents(listClanChoices(CMD, "clan-choice-ic-join", Clan.listOpenPaused().stream().filter(c -> c.getID() != CMD.HostClan).collect(Collectors.toList()))).queue();
                                         else Clan.get(CMD.HostClan).InterclanRequestUI(M, CMD);
                                     } catch (Exception e) {
                                         replyException(M, e);
@@ -1225,7 +1225,7 @@ public class ClanFeatures extends ListenerAdapter {
                                             if (isClanManager(event.getUser())) {
                                                 M.editOriginal(TL(M, "Done") + "!").queue();
                                                 User U = getUserByID(event.getValue("userid").getAsString());
-                                                ClanMember CM = new ClanMember(C.getId(), U.getIdLong());
+                                                ClanMember CM = new ClanMember(C.getID(), U.getIdLong());
                                                 C.LogClanUpdatesNewMember(CM);
                                             }
                                         } else if (event.getModalId().contains("clan-manage-color")) {
@@ -1299,7 +1299,7 @@ public class ClanFeatures extends ListenerAdapter {
                             if (event.getModalId().startsWith("clan-clanrole-new")) {
                                 event.deferReply(true).queue(M -> {
                                     if ((isEmoji(event.getValue("emoji").getAsString()) || event.getGuild().getEmojiById(event.getValue("emoji").getAsString()) != null) && C.getClanRoles().size() < 25) {
-                                        ClanRole CR = new ClanRole(C.getId(), event.getValue("name").getAsString(), event.getValue("emoji").getAsString());
+                                        ClanRole CR = new ClanRole(C.getID(), event.getValue("name").getAsString(), event.getValue("emoji").getAsString());
                                         CMD.ClanRoleID = CR.getId();
                                         C.EditClanRoleUI(CMD, M, CR);
                                     } else {
@@ -1441,7 +1441,7 @@ public class ClanFeatures extends ListenerAdapter {
         List<ActionRow> R = new ArrayList<>();
         List<SelectOption> options = new ArrayList<>();
         for (Clan clan : choices) {
-            options.add(SelectOption.of(clan.getTag() + " • " + clan.getName(), clan.getId() + "")
+            options.add(SelectOption.of(clan.getTag() + " • " + clan.getName(), clan.getID() + "")
                     .withDescription(clan.getNationality().getName() + " | [" + clan.getMemberCount() + "/50] | " + EpochSecondToPattern(clan.getTimeCreated().getEpochSecond(), "dd/MM/yyyy"))
                     .withEmoji(clan.getEmoji() != null ? clan.getEmoji().retrieve() : null));
             if (options.size() == 25) {
@@ -1466,7 +1466,7 @@ public class ClanFeatures extends ListenerAdapter {
         List<ActionRow> R = new ArrayList<>();
         List<SelectOption> options = new ArrayList<>();
         for (Clan clan : choices) {
-            options.add(SelectOption.of(clan.getTag() + " • " + clan.getName(), clan.getId() + "")
+            options.add(SelectOption.of(clan.getTag() + " • " + clan.getName(), clan.getID() + "")
                     .withDescription(clan.getNationality().getName() + " | [" + clan.getMemberCount() + "/50] | " + clan.getPowerAsString())
                     .withEmoji(clan.getEmoji().retrieve()));
             if (options.size() == 25) {
@@ -1601,7 +1601,7 @@ public class ClanFeatures extends ListenerAdapter {
         List<Clan> clans = isClanManager(CMD.MyID) ? Clan.listOpenPaused() : getClansOfUser(CMD.MyID);
         if (clans.isEmpty()) M.editOriginal(TL(M,"error-you-are-not-in-a-clan")).queue();
         if (clans.size() > 1) M.editOriginalEmbeds(ClanChoice(M,"Interclaning " + CMD.getJoinClan().getName()).build()).setComponents(listClanChoices(CMD, "clan-choice-ic-host", clans)).queue();
-        if (clans.size() == 1) if (CMD.getJoinClan() == null) M.editOriginalEmbeds(ClanChoice(M,"Interclaning " + CMD.getJoinClan().getName()).build()).setComponents(listClanChoices(CMD, "clan-choice-ic-join", Clan.listOpenPaused().stream().filter(c -> c.getId() != CMD.HostClan).collect(Collectors.toList()))).queue();
+        if (clans.size() == 1) if (CMD.getJoinClan() == null) M.editOriginalEmbeds(ClanChoice(M,"Interclaning " + CMD.getJoinClan().getName()).build()).setComponents(listClanChoices(CMD, "clan-choice-ic-join", Clan.listOpenPaused().stream().filter(c -> c.getID() != CMD.HostClan).collect(Collectors.toList()))).queue();
         else clans.getFirst().InterclanRequestUI(M, CMD);
     }
 
