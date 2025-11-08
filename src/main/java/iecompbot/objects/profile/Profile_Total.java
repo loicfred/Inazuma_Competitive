@@ -27,7 +27,7 @@ public class Profile_Total extends DatabaseObject<Profile_Total> {
     public int TotalQuests = 0;
 
     public String Element = "Void";
-    public String Position = "Forward";
+    public String Position = "FW";
     public String Gender = "Male";
 
     public int GP = 30;
@@ -45,7 +45,7 @@ public class Profile_Total extends DatabaseObject<Profile_Total> {
     public Profile_Total() {}
     public Profile_Total(Profile P) {
         this.P = P;
-        this.ID = P.getId();
+        this.ID = P.getID();
         Write();
     }
     public Profile_Total(long userID) {
@@ -119,13 +119,13 @@ public class Profile_Total extends DatabaseObject<Profile_Total> {
     }
 
     public Element getElement() {
-        return ie.enums.Element.valueOf(Element);
+        return ie.enums.Element.get(Element);
     }
     public Position getPosition() {
-      return ie.enums.Position.valueOf(Position);
+      return ie.enums.Position.get(Position);
     }
     public Gender getGender() {
-        return ie.enums.Gender.valueOf(Gender);
+        return ie.enums.Gender.get(Gender);
     }
 
     public int getGP() {
@@ -238,7 +238,7 @@ public class Profile_Total extends DatabaseObject<Profile_Total> {
     }
 
     public static Profile_Total get(Profile p) {
-        Profile_Total T = getById(Profile_Total.class, p.getId()).orElseGet(() -> new Profile_Total(p));
+        Profile_Total T = getById(Profile_Total.class, p.getID()).orElseGet(() -> new Profile_Total(p));
         T.P = p;
         return T;
     }

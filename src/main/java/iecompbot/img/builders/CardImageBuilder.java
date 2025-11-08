@@ -64,7 +64,7 @@ public class CardImageBuilder extends ImageBuilder {
             RY = c.getCardRayItem();
             ST = c.getCardStrikeItem();
             sponsor = c.getSponsor();
-            Number = clan.getMemberById(p.getId()).getNumber();
+            Number = clan.getMemberById(p.getID()).getNumber();
         } catch (Exception ignored) {}
     }
 
@@ -227,13 +227,13 @@ public class CardImageBuilder extends ImageBuilder {
     private void AddPosition(Graphics2D g2d) {
         try {
             Image Position = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/License/P_FW.png"))).getImage();
-            if (P.Totals().getPosition().equals("FW")) {
+            if (P.Totals().getPosition().equals(ie.enums.Position.FW)) {
                 Position = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/License/P_FW.png"))).getImage();
-            } else if (P.Totals().getPosition().equals("MF")) {
+            } else if (P.Totals().getPosition().equals(ie.enums.Position.MF)) {
                 Position = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/License/P_MF.png"))).getImage();
-            } else if (P.Totals().getPosition().equals("DF")) {
+            } else if (P.Totals().getPosition().equals(ie.enums.Position.DF)) {
                 Position = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/License/P_DF.png"))).getImage();
-            } else if (P.Totals().getPosition().equals("GK")) {
+            } else if (P.Totals().getPosition().equals(ie.enums.Position.GK)) {
                 Position = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/License/P_GK.png"))).getImage();
             }
             g2d.drawImage(Position, 0, 0, BGIMG.getWidth(null), BGIMG.getHeight(null), null);

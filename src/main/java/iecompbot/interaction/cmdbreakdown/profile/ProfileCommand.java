@@ -26,7 +26,7 @@ public class ProfileCommand extends IDCommand {
     }
     public ProfileCommand(Profile pf) {
         super("");
-        this.ID = pf.getId();
+        this.ID = pf.getID();
         this.P = pf;
     }
 

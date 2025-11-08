@@ -51,6 +51,7 @@ import java.util.stream.Collectors;
 
 import static iecompbot.Constants.*;
 import static iecompbot.L10N.TL;
+import static iecompbot.Main.DefaultURL;
 import static iecompbot.Main.MainDirectory;
 import static iecompbot.img.ImgUtilities.getDominantColor;
 import static iecompbot.img.ImgUtilities.getHexValue;
@@ -108,9 +109,11 @@ public class Profile extends DatabaseObject<Profile> {
     public String DiscordURL = null;
     public String TiktokURL = null;
 
-
-    public long getId() {
+    public long getID() {
         return ID;
+    }
+    public String getNationalityName() {
+        return NationalityName;
     }
     public Nationality getNationality() {
         return Nat == null ? Nat = Nationality.get(NationalityName) : Nat;
@@ -129,6 +132,9 @@ public class Profile extends DatabaseObject<Profile> {
     }
     public String getHistory() {
         return History;
+    }
+    public Long getBirthdayEpochSecond() {
+        return BirthdayEpochSecond;
     }
     public Instant getBirthday() {
         if (BirthdayEpochSecond == null) return null;
@@ -149,19 +155,19 @@ public class Profile extends DatabaseObject<Profile> {
     public String getCardGIFURL() {
         return CardGIFURL;
     }
-    public boolean hasMatchmakingNotification() {
+    public boolean isHasMatchmakingNotification() {
         return hasMatchmakingNotification;
     }
-    public boolean hasTournamentNotification() {
+    public boolean isHasTournamentNotification() {
         return hasTournamentNotification;
     }
-    public boolean hasPrivateProfile() {
+    public boolean isHasPrivateProfile() {
         return hasPrivateProfile;
     }
-    public boolean hasClanTag() {
+    public boolean isHasClanTag() {
         return hasClanTag;
     }
-    public boolean hasGIF() {
+    public boolean isHasGIF() {
         return hasGIF && getItem("Shiny Card").Amount >= 1;
     }
     public Instant getScoreTimeout() {
@@ -219,14 +225,13 @@ public class Profile extends DatabaseObject<Profile> {
     }
 
     public User getUser() {
-        return user == null ? user = getUserByID(getId()) : user;
+        return user == null ? user = getUserByID(getID()) : user;
     }
 
     public Profile_Booster addBooster(Item.Item_To_Profile i) {
         if (i.Amount > 0) {
-            removeItem(i.getId(), 1);
-            if (i != null) {
-                return new Profile_Booster(getId()
+            if (removeItem(i.getId(), 1) != 0) {
+                return new Profile_Booster(getID()
                         , Instant.now().plus(i.getItem().getName().contains("48") ? 48 : 24, ChronoUnit.HOURS).toEpochMilli()
                         , i.getName().contains("Coin") ? "Coin" : "XP"
                         , i.getName()
@@ -236,7 +241,7 @@ public class Profile extends DatabaseObject<Profile> {
         return null;
     }
     public List<Profile_Booster> getBoosters() {
-        return Boosters == null ? Boosters = Profile_Booster.get(getId()) : Boosters;
+        return Boosters == null ? Boosters = Profile_Booster.get(getID()) : Boosters;
     }
 
 
@@ -250,13 +255,13 @@ public class Profile extends DatabaseObject<Profile> {
         TR.Amount = amount;
         TR.Update();
     }
-    public void removeItem(long itemid, int amount) {
+    public int removeItem(long itemid, int amount) {
         Item.Item_To_Profile TR = getItem(itemid);
         TR.Amount -= amount;
-        TR.Update();
+        return TR.Update();
     }
     public List<Item.Item_To_Profile> getItems() {
-        return Items == null ? Items = getAllWhere(Item.Item_To_Profile.class,"UserID = ?", getId()) : Items;
+        return Items == null ? Items = getAllWhere(Item.Item_To_Profile.class,"UserID = ?", getID()) : Items;
     }
     public List<Item.Item_To_Profile> getItems(Item.ItemType type) {
         return getItems().stream().filter(i -> i.getType().equals(type)).collect(Collectors.toList());
@@ -264,7 +269,7 @@ public class Profile extends DatabaseObject<Profile> {
     public Item.Item_To_Profile getItem(long itemid) {
         Item.Item_To_Profile TR = getItems().stream().filter(tr -> tr.ItemID == itemid).findFirst().orElse(null);
         if (TR == null) {
-            TR = new Item.Item_To_Profile(getId(), itemid, 0);
+            TR = new Item.Item_To_Profile(getID(), itemid, 0);
             getItems().add(TR);
         }
         return TR;
@@ -272,7 +277,7 @@ public class Profile extends DatabaseObject<Profile> {
     public Item.Item_To_Profile getItem(String name) {
         Item.Item_To_Profile TR = getItems().stream().filter(tr -> tr.getItem().getName().equals(name)).findFirst().orElse(null);
         if (TR == null) {
-            TR = new Item.Item_To_Profile(getId(), Item.get(name).getId(), 0);
+            TR = new Item.Item_To_Profile(getID(), Item.get(name).getId(), 0);
             getItems().add(TR);
         }
         return TR;
@@ -345,18 +350,24 @@ public class Profile extends DatabaseObject<Profile> {
 
 
     public Profile_PastClan AddClanLog(ClanMember member) {
-        return new Profile_PastClan(getId(), member.getClanID(), member.getId(), Instant.now().toEpochMilli(), member.isMainClan());
+        return new Profile_PastClan(getID(), member.getClanID(), member.getId(), Instant.now().toEpochMilli(), member.isMainClan());
     }
     public List<Profile_PastClan> getClanLogs(boolean mainClan) {
-        return Profile_PastClan.ofUser(getId(), mainClan);
+        return Profile_PastClan.ofUser(getID(), mainClan);
     }
 
     public List<MatchLog> getMatchLogs(Long serverid, List<Game> games, int pages, int amountperpages) {
-        return MatchLog.getMatchesOf(getId(), serverid, games, pages, amountperpages);
+        return MatchLog.getMatchesOf(getID(), serverid, games, pages, amountperpages);
     }
 
+    public void setNationalityName(String nationalityName) {
+        NationalityName = Nationality.get(nationalityName).getName();
+    }
     public void setNationality(Nationality nationality) {
         NationalityName = nationality.getName();
+    }
+    public void setColorCode(String colorCode) {
+        ColorCode = colorCode;
     }
     public void setColor(Color color) {
         ColorCode = getHexValue(color);
@@ -385,16 +396,16 @@ public class Profile extends DatabaseObject<Profile> {
     public void setCardGIFURL(String cardGIFURL) {
         if (cardGIFURL == null || cardGIFURL.length() > 10) CardGIFURL = cardGIFURL;
     }
-    public void setMatchmakingNotification(boolean hasMatchmakingNotification) {
+    public void setHasMatchmakingNotification(boolean hasMatchmakingNotification) {
         this.hasMatchmakingNotification = hasMatchmakingNotification;
     }
-    public void setTournamentNotification(boolean hasTournamentNotification) {
+    public void setHasTournamentNotification(boolean hasTournamentNotification) {
         this.hasTournamentNotification = hasTournamentNotification;
     }
-    public void setPrivateProfile(boolean hasPrivateProfile) {
+    public void setHasPrivateProfile(boolean hasPrivateProfile) {
         this.hasPrivateProfile = hasPrivateProfile;
     }
-    public void setGIF(boolean hasGIF) {
+    public void setHasGIF(boolean hasGIF) {
         this.hasGIF = hasGIF && getItem("Shiny Card").Amount >= 1;
     }
     public void RefreshScoreTimeout(Instant i) {
@@ -410,24 +421,26 @@ public class Profile extends DatabaseObject<Profile> {
         UpdateOnly("BirthdayTimeoutEpochSecond");
     }
 
+
+
     public Profile_Total Totals() {
         return Total == null ? Total = Profile_Total.get(this) : Total;
     }
 
 
     public File getCharacter() {
-        new File(MainDirectory + "/user/" + getId() + "/").mkdirs();
-        return new File(MainDirectory + "/user/" + getId() + "/character.png");
+        new File(MainDirectory + "/user/" + getID() + "/").mkdirs();
+        return new File(MainDirectory + "/user/" + getID() + "/character.png");
     }
     public File getEmblem() {
-        new File(MainDirectory + "/user/" + getId() + "/").mkdirs();
-        return new File(MainDirectory + "/user/" + getId() + "/emblem.png");
+        new File(MainDirectory + "/user/" + getID() + "/").mkdirs();
+        return new File(MainDirectory + "/user/" + getID() + "/emblem.png");
     }
     public void RefreshProfileInformation(Interaction event) {
         Name = getUser().getName();
         FullName = getUser().getEffectiveName();
         AvatarURL = getUser().getEffectiveAvatarUrl();
-        if (event != null && getId() == event.getUser().getIdLong()) {
+        if (event != null && getID() == event.getUser().getIdLong()) {
             try {
                 Language = event.getUserLocale().getLanguageName();
                 if (NationalityName.equals("International")) NationalityName = event.getUserLocale().getLanguageName();
@@ -457,7 +470,7 @@ public class Profile extends DatabaseObject<Profile> {
                     CIB.GenerateCardPNG();
                     String CardPNGURL = getCardUrl(CIB.DownloadPNGToFile(), "card.png");
                     setCardPNGURL(CardPNGURL != null && CardPNGURL.contains("?") ? CardPNGURL.split("\\?")[0] : CardPNGURL);
-                    if (hasGIF()) {
+                    if (isHasGIF()) {
                         ImageGenerationTimerEpochSecond = Instant.now().plus(15, ChronoUnit.SECONDS).getEpochSecond();
                         if (M != null) M.editOriginal("**[GIF]** " + TL(M, TL(M,"generating-cards"))).queue();
                         CIB.GenerateCardGIF(55, 0.5);
@@ -477,24 +490,24 @@ public class Profile extends DatabaseObject<Profile> {
         return getCardPNGURL();
     }
     public synchronized String getPersonalCardGIF() {
-        if (hasGIF() && getCardGIFURL() != null) return getCardGIFURL();
+        if (isHasGIF() && getCardGIFURL() != null) return getCardGIFURL();
         return getPersonalCardPNG();
     }
     public synchronized String getClanCardPNG(Clan clan) {
-        if (clan != null && clan.getMemberById(getId()).getCardPNGURL() != null) return clan.getMemberById(getId()).getCardPNGURL();
+        if (clan != null && clan.getMemberById(getID()).getCardPNGURL() != null) return clan.getMemberById(getID()).getCardPNGURL();
         return getPersonalCardGIF();
     }
     public synchronized String getClanCardGIF(Clan clan) {
-        if (hasGIF() && clan != null && clan.getMemberById(getId()).getCardGIFURL() != null) return clan.getMemberById(getId()).getCardGIFURL();
+        if (isHasGIF() && clan != null && clan.getMemberById(getID()).getCardGIFURL() != null) return clan.getMemberById(getID()).getCardGIFURL();
         return getClanCardPNG(clan);
     }
 
 
     public boolean hasPersonalCard() {
-        return CardPNGURL != null && (!hasGIF() || CardGIFURL != null);
+        return CardPNGURL != null && (!isHasGIF() || CardGIFURL != null);
     }
     public List<Profile_Trophy> getTrophies() {
-        return Profile_Trophy.get(getId());
+        return Profile_Trophy.get(getID());
     }
 
     public boolean hasDailies() {
@@ -528,12 +541,12 @@ public class Profile extends DatabaseObject<Profile> {
         return getAchievements().stream().filter(Q -> !Q.isComplete()).collect(Collectors.toList());
     }
     public synchronized List<Profile_Achievement> getAchievements() {
-        return Achievements == null ? Achievements = Profile_Achievement.OfUser(getId()) : Achievements;
+        return Achievements == null ? Achievements = Profile_Achievement.OfUser(getID()) : Achievements;
     }
     public synchronized List<Profile_Quest> getQuests() {
         if (Quests == null) {
             try {
-                Quests = Profile_Quest.OfUser(getId());
+                Quests = Profile_Quest.OfUser(getID());
                 if (Instant.now().isAfter(Instant.ofEpochSecond(NextDailyReceiveTime))) {
                     NextDailyReceiveTime = getTomorrowMidnight().getEpochSecond();
                     if (Quests.stream().noneMatch(a -> a.getName().startsWith("Daily Training"))) {
@@ -587,7 +600,7 @@ public class Profile extends DatabaseObject<Profile> {
     }
     private transient DatabaseObject.Row activity;
     public DatabaseObject.Row getActivity(Long serverid, String gamecodes) {
-        return activity == null ? activity = doQuery("CALL DisplayUserActivity(?,?,?,?,?)", getId(), serverid, gamecodes, 30, 3).orElse(null) : activity;
+        return activity == null ? activity = doQuery("CALL DisplayUserActivity(?,?,?,?,?)", getID(), serverid, gamecodes, 30, 3).orElse(null) : activity;
     }
 
     public void ViewProfile(InteractionHook M) {
@@ -596,7 +609,7 @@ public class Profile extends DatabaseObject<Profile> {
         EmbedBuilder E = new EmbedBuilder();
         E.setThumbnail(getUser().getAvatarUrl());
         E.setColor(getColor());
-        E.setAuthor(TL(M,"profile-of-user", getUser().getEffectiveName()));
+        E.setAuthor(TL(M,"profile-of-user", getUser().getEffectiveName(), DefaultURL + "/p/" + Name));
         String power = POWERDECIMAL.format(getPower(null, null));
         E.setDescription("\"*" + getSignature().replaceAll("<br>", "\n") + "*\"\n" +
                 (!isPowerDisabled(G) ? "**Average Power: " + BotEmoji.get("POW") + power + "**" : ""));
@@ -645,7 +658,7 @@ public class Profile extends DatabaseObject<Profile> {
         if (!getUser().equals(M.getInteraction().getUser())) {
             E.setFooter(null);
         }
-        Clan clan = Clan.getClanOfUser(getId());
+        Clan clan = Clan.getClanOfUser(getID());
         E.setImage(getClanCardGIF(clan));
 
         List<Button> BTN = new ArrayList<>();
@@ -669,7 +682,7 @@ public class Profile extends DatabaseObject<Profile> {
         profile.setDescription(TL(M,"profile-game-description"));
         profile.setThumbnail(getUser().getEffectiveAvatarUrl());
         profile.setColor(getColor());
-        for (Profile_Game P : Profile_Game.ofUser(getId())) {
+        for (Profile_Game P : Profile_Game.ofUser(getID())) {
             if (P.Wins > 0 || P.Ties > 0 || P.Loses > 0) {
                 int Rank = P.getRank();
                 String emoji = Rank == 1 ? "(:first_place:)" : Rank == 2 ? "(:second_place:)" : Rank == 3 ? "(:third_place:)" : "";
@@ -693,7 +706,7 @@ public class Profile extends DatabaseObject<Profile> {
             ServerInfo I = ServerInfo.get(G);
             if (I.Ranking().hasPrivateRanking()) {
                 profile.addField(G.getName() + " ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯", " ", false);
-                for (Profile_Game_S P : Profile_Game_S.ofUser(getId(), G.getIdLong())) {
+                for (Profile_Game_S P : Profile_Game_S.ofUser(getID(), G.getIdLong())) {
                     if (P.Wins > 0 || P.Ties > 0 || P.Loses > 0) {
                         int Rank = P.getRank();
                         String emoji = Rank == 1 ? "(:first_place:)" : Rank == 2 ? "(:second_place:)" : Rank == 3 ? "(:third_place:)" : "";
@@ -819,7 +832,7 @@ public class Profile extends DatabaseObject<Profile> {
         String power;
         String clan;
         int AmountPerPages = 15;
-        List<DatabaseObject.Row> TRs = DatabaseObject.doQueryAll("CALL DisplayUserTournaments(?,?,?,?,?,?);", getId(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), PGCMD.Page, AmountPerPages, true); // userid, serverid, gamelist, page, amountPerPage, private
+        List<DatabaseObject.Row> TRs = DatabaseObject.doQueryAll("CALL DisplayUserTournaments(?,?,?,?,?,?);", getID(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), PGCMD.Page, AmountPerPages, true); // userid, serverid, gamelist, page, amountPerPage, private
         for (DatabaseObject.Row TR : TRs) {
             G = Game.get(TR.getAsString("GameCode"));
             medal = TR.getAsInt("Position") == 1 ? ":first_place:" : TR.getAsInt("Position") == 2 ? ":second_place:" : TR.getAsInt("Position") == 3 ? ":third_place:" : TR.getAsInt("Position") <= 0 ? ":Out:" : TR.getAsInt("Position") + "th";
@@ -849,7 +862,7 @@ public class Profile extends DatabaseObject<Profile> {
         }
 
         MSG.EnableGames(GMCMD, 0, 3);
-        MSG.EnablePagination(PGCMD, 25, doQueryValue(Integer.class, "SELECT GetUserTournamentsCount(?,?,?,?) AS 'Count'", getId(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), true).orElse(0));
+        MSG.EnablePagination(PGCMD, 25, doQueryValue(Integer.class, "SELECT GetUserTournamentsCount(?,?,?,?) AS 'Count'", getID(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(",")), true).orElse(0));
 
         M.editOriginal(MSG.build()).queue();
     }
@@ -873,9 +886,9 @@ public class Profile extends DatabaseObject<Profile> {
         for (MatchLog log : getMatchLogs(FILCMD.getServerID(), GMCMD.Games, PGCMD.Page, AmountPerPages)) {
             if (E.getFields().size() < 12) {
                 Name1 = getUser().getName();
-                Name2 = getId() == log.getP1ID() ? log.getP2().getName() : log.getP1().getName();
-                P1Score = getId() == log.getP1ID() ? log.getP1Score() : log.getP2Score();
-                P2Score = getId() == log.getP1ID() ? log.getP2Score() : log.getP1Score();
+                Name2 = getID() == log.getP1ID() ? log.getP2().getName() : log.getP1().getName();
+                P1Score = getID() == log.getP1ID() ? log.getP1Score() : log.getP2Score();
+                P2Score = getID() == log.getP1ID() ? log.getP2Score() : log.getP1Score();
                 P1NameSurround = P1Score > P2Score ? "" : P1Score < P2Score ? "~~" : "__";
                 P2NameSurround = P1Score > P2Score ? "~~" : P1Score < P2Score ? "" : "__";
                 emoji = P1Score > P2Score ? BotEmoji.get("Win").getFormatted() : P1Score < P2Score ? BotEmoji.get("Lose").getFormatted() : BotEmoji.get("Tie").getFormatted();
@@ -908,7 +921,7 @@ public class Profile extends DatabaseObject<Profile> {
         }
 
         MSG.EnableGames(GMCMD, 0, 3);
-        MSG.EnablePagination(PGCMD, 25, doQueryValue(Integer.class, "SELECT GetUserHistoryCount(?,?,?) AS 'Count'", getId(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(","))).orElse(0));
+        MSG.EnablePagination(PGCMD, 25, doQueryValue(Integer.class, "SELECT GetUserHistoryCount(?,?,?) AS 'Count'", getID(), FILCMD.getServerID(), GMCMD.Games.isEmpty() ? null : GMCMD.Games.stream().map(Game::getCode).collect(Collectors.joining(","))).orElse(0));
 
         M.editOriginal(MSG.build()).queue();
     }
@@ -921,10 +934,10 @@ public class Profile extends DatabaseObject<Profile> {
         ArrangeClanLogs();
         String S = "";
 
-        Clan clan = Clan.getClanOfUser(getId());
-        if (clan != null) S = S + "> **" + clan.getEmojiFormatted() + " " + clan.getName() + ":** " + TL(M,"Member_Since") + " __<t:" + clan.getMemberById(getId()).getTimeJoined().getEpochSecond() + ":d>__\n";
-        Clan clan2 = Clan.getReinforcementOfUser(getId());
-        if (clan2 != null) S = S + "> **" + clan2.getEmojiFormatted() + " " + clan2.getName() + ":** " + TL(M,"Reinforcing_Since") + " __<t:" + clan2.getMemberById(getId()).getTimeJoined().getEpochSecond() + ":d>__";
+        Clan clan = Clan.getClanOfUser(getID());
+        if (clan != null) S = S + "> **" + clan.getEmojiFormatted() + " " + clan.getName() + ":** " + TL(M,"Member_Since") + " __<t:" + clan.getMemberById(getID()).getTimeJoined().getEpochSecond() + ":d>__\n";
+        Clan clan2 = Clan.getReinforcementOfUser(getID());
+        if (clan2 != null) S = S + "> **" + clan2.getEmojiFormatted() + " " + clan2.getName() + ":** " + TL(M,"Reinforcing_Since") + " __<t:" + clan2.getMemberById(getID()).getTimeJoined().getEpochSecond() + ":d>__";
         if (!S.isEmpty()) E.addField(TL(M,"Current-Clan"), S, false);
 
         List<Profile_PastClan> CLs = getClanLogs(true);
@@ -974,17 +987,17 @@ public class Profile extends DatabaseObject<Profile> {
                 SELECT Count(*) AS Count FROM challonge_participant CP
                 JOIN challonge_tournament CT ON CT.ID = CP.TournamentID
                 WHERE Position = ? AND CT.isPublic AND (DiscordID = ? OR DiscordID2 = ? OR DiscordID3 = ? OR DiscordID4 = ? OR DiscordID5 = ? OR DiscordID6 = ? OR DiscordID7 = ? OR DiscordID8 = ?);
-                """,1, getId(), getId(), getId(), getId(), getId(), getId(), getId(), getId()).orElse(0));
+                """,1, getID(), getID(), getID(), getID(), getID(), getID(), getID(), getID()).orElse(0));
         setItem(1002, doQueryValue(Integer.class,"""
                 SELECT Count(*) AS Count FROM challonge_participant CP
                 JOIN challonge_tournament CT ON CT.ID = CP.TournamentID
                 WHERE Position = ? AND CT.isPublic AND (DiscordID = ? OR DiscordID2 = ? OR DiscordID3 = ? OR DiscordID4 = ? OR DiscordID5 = ? OR DiscordID6 = ? OR DiscordID7 = ? OR DiscordID8 = ?);
-                """,2, getId(), getId(), getId(), getId(), getId(), getId(), getId(), getId()).orElse(0));
+                """,2, getID(), getID(), getID(), getID(), getID(), getID(), getID(), getID()).orElse(0));
         setItem(1003, doQueryValue(Integer.class,"""
                 SELECT Count(*) AS Count FROM challonge_participant CP
                 JOIN challonge_tournament CT ON CT.ID = CP.TournamentID
                 WHERE Position = ? AND CT.isPublic AND (DiscordID = ? OR DiscordID2 = ? OR DiscordID3 = ? OR DiscordID4 = ? OR DiscordID5 = ? OR DiscordID6 = ? OR DiscordID7 = ? OR DiscordID8 = ?);
-                """,3, getId(), getId(), getId(), getId(), getId(), getId(), getId(), getId()).orElse(0));
+                """,3, getID(), getID(), getID(), getID(), getID(), getID(), getID(), getID()).orElse(0));
 
         EmbedBuilder E = new EmbedBuilder();
         E.setThumbnail(getUser().getAvatarUrl());
@@ -1002,7 +1015,7 @@ public class Profile extends DatabaseObject<Profile> {
         for (DatabaseObject.Row I : doQueryAll("""
                 SELECT * FROM inazuma_competitive.profile_inventory
                 WHERE UserID = ? AND NOT Type = 'CURRENCY'
-                LIMIT 25 OFFSET ?;""", getId(), 25 * (PGCMD.Page - 1))) {
+                LIMIT 25 OFFSET ?;""", getID(), 25 * (PGCMD.Page - 1))) {
             servername = I.getAsString("ServerName");
             typename = Item.ItemType.valueOf(I.getAsString("Type")).getName(M);
             if (servername != null) {
@@ -1043,7 +1056,7 @@ public class Profile extends DatabaseObject<Profile> {
 
         BuiltMessageE MSG = new BuiltMessageE(M);
         MSG.addEmbeds(E.build());
-        if (getId() == M.getInteraction().getUser().getIdLong()) {
+        if (getID() == M.getInteraction().getUser().getIdLong()) {
             ProfileCommand CMD = new ProfileCommand(this);
             if (!cosmeticsframe.isEmpty()) {
                 cosmeticsframe.add(SelectOption.of(TL(M,"Default"), "0").withDescription("Default design.").withDefault( getCustomFrameItem() == null));
@@ -1159,7 +1172,7 @@ public class Profile extends DatabaseObject<Profile> {
             List<MessageEmbed> Es = new ArrayList<>();
             E.setImage(getCardPNGURL());
             if (!E.isEmpty()) Es.add(E.build());
-            if (hasGIF()) {
+            if (isHasGIF()) {
                 E = new EmbedBuilder();
                 E.setColor(getColor());
                 E.setImage(getCardGIFURL());
@@ -1172,7 +1185,7 @@ public class Profile extends DatabaseObject<Profile> {
                     E.setImage(C.getCardPNGURL());
                     E.setColor(C.getClan().getColor());
                     if (!E.isEmpty()) Es.add(E.build());
-                    if (hasGIF()) {
+                    if (isHasGIF()) {
                         E = new EmbedBuilder();
                         E.setImage(C.getCardGIFURL());
                         E.setColor(C.getClan().getColor());
@@ -1235,10 +1248,10 @@ public class Profile extends DatabaseObject<Profile> {
 
 
         List<SelectOption> options2 = new ArrayList<>();
-        if (getItem("Shiny Card").Amount >= 1) options2.add(SelectOption.of(TL(M,"edit-toggle-card-gif"), "pf-toggle-card-gif").withDescription(TL(M,"edit-toggle-card-gif-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(hasGIF()));
-        options2.add(SelectOption.of(TL(M,"edit-toggle-matchmaking-notif"), "pf-toggle-matchmaking").withDescription(TL(M,"edit-toggle-matchmaking-notif-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(hasMatchmakingNotification()));
-        options2.add(SelectOption.of(TL(M,"edit-toggle-tournament-notif"), "pf-toggle-tournament").withDescription(TL(M,"edit-toggle-tournament-notif-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(hasTournamentNotification()));
-        options2.add(SelectOption.of(TL(M,"edit-toggle-profile-private"), "pf-toggle-private").withDescription(TL(M,"edit-toggle-profile-private-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(hasPrivateProfile()));
+        if (getItem("Shiny Card").Amount >= 1) options2.add(SelectOption.of(TL(M,"edit-toggle-card-gif"), "pf-toggle-card-gif").withDescription(TL(M,"edit-toggle-card-gif-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(isHasGIF()));
+        options2.add(SelectOption.of(TL(M,"edit-toggle-matchmaking-notif"), "pf-toggle-matchmaking").withDescription(TL(M,"edit-toggle-matchmaking-notif-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(isHasMatchmakingNotification()));
+        options2.add(SelectOption.of(TL(M,"edit-toggle-tournament-notif"), "pf-toggle-tournament").withDescription(TL(M,"edit-toggle-tournament-notif-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(isHasTournamentNotification()));
+        options2.add(SelectOption.of(TL(M,"edit-toggle-profile-private"), "pf-toggle-private").withDescription(TL(M,"edit-toggle-profile-private-description")).withEmoji(Emoji.fromUnicode("U+2699")).withDefault(isHasPrivateProfile()));
         StringSelectMenu Togglers = StringSelectMenu.create(CMD.Command("pf-manage-toggle"))
                 .setPlaceholder(options2.getFirst().getLabel())
                 .setRequiredRange(0, 25).addOptions(options2)
@@ -1309,7 +1322,7 @@ public class Profile extends DatabaseObject<Profile> {
         }
     }
     public void UpdateAchievement() {
-        List<Profile_Game> MyPGS = Profile_Game.ofUser(getId());
+        List<Profile_Game> MyPGS = Profile_Game.ofUser(getID());
         UpdateAchievement("TOTAL_MATCH", Integer.parseInt(Totals().getTotalStats().get("Wins").toString()) + Integer.parseInt(Totals().getTotalStats().get("Ties").toString()) + Integer.parseInt(Totals().getTotalStats().get("Loses").toString()));
         UpdateAchievement("TOTAL_WIN_MATCH", Integer.parseInt(Totals().getTotalStats().get("Wins").toString()));
         UpdateAchievement("TOTAL_POLY_5_GAMES", (int) MyPGS.stream().filter(PG -> PG.Wins >= 5).count());
@@ -1358,24 +1371,24 @@ public class Profile extends DatabaseObject<Profile> {
         return P;
     }
     public Profile_Game getPG(Game game) {
-        Profile_Game P = Profile_Game.get(getId(), game);
+        Profile_Game P = Profile_Game.get(getID(), game);
         P.pf = this;
         P.g = game;
         return P;
     }
     public Profile_Game_S getPG(Game game, long serverid) {
-        Profile_Game_S P = Profile_Game_S.get(getId(), serverid, game);
+        Profile_Game_S P = Profile_Game_S.get(getID(), serverid, game);
         P.pf = this;
         P.g = game;
         return P;
     }
     public List<Profile_Game> getPGs() {
-        List<Profile_Game> P = Profile_Game.ofUser(getId());
+        List<Profile_Game> P = Profile_Game.ofUser(getID());
         for (Profile_Game PG : P) PG.pf = this;
         return P;
     }
     public List<Profile_Game_S> getPGs(long serverid) {
-        List<Profile_Game_S> P = Profile_Game_S.ofUser(getId(), serverid);
+        List<Profile_Game_S> P = Profile_Game_S.ofUser(getID(), serverid);
         for (Profile_Game_S PG : P) PG.pf = this;
         return P;
     }
@@ -1388,7 +1401,7 @@ public class Profile extends DatabaseObject<Profile> {
         return PowerSQL(null, gamecodes);
     }
     public DatabaseObject.Row PowerSQL(Long serverId, String gamecodes) {
-        return doQuery("CALL DisplayUserPower(?,?,?)", getId(), serverId, gamecodes).orElse(null);
+        return doQuery("CALL DisplayUserPower(?,?,?)", getID(), serverId, gamecodes).orElse(null);
     }
 
     private void listTrophies(EmbedBuilder e) {
@@ -1396,14 +1409,14 @@ public class Profile extends DatabaseObject<Profile> {
             e.addField(T.getEmoji() + " " + T.getName(), "*" + T.getDescription() + "*", false);
         }
         for (Staff S : STAFFLIST) {
-            if (S.UserID == getId()) {
+            if (S.UserID == getID()) {
                 if (S.Role.equals("Graphic")) e.addField(":art: Graphic Designer", "*" + S.Description + "*", false);
                 if (S.Role.equals("Translator")) e.addField(":magic_wand: Translator", "*" + S.Description + "*", false);
                 if (S.Role.equals("Clan Manager")) e.addField(":small_blue_diamond: Clan Manager", "*" + S.Description + "*", false);
                 if (S.Role.equals("Tournament Manager")) e.addField(":small_orange_diamond: Tournament Manager", "*" + S.Description + "*", false);
             }
         }
-        for (DatabaseObject.Row TR : doQueryAll("CALL DisplayEvents(?,?)", getId(), null)) {
+        for (DatabaseObject.Row TR : doQueryAll("CALL DisplayEvents(?,?)", getID(), null)) {
             if (TR.getAsInt("Position") > 0 || (TR.getAsString("Type").equals("WC") || TR.getAsString("Position").equals("EU"))) {
                 String emoji = TR.getAsInt("Position") == 1 ? ":first_place:" : TR.getAsInt("Position") == 2 ? ":second_place:" : TR.getAsInt("Position") == 3 ? ":third_place:" : ":medal:";
                 e.addField(emoji + " " + TR.getAsString("Name") + " Player", "*A player for " + TR.getAsString("Team") + " in the " + TR.getAsString("Name") + ".*", false);

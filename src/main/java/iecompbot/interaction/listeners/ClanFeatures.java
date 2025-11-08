@@ -146,10 +146,10 @@ public class ClanFeatures extends ListenerAdapter {
                                         ServerInfo I = ServerInfo.get(event.getGuild());
                                         Clanlist E;
                                         if (event.getOption("game") != null) {
-                                            E = new Clanlist(I != null ? I.getId() : 0, Game.get(event.getOption("game").getAsString()));
+                                            E = new Clanlist(I != null ? I.getID() : 0, Game.get(event.getOption("game").getAsString()));
                                             E.setFooter(TL(M, "Filter") + ": " + Game.get(event.getOption("game").getAsString()));
                                         } else {
-                                            E = new Clanlist(I != null ? I.getId() : 0, null);
+                                            E = new Clanlist(I != null ? I.getID() : 0, null);
                                         }
                                         M.editOriginalEmbeds(E.getEmbed(M, I).build()).queue();
                                     } catch (Exception e) {

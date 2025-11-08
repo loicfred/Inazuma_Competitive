@@ -354,12 +354,12 @@ public class Clan extends DatabaseObject<Clan> {
 
 
         Profile Capt = Profile.get(captain);
-        new ClanMember(createdClan.getId(), Capt.getId(), "00", captain.getEffectiveName(), List.of(Captain), null);
+        new ClanMember(createdClan.getId(), Capt.getID(), "00", captain.getEffectiveName(), List.of(Captain), null);
         new File(MainDirectory + "/clans/" + ID + "/").mkdirs();
         LogClanUpdatesClanCreate(captain);
 
         Wait(1000);
-        List<ClanMember> clanMembers = members.stream().map(U -> new ClanMember(createdClan.getId(), Profile.get(U).getId(), "00", U.getEffectiveName(), new ArrayList<>(), null)).collect(Collectors.toList());
+        List<ClanMember> clanMembers = members.stream().map(U -> new ClanMember(createdClan.getId(), Profile.get(U).getID(), "00", U.getEffectiveName(), new ArrayList<>(), null)).collect(Collectors.toList());
         LogClanUpdatesNewMembers(clanMembers);
 
         sendPrivateMessage(captain, TL(Capt, "clan-register-accept"));
@@ -775,6 +775,7 @@ public class Clan extends DatabaseObject<Clan> {
         }
     }
     public void LogClanUpdatesClanDisband() {
+        setDateDeletedEpochSecond(Instant.now().getEpochSecond());
         for (DatabaseObject.Row TR : getClanUpdatesChannels()) {
             try {
                 if (Prefs.TestMode && TR.getAsLong("ServerID") != 930718276542136400L) continue;
@@ -820,15 +821,15 @@ public class Clan extends DatabaseObject<Clan> {
                 sendPrivateMessage(getCaptain().getUser(), TL(Profile.get(getCaptain().getUser()),"clan-derelict-warning", "**" + getEmojiFormatted() + " " + getName() + "**", "<t:" + DerelictTimeEpochSecond + ":R>"));
             }
             if (MatchAct > 0 || TournAct > 0) {
-                if (!getStatus().equals("Open"))
-                    sendPrivateMessage(getCaptain().getUser(), ":chart_with_upwards_trend: " + TL(Profile.get(getCaptain().getUser()),"clan-derelict-open", "**" + getEmojiFormatted() + " " + getName() + "**"));
+//                if (!getStatus().equals("Open"))
+//                    sendPrivateMessage(getCaptain().getUser(), ":chart_with_upwards_trend: " + TL(Profile.get(getCaptain().getUser()),"clan-derelict-open", "**" + getEmojiFormatted() + " " + getName() + "**"));
                 setStatus("Open");
                 setDerelictTimeEpochSecond(Instant.now().plus(30, ChronoUnit.DAYS).getEpochSecond());
                 setDerelictReminderEpochSecond(Instant.now().plus(7, ChronoUnit.DAYS).getEpochSecond());
             } else if (isDerelictDue()) {
                 if (getClanMembers().size() >= 5) {
-                    if (!getStatus().equals("Pause"))
-                        sendPrivateMessage(getCaptain().getUser(), ":chart_with_downwards_trend: " + TL(Profile.get(getCaptain().getUser()),"clan-derelict-pause", "**" + getEmojiFormatted() + " " + getName() + "**", "**Pause**"));
+//                    if (!getStatus().equals("Pause"))
+//                        sendPrivateMessage(getCaptain().getUser(), ":chart_with_downwards_trend: " + TL(Profile.get(getCaptain().getUser()),"clan-derelict-pause", "**" + getEmojiFormatted() + " " + getName() + "**", "**Pause**"));
                     setStatus("Pause");
                 } else {
                     if (!getStatus().equals("Closed")) {
@@ -926,7 +927,7 @@ public class Clan extends DatabaseObject<Clan> {
                             //I.LogSlash(TLG(I,"nickname-modify-interact-fail", "**" + member.getEffectiveName() + "**"));
                         }
                     } else {
-                        I.setClanTagsAllowed(false);
+                        I.setAreClanTagsAllowed(false);
                         I.Update();
                         //if (!isStartup) I.LogSlash(TLG(I,"nickname-modify-permission-fail", "**" + member.getEffectiveName() + "**"));
                     }
@@ -947,7 +948,7 @@ public class Clan extends DatabaseObject<Clan> {
                         //I.LogSlash(TLG(I, "nickname-modify-interact-fail", "**" + member.getEffectiveName() + "**", getTag()));
                     }
                 } else {
-                    I.setClanTagsAllowed(false);
+                    I.setAreClanTagsAllowed(false);
                     I.Update();
                     //I.LogSlash(TLG(I, "nickname-modify-permission-fail", "**" + member.getEffectiveName() + "**", getTag()));
                 }
@@ -1082,7 +1083,7 @@ public class Clan extends DatabaseObject<Clan> {
         clanprofile.setColor(getColor());
         clanprofile.setDescription(getDescription());
 
-        clanprofile.setTitle((":white_check_mark: ") + getTag() + " | " + getName());
+        clanprofile.setTitle((":white_check_mark: ") + getTag() + " | " + getName(), DefaultURL + "/c/" + getId());
 
 
         String flag = getNationality().getFlag().getFormatted();

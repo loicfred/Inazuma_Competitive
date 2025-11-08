@@ -122,7 +122,7 @@ public class AdminFeatures extends ListenerAdapter {
 
                                                     if (start_medals < end_medals && start_medals > -1) {
                                                         if (I.Ranking().getTierByMedal(start_medals) == null && I.Ranking().getTierByMedal(end_medals) == null) {
-                                                            League.League_Tier L = new League.League_Tier(I.getId(), name, colorcode, start_medals, end_medals, emoji.getIdLong());
+                                                            League.League_Tier L = new League.League_Tier(I.getID(), name, colorcode, start_medals, end_medals, emoji.getIdLong());
                                                             EmbedBuilder E = new EmbedBuilder();
                                                             E.setTitle(TL(M, "ranking-manager"));
                                                             E.setDescription(TL(M, "ranking-manager-leagues-description"));
@@ -174,7 +174,7 @@ public class AdminFeatures extends ListenerAdapter {
 
                                                 if (start_medals >= end_medals && start_medals > -1 && end_medals > 0) {
                                                     if (I.Ranking().getLeagueByMedal(start_medals) == null && I.Ranking().getLeagueByMedal(end_medals) == null) {
-                                                        League L = new League(tier, I.getId(), name, start_medals, end_medals, power, emoji.getIdLong());
+                                                        League L = new League(tier, I.getID(), name, start_medals, end_medals, power, emoji.getIdLong());
                                                         EmbedBuilder E = new EmbedBuilder();
                                                         E.setTitle(TL(M, "ranking-manager"));
                                                         E.setDescription(TL(M, "ranking-manager-leagues-description"));
@@ -309,7 +309,7 @@ public class AdminFeatures extends ListenerAdapter {
                                                 I.Update();
                                                 Item IT = I.getCurrency();
                                                 if (IT == null) {
-                                                    IT = new Item(I.getId(), name, description, Item.ItemType.CURRENCY, emoji.getIdLong());
+                                                    IT = new Item(I.getID(), name, description, Item.ItemType.CURRENCY, emoji.getIdLong());
                                                 } else {
                                                     IT.setName(name);
                                                     IT.setDescription(description);
@@ -350,7 +350,7 @@ public class AdminFeatures extends ListenerAdapter {
                                                     Message.Attachment img = event.getOption("img-asset").getAsAttachment();
                                                     if (img.getWidth() != 450 && img.getHeight() != 450) M.editOriginal(TL(M, "server-economy-item-add-error-3", 450, 450)).queue();
                                                 }
-                                                Item IT = new Item(I.getId(), name, description, Item.ItemType.valueOf(type), emoji.getIdLong());
+                                                Item IT = new Item(I.getID(), name, description, Item.ItemType.valueOf(type), emoji.getIdLong());
                                                 IT.setPrice(I.getCurrency().getId(), price);
                                                 IT.Update();
                                                 EmbedBuilder E = I.getServerEmbed();
@@ -657,12 +657,12 @@ public class AdminFeatures extends ListenerAdapter {
                             event.deferEdit().queue(MM -> {
                                 try {
                                     if (isBotOwner(event.getUser())) {
-                                        I.setScoresAllowed(event.getValues().contains("Match-Result"));
-                                        I.setTournamentsAllowed(event.getValues().contains("Tournament"));
+                                        I.setAreScoresAllowed(event.getValues().contains("Match-Result"));
+                                        I.setAreTournamentsAllowed(event.getValues().contains("Tournament"));
                                     }
-                                    I.setClanRolesAllowed(event.getValues().contains("Clan-Roles"));
-                                    I.setClanTagsAllowed(event.getValues().contains("Clan-Tags"));
-                                    I.setWinnerRolesAllowed(event.getValues().contains("Winner-Roles"));
+                                    I.setAreClanRolesAllowed(event.getValues().contains("Clan-Roles"));
+                                    I.setAreClanTagsAllowed(event.getValues().contains("Clan-Tags"));
+                                    I.setAreWinnerRolesAllowed(event.getValues().contains("Winner-Roles"));
                                     I.Update();
                                     slashAdmServerManage(MM, I);
                                     if (I.areClanRolesAllowed || I.areClanTagsAllowed) RefreshAllClanMembers(Clan.listOpen());
@@ -820,13 +820,13 @@ public class AdminFeatures extends ListenerAdapter {
                             }
                             else if (event.getComponentId().startsWith("adm-ranking-manage-tier")) {
                                 event.deferReply(true).queue(M -> {
-                                    DoubleIDCommand CMD2 = new DoubleIDCommand(I.getId(), Long.parseLong(event.getValues().getFirst()));
+                                    DoubleIDCommand CMD2 = new DoubleIDCommand(I.getID(), Long.parseLong(event.getValues().getFirst()));
                                     EditLeagueTier(CMD2, M, League.League_Tier.get(CMD2.ObjectID));
                                 });
                             }
                             else if (event.getComponentId().startsWith("adm-ranking-manage-league")) {
                                 event.deferReply(true).queue(M -> {
-                                    DoubleIDCommand CMD2 = new DoubleIDCommand(I.getId(), Long.parseLong(event.getValues().getFirst()));
+                                    DoubleIDCommand CMD2 = new DoubleIDCommand(I.getID(), Long.parseLong(event.getValues().getFirst()));
                                     EditLeague(CMD2, M, League.get(CMD2.ObjectID));
                                 });
                             }
@@ -840,7 +840,7 @@ public class AdminFeatures extends ListenerAdapter {
                         }
                         else if (event.getComponentId().startsWith("adm-shop-manage-item")) {
                             event.deferReply(true).queue(M -> {
-                                DoubleIDCommand CMD2 = new DoubleIDCommand(I.getId(), Long.parseLong(event.getValues().getFirst()));
+                                DoubleIDCommand CMD2 = new DoubleIDCommand(I.getID(), Long.parseLong(event.getValues().getFirst()));
                                 EditShopItem(CMD2, M, I, I.getItem(CMD2.ObjectID));
                             });
                         }
@@ -864,7 +864,7 @@ public class AdminFeatures extends ListenerAdapter {
                             event.deferEdit().queue(M -> {
                                 try {
                                     if (event.getComponentId().startsWith("adm-rank-type")) {
-                                        I.setGlobalRankAllowed(event.getValues().contains("Global"));
+                                        I.setAreGlobalRankAllowed(event.getValues().contains("Global"));
                                         for (Game G : Game.values()) I.setGameRanksAllowed(event.getValues().contains(G.getCode()), G);
                                     }
                                     I.Update();
@@ -1135,7 +1135,7 @@ public class AdminFeatures extends ListenerAdapter {
     public static void slashAdmServerManage(InteractionHook M, ServerInfo I) {
         try {
             if (isAdmin(M, M.getInteraction().getMember())) {
-                IDCommand CMD = new IDCommand(I.getId());
+                IDCommand CMD = new IDCommand(I.getID());
 
                 EmbedBuilder E = I.getServerEmbed();
                 E.setTitle(TL(M,"server-manager"));
@@ -1200,7 +1200,7 @@ public class AdminFeatures extends ListenerAdapter {
     public static void slashAdmRankingManage(InteractionHook M, ServerInfo I) {
         try {
             if (isAdmin(M, M.getInteraction().getMember())) {
-                IDCommand CMD = new IDCommand(I.getId());
+                IDCommand CMD = new IDCommand(I.getID());
 
                 EmbedBuilder E = I.getServerEmbed();
                 E.setTitle(TL(M,"ranking-manager"));
@@ -1247,7 +1247,7 @@ public class AdminFeatures extends ListenerAdapter {
             , TextChannel InscriptionChannel, TextChannel PanelChannel, TextChannel RulesChannel, TextChannel ResultChannel, TextChannel PredictionChannel, Role ParticipantRole, Role OrganizerRole, int CAP, boolean notify, Long customStartTime) throws Exception {
         Tournament T = retrieveFromAccessedTournaments(url, name, false);
         ServerInfo IsOwnedBy = retrieveServerOwnedFrom(T);
-        if (IsOwnedBy != null && IsOwnedBy.getId() != I.getId()) {
+        if (IsOwnedBy != null && IsOwnedBy.getID() != I.getID()) {
             M.editOriginal(TL(M, "tournament-set-not-belong-this-server", "**" + IsOwnedBy.getName() + "**")).queue();
         } else {
             // Check if tournament is eligible for Inscriptions
@@ -1351,7 +1351,7 @@ public class AdminFeatures extends ListenerAdapter {
             try {
                 Tournament T = retrieveFromAccessedTournaments(url, url, true);
                 ServerInfo IsOwnedBy = retrieveServerOwnedFrom(T);
-                if (IsOwnedBy == null || IsOwnedBy.getId() == I.getId() || isTournamentManager(M.getInteraction().getUser())) {
+                if (IsOwnedBy == null || IsOwnedBy.getID() == I.getID() || isTournamentManager(M.getInteraction().getUser())) {
                     SChallonge_Tournament CT = I.getChallonge(T.getId());
                     if (CT != null) {
                         ChallongeCommand CMD = new ChallongeCommand("null");

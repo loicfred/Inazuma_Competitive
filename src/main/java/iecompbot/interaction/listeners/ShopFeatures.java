@@ -111,7 +111,7 @@ public class ShopFeatures extends ListenerAdapter {
                                                 E.setDescription(":white_check_mark: " + TL(M, "shop-buy-success", "**" + CMD.getItem().getEmojiFormatted() + " " + CMD.getItem().getName() + "**") + "\n" + (CMD.getItem().getServerId() != null ? TL(M, "server-economy-buy-success-adm") : ""));
                                                 M.editOriginalEmbeds(E.build()).setReplace(true).queue();
                                                 if (CMD.getItem().getId() == 1101) { // Shiny Card
-                                                    CMD.getProfile().setGIF(true);
+                                                    CMD.getProfile().setHasGIF(true);
                                                     CMD.getProfile().UpdateOnly("hasGIF");
                                                 }
                                             }
@@ -167,7 +167,7 @@ public class ShopFeatures extends ListenerAdapter {
                             event.deferReply(true).queue(M -> {
                                 try {
                                     Profile P = Profile.get(event.getUser());
-                                    P.ViewInventory(M, new PageViewerCommand(P.getId(), "pf-inv-cp"));
+                                    P.ViewInventory(M, new PageViewerCommand(P.getID(), "pf-inv-cp"));
                                 } catch (Exception e) {
                                     replyException(M, e);
                                 }
@@ -626,7 +626,7 @@ public class ShopFeatures extends ListenerAdapter {
             try {
                 String name = StopString(ClearClanTags(P.getUser().getEffectiveName(), cls), 14);
                 if (CMD.IncludeClan) {
-                    clan = Clan.getClanOfUser(P.getId());
+                    clan = Clan.getClanOfUser(P.getID());
                     isInClan = (clan != null ? "**" + clan.getTag() + " • **" : "");
                 }
                 s1 = s1 + "`" + i + ")` " + P.getNationality().getFlag().getFormatted() + " " + isInClan + name + "\n";

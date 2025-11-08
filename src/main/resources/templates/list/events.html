@@ -40,7 +40,7 @@
             transition: 0.2s;
             gap: 10px;
             width: 95%;
-            height: 120px;
+            min-height: 120px;
             padding: 2px;
         }
         .clan-box2:hover {
@@ -67,6 +67,9 @@
             .clan-box2 {
                 flex-direction: column;
             }
+            p {
+                font-size: 8px;
+            }
         }
     </style>
 </head>
@@ -81,8 +84,8 @@
                 <div th:style="'flex-direction: column;'">
                     <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
                     <div style="display: flex; gap: 5px;">
-                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
-                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
                     </div>
                 </div>
             </a>
@@ -99,8 +102,8 @@
                 <div th:style="'flex-direction: column;'">
                     <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
                     <div style="display: flex; gap: 5px;">
-                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
-                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
                     </div>
                 </div>
             </a>
@@ -116,8 +119,8 @@
                 <div th:style="'flex-direction: column;'">
                     <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
                     <div style="display: flex; gap: 5px;">
-                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
-                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
                     </div>
                 </div>
             </a>
@@ -133,8 +136,8 @@
                 <div th:style="'flex-direction: column;'">
                     <p class="IEStrike mb-0" th:utext="${each.getDescription().length() > 300 ? each.getDescription().substring(0,300) + '...' : each.getDescription()}"></p>
                     <div style="display: flex; gap: 5px;">
-                        <p class="IEStrike mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
-                        <p class="IEStrike mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Started: ' + ${#dates.format(each.getStartedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
+                        <p class="IEItalic mb-0" th:text="'Completed: ' + ${#dates.format(each.getCompletedAtTimeEpochSecond() * 1000, 'dd/MM/yyyy')}"></p>
                     </div>
                 </div>
             </a>

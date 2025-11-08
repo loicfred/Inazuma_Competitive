@@ -24,7 +24,7 @@
         }
         .clanlink {
             font: 11px IEStrike, sans-serif;
-            padding-right: 3px;
+            padding-right: 4px;
             padding-left: 3px;
         }
         #nameBox {
@@ -38,6 +38,9 @@
             margin: 5px 5px 10px 30px;
         }
 
+        th {
+            text-align: center;
+        }
 
         .clanbutton {
             display: flex;
@@ -181,7 +184,7 @@
     <button class="tab-button" th:onclick="|showTab(1)|">Tournaments</button>
     <button class="tab-button" th:onclick="|showTab(2)|">Matches</button>
     <button class="tab-button" th:onclick="|showTab(3)|">Clans</button>
-    <button th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == profile.getId()}" class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
+    <button th:if="${#authorization.expression('isAuthenticated()') && (#authentication.principal.attributes['id'] == profile.getID() || managers.isBotOwner(#authentication.principal.attributes['id']))}" class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
 </div>
 
 <div layout:fragment="profile_media">
@@ -277,26 +280,28 @@
     <div id="tab4-clan-log"></div>
 </div>
 
-<div layout:fragment="profile_tab5" th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == profile.getId()}">
+<div layout:fragment="profile_tab5" th:if="${#authorization.expression('isAuthenticated()') && (#authentication.principal.attributes['id'] == profile.getID() || managers.isBotOwner(#authentication.principal.attributes['id']))}">
     <form id="profileForm" style="display: flex" th:action="${'/p/' + profile.ID + '/update'}" th:object="${profile}" method="post" >
         <input id="profileid" type="hidden" th:field="*{ID}" />
         <div class="formSide" id="FORM_UPDATE_1">
-            <label th:text="Signature" class="IEStrike mb-3">
-                <textarea th:field="*{Signature}" th:text="${profile.getSignature()}" maxlength="128" rows="2"></textarea>
-            </label>
+            <div class="form-group2">
+                <label class="IEStrike" for="eSignature">Signature</label>
+                <textarea id="eSignature" th:field="*{Signature}" maxlength="128" rows="2"></textarea>
+            </div>
 
-            <label th:text="ColorCode" class="IEStrike mb-3" style="display: flex; align-items: center; width: 100%; padding-right: 10px;">
-                <input class="ms-auto" type="color" th:field="*{ColorCode}" th:value="${profile.getColorCode() == null ? '' : profile.getColorCode()}">
-            </label>
+            <div class="form-group2">
+                <label class="IEStrike" for="History">History</label>
+                <textarea id="History" th:field="*{History}" maxlength="1024" rows="7"></textarea>
+            </div>
 
-            <label th:text="Birthday" class="IEStrike mb-3">
-                <textarea th:field="*{BirthdayEpochSecond}" th:text="${profile.getBirthday()}"></textarea>
-                <input type="date" th:field="*{BirthdayEpochSecond}" th:value="${profile.BirthdayEpochSecond != null ? #dates.format(profile.BirthdayEpochSecond * 1000, 'yyyy-MM-dd') : ''}">
-            </label>
+            <div class="form-group">
+                <label class="IEStrike" for="ColorCode">Color</label>
+                <input class="ms-auto" id="ColorCode" type="color" th:field="*{ColorCode}">
+            </div>
 
             <div class="mb-3">
-                <label th:text="Nationality" class="IEStrike" for="editnationality"></label>
-                <select th:field="*{NationalityName}" name="nationality" id="editnationality" style="background-color: black;">
+                <label text="Nationality" class="IEStrike" for="NationalityName"></label>
+                <select th:field="*{NationalityName}" id="NationalityName" style="background-color: black;">
                     <option th:each="nation : ${profile.getNationality().getNationalities()}"
                             th:value="${nation.getName()}"
                             th:text="${nation.getCodepoints() + ' ' + nation.getName()}"
@@ -304,9 +309,74 @@
                     </option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="WebsiteURL">Website URL</label>
+                <input type="text" id="WebsiteURL" maxlength="256" th:field="*{WebsiteURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="TwitchURL">Twitch URL</label>
+                <input type="text" id="TwitchURL" maxlength="256" th:field="*{TwitchURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="YouTubeURL">YouTube URL</label>
+                <input type="text" id="YouTubeURL" maxlength="256" th:field="*{YouTubeURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="DiscordURL">Discord URL</label>
+                <input type="text" id="DiscordURL" maxlength="256" th:field="*{DiscordURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="TiktokURL">Tiktok URL</label>
+                <input type="text" id="TiktokURL" maxlength="256" th:field="*{TiktokURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="InstagramURL">Instagram URL</label>
+                <input type="text" id="InstagramURL" maxlength="256" th:field="*{InstagramURL}">
+            </div>
         </div>
         <div class="formSide" id="FORM_UPDATE_2">
+            <div style="display: flex; width: 100%; padding-right: 10px;">
+                <label class="IEStrike" for="hasMatchmakingNotification">Toggle Matchmaking Notification</label>
+                <label class="switch" style="margin-left: auto;">
+                    <input type="checkbox" id="hasMatchmakingNotification" th:field="*{hasMatchmakingNotification}">
+                    <span class="slider round"></span>
+                </label>
+            </div>
 
+            <div style="display: flex; width: 100%; padding-right: 10px;">
+                <label class="IEStrike" for="hasTournamentNotification">Toggle Matchmaking Notification</label>
+                <label class="switch" style="margin-left: auto;">
+                    <input type="checkbox" id="hasTournamentNotification" th:field="*{hasTournamentNotification}">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div style="display: flex; width: 100%; padding-right: 10px;">
+                <label class="IEStrike" for="hasGIF">Toggle Card GIF (if has Shiny Card)</label>
+                <label class="switch" style="margin-left: auto;">
+                    <input type="checkbox" id="hasGIF" th:field="*{hasGIF}">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="StrikersFriendcode">Strikers Friendcode</label>
+                <input type="text" id="StrikersFriendcode" maxlength="12" th:field="*{StrikersFriendcode}">
+            </div>
+            <div class="form-group">
+                <label class="IEStrike" for="XtremeFriendcode">Xtreme</label>
+                <input type="text" id="XtremeFriendcode" maxlength="12" th:field="*{XtremeFriendcode}">
+            </div>
+            <div class="form-group">
+                <label class="IEStrike" for="SwitchFriendcode">Switch Friendcode</label>
+                <input type="text" id="SwitchFriendcode" maxlength="12" th:field="*{SwitchFriendcode}">
+            </div>
         </div>
     </form>
 </div>

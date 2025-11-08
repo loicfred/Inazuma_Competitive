@@ -1104,12 +1104,12 @@ public class GuildReady {
                         if (Tier.getStart() <= 0) continue;
                         if (I.areGlobalRankAllowed) {
                             Role R = I.Roles().getLeagueRole(Tier);
-                            for (DatabaseObject.Row PT : I.Ranking().hasPrivateRanking() ? doQueryAll("SELECT UserID, SUM(Medals) AS 'Medals' FROM inazuma_competitive.profile_game_s WHERE ServerID = ? GROUP BY UserID HAVING ? <= Medals AND Medals <= ?", I.getId(), Tier.getStart(), Tier.getEnd()) : LMap.get(Tier)) {
+                            for (DatabaseObject.Row PT : I.Ranking().hasPrivateRanking() ? doQueryAll("SELECT UserID, SUM(Medals) AS 'Medals' FROM inazuma_competitive.profile_game_s WHERE ServerID = ? GROUP BY UserID HAVING ? <= Medals AND Medals <= ?", I.getID(), Tier.getStart(), Tier.getEnd()) : LMap.get(Tier)) {
                                 Member M = I.getGuild().getMemberById(PT.getAsLong("UserID"));
                                 I.Roles().AddRoleToMember(R, Tier.getTierEmojiFormatted(), M);
                             }
                             if (R != null) for (Member M : I.getGuild().getMembersWithRoles(R)) {
-                                League PT = I.Ranking().hasPrivateRanking() ? Profile_Total.get(M.getIdLong()).getLeague(I.getId()) : Profile_Total.get(M.getIdLong()).getLeague();
+                                League PT = I.Ranking().hasPrivateRanking() ? Profile_Total.get(M.getIdLong()).getLeague(I.getID()) : Profile_Total.get(M.getIdLong()).getLeague();
                                 if (PT.getTier().getId() != Tier.getId()) {
                                     I.Roles().RemoveRoleFromMember(R, Tier.getTierEmojiFormatted(), M);
                                 }
@@ -1119,12 +1119,12 @@ public class GuildReady {
                         for (Game G : Game.values()) {
                             if (I.isGameRankAllowed(G)) {
                                 Role R = I.Roles().getLeagueRole(Tier, G);
-                                for (BasePG<?> PT : I.Ranking().hasPrivateRanking() ? getAllWhere(Profile_Game_S.class, "ServerID = ? AND ? <= Medals AND Medals <= ? AND GameCode = ?", I.getId(), Tier.getStart(), Tier.getEnd(), G.getCode()) : GMap.get(G).get(Tier)) {
+                                for (BasePG<?> PT : I.Ranking().hasPrivateRanking() ? getAllWhere(Profile_Game_S.class, "ServerID = ? AND ? <= Medals AND Medals <= ? AND GameCode = ?", I.getID(), Tier.getStart(), Tier.getEnd(), G.getCode()) : GMap.get(G).get(Tier)) {
                                     Member M = I.getGuild().getMemberById(PT.getUserID());
                                     I.Roles().AddRoleToMember(R, Tier.getTierEmojiFormatted(), M);
                                 }
                                 if (R != null) for (Member M : I.getGuild().getMembersWithRoles(R)) {
-                                    BasePG<?> PT = I.Ranking().hasPrivateRanking() ? Profile_Game_S.get(M.getIdLong(), I.getId(), G) : Profile_Game.get(M.getIdLong(), G);
+                                    BasePG<?> PT = I.Ranking().hasPrivateRanking() ? Profile_Game_S.get(M.getIdLong(), I.getID(), G) : Profile_Game.get(M.getIdLong(), G);
                                     if (PT.getLeague().getTier().getId() != Tier.getId()) {
                                         I.Roles().RemoveRoleFromMember(R, Tier.getTierEmojiFormatted(), M);
                                     }
@@ -1169,11 +1169,11 @@ public class GuildReady {
         System.out.println("[Setup] Refresh clan servers...");
         ExecutorService CachedPool = Executors.newFixedThreadPool(20);
         for (ServerInfo I : getServersNeedingCommands()) {
-            if (I.getGuild() != null && I.getId() != 930718276542136400L) CachedPool.execute(() -> {
+            if (I.getGuild() != null && I.getID() != 930718276542136400L) CachedPool.execute(() -> {
                 try {
                     List<CommandData> GuildCmd = new ArrayList<>();
                     try {
-                        Clan clan = getWhere(Clan.class, "ClanServerID = ?", I.getId()).orElse(null);
+                        Clan clan = getWhere(Clan.class, "ClanServerID = ?", I.getID()).orElse(null);
                         if (clan != null) {
                             String tag = "";
                             for (char c : RemoveNumbers(CharFix(clan.Tag)).toCharArray()) {
@@ -1246,7 +1246,7 @@ public class GuildReady {
                     try {
                         I.getGuild().updateCommands().addCommands(GuildCmd).queue(commands -> {
                         }, new ErrorHandler().handle(ErrorResponse.MISSING_ACCESS, error -> {
-                            System.out.println("Missing Access in: [" + I.getName() + "/" + I.getId() + "]");
+                            System.out.println("Missing Access in: [" + I.getName() + "/" + I.getID() + "]");
                         }));
                     } catch (ErrorResponseException e) {
                         handleException(e);
@@ -1461,7 +1461,7 @@ public class GuildReady {
                         new OptionData(OptionType.STRING, "message", "The message's link.", true)));
 
                 try {
-                    Clan clan = getWhere(Clan.class, "ClanServerID = ?", I.getId()).orElse(null);
+                    Clan clan = getWhere(Clan.class, "ClanServerID = ?", I.getID()).orElse(null);
                     if (clan != null) {
                         String tag = "";
                         for (char c : RemoveNumbers(CharFix(clan.Tag)).toCharArray()) {
@@ -1530,7 +1530,7 @@ public class GuildReady {
 
                 I.getGuild().updateCommands().addCommands(GuildCmd).queue(commands -> {
                 }, new ErrorHandler().handle(ErrorResponse.MISSING_ACCESS, error -> {
-                    System.out.println("Missing Access in: [" + I.getName() + "/" + I.getId() + "]");
+                    System.out.println("Missing Access in: [" + I.getName() + "/" + I.getID() + "]");
                 }));
             }
         } catch (Exception e) {

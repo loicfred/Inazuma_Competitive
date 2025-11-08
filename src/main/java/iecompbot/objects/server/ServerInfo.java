@@ -55,7 +55,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     private transient List<Blacklist> Blacklists;
     private transient List<Item> AllItems;
 
-    private long ID;
+    public long ID;
     public String Name;
     public String Description;
     public String IconUrl;
@@ -120,11 +120,18 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     public int CurrencyPerTop3 = 0;
 
 
-    public long getId() {
+
+
+
+
+    public long getID() {
         return ID;
     }
     public String getName() {
         return Name;
+    }
+    public String getDescription() {
+        return Description;
     }
     public String getFlag() {
         if (NationalityName == null) return "";
@@ -137,6 +144,9 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     }
     public String getOwnerID() {
         return OwnerID;
+    }
+    public boolean isPublic() {
+        return isPublic;
     }
     private transient User owner;
     public User getOwner() {
@@ -169,6 +179,24 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     public int getToleranceLevel() {
         return ToleranceLevel;
     }
+    public boolean isAdminAcceptOnly() {
+        return AdminAcceptOnly;
+    }
+    public boolean isAreScoresAllowed() {
+        return areScoresAllowed;
+    }
+    public boolean isAreTournamentsAllowed() {
+        return areTournamentsAllowed;
+    }
+    public boolean isAreWinnerRolesAllowed() {
+        return areWinnerRolesAllowed;
+    }
+    public boolean isAreClanRolesAllowed() {
+        return areClanRolesAllowed;
+    }
+    public boolean isAreClanTagsAllowed() {
+        return areClanTagsAllowed;
+    }
     public int getTournamentCount() {
         return TournamentCount;
     }
@@ -194,7 +222,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
         return Ranking().hasPrivateRanking() || showBoardMembersOnly;
     }
     public int getMatchesCount() {
-        return Math.toIntExact(Count(MatchLog_S.class, "ServerID = ?", getId()));
+        return Math.toIntExact(Count(MatchLog_S.class, "ServerID = ?", getID()));
     }
 
     public boolean isGameRankAllowed(Game game) {
@@ -232,6 +260,9 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     }
 
 
+    public void setID(long id) {
+        ID = id;
+    }
     public void setName(String name) {
         Name = name;
     }
@@ -259,29 +290,32 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     public void setHistory(String history) {
         History = StopString(history, 1024);
     }
+    public void setIsPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
     }
     public void setAdminAcceptOnly(boolean adminAcceptOnly) {
         AdminAcceptOnly = adminAcceptOnly;
     }
-    public void setScoresAllowed(boolean areScoresAllowed) {
+    public void setAreScoresAllowed(boolean areScoresAllowed) {
         this.areScoresAllowed = areScoresAllowed;
     }
-    public void setTournamentsAllowed(boolean areTournamentsAllowed) {
+    public void setAreTournamentsAllowed(boolean areTournamentsAllowed) {
         this.areTournamentsAllowed = areTournamentsAllowed;
     }
-    public void setWinnerRolesAllowed(boolean areWinnerRolesAllowed) {
+    public void setAreWinnerRolesAllowed(boolean areWinnerRolesAllowed) {
         this.areWinnerRolesAllowed = areWinnerRolesAllowed;
     }
-    public void setClanRolesAllowed(boolean areClanRolesAllowed) {
+    public void setAreClanRolesAllowed(boolean areClanRolesAllowed) {
         this.areClanRolesAllowed = areClanRolesAllowed;
     }
-    public void setClanTagsAllowed(boolean areClanTagsAllowed) {
+    public void setAreClanTagsAllowed(boolean areClanTagsAllowed) {
         this.areClanTagsAllowed = areClanTagsAllowed;
     }
 
-    public void setGlobalRankAllowed(boolean areGlobalRankAllowed) {
+    public void setAreGlobalRankAllowed(boolean areGlobalRankAllowed) {
         this.areGlobalRankAllowed = areGlobalRankAllowed;
     }
     public void setGameRanksAllowed(boolean isAllowed, Game G) {
@@ -345,7 +379,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
     }
     public List<SChallonge_Tournament> getChallonges(boolean completedOnly) {
         if (completedOnly) {
-            List<SChallonge_Tournament> T = getAllWhere(SChallonge_Tournament.class,"ServerID = ? AND State = ? ORDER BY ID DESC", getId(), TournamentState.COMPLETE.toString());
+            List<SChallonge_Tournament> T = getAllWhere(SChallonge_Tournament.class,"ServerID = ? AND State = ? ORDER BY ID DESC", getID(), TournamentState.COMPLETE.toString());
             for (SChallonge_Tournament CT : T) CT.I = this;
             return T;
         } else {
@@ -353,7 +387,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
         }
     }
     public List<SChallonge_Tournament> getActiveChallonges() {
-        List<SChallonge_Tournament> CTS = getAllWhere(SChallonge_Tournament.class,"ServerID = ? AND NOT State = ? AND (StartedAtTimeEpochSecond = 0 OR StartedAtTimeEpochSecond > ?)", getId(), TournamentState.COMPLETE.toString(), Instant.now().minus(30, ChronoUnit.DAYS).getEpochSecond());
+        List<SChallonge_Tournament> CTS = getAllWhere(SChallonge_Tournament.class,"ServerID = ? AND NOT State = ? AND (StartedAtTimeEpochSecond = 0 OR StartedAtTimeEpochSecond > ?)", getID(), TournamentState.COMPLETE.toString(), Instant.now().minus(30, ChronoUnit.DAYS).getEpochSecond());
         for (SChallonge_Tournament ct : CTS) ct.I = this;
         return CTS;
     }
@@ -376,16 +410,16 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
 
 
     public List<Item> listItems() {
-        return AllItems == null ? AllItems = Item.getAllWhere(Item.class, "ServerID = ? AND NOT TYPE = 'CURRENCY'", getId()) : AllItems;
+        return AllItems == null ? AllItems = Item.getAllWhere(Item.class, "ServerID = ? AND NOT TYPE = 'CURRENCY'", getID()) : AllItems;
     }
     public Item getCurrency() {
-        return cacheService.getCachedCurrency(getId());
+        return cacheService.getCachedCurrency(getID());
     }
     public Item getItem(long id) {
         return Item.get(id);
     }
     public Item getItem(String name) {
-        return cacheService.getCachedItemByName(name, getId());
+        return cacheService.getCachedItemByName(name, getID());
     }
     public List<Item> getItems(Item.ItemType type) {
         return cacheService.getCachedItemByType(type, null);
@@ -533,7 +567,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
         return Channels == null ? Channels = ServerInfo_Channels.get(this) : Channels;
     }
     public synchronized ServerInfo_Ranking Ranking() {
-        return Ranking == null ? Ranking = ServerInfo_Ranking.get(getId()) : Ranking;
+        return Ranking == null ? Ranking = ServerInfo_Ranking.get(getID()) : Ranking;
     }
 
 
@@ -621,7 +655,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                 }
                 setDominantColorcode(getHexValue(getDominantColor(getGuild().getIconUrl())));
                 setIconUrl(getIconUrl());
-                TournamentCount = Count(SChallonge_Tournament.class, "ServerID = ?", getId());
+                TournamentCount = Count(SChallonge_Tournament.class, "ServerID = ?", getID());
             } catch (IOException ignored) {
             }
             setMemberCount(getGuild().getMemberCount());
@@ -784,13 +818,13 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
 
         private ServerInfo_Channels() {}
         public ServerInfo_Channels(ServerInfo I) {
-            this.ID = I.getId();
+            this.ID = I.getID();
             this.I = I;
             Write();
         }
 
         public static ServerInfo_Channels get(ServerInfo I) {
-            ServerInfo_Channels S = getById(ServerInfo_Channels.class, I.getId()).orElseGet(() -> new ServerInfo_Channels(I));
+            ServerInfo_Channels S = getById(ServerInfo_Channels.class, I.getID()).orElseGet(() -> new ServerInfo_Channels(I));
             S.I = I;
             return S;
         }
@@ -985,8 +1019,8 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                         return newrole;
                     }
                 } else {
-                    I.setClanRolesAllowed(false);
-                    I.setGlobalRankAllowed(false);
+                    I.setAreClanRolesAllowed(false);
+                    I.setAreGlobalRankAllowed(false);
                     for (Game G : Game.values()) I.setGameRanksAllowed(false, G);
                     I.Update();
                     //I.LogSlash(TLG(I,"role-create-permission-fail",  roleemoji + " **__" + name + "__**"));
@@ -1006,8 +1040,8 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                             }
                         }
                     } else {
-                        I.setClanRolesAllowed(false);
-                        I.setGlobalRankAllowed(false);
+                        I.setAreClanRolesAllowed(false);
+                        I.setAreGlobalRankAllowed(false);
                         for (Game G : Game.values()) I.setGameRanksAllowed(false, G);
                         I.Update();
                     }
@@ -1024,8 +1058,8 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                             //I.LogSlash(TLG(I, "role-recolor-interact-fail", roleemoji + " **__" + role.getName() + "__**"));
                         }
                     } else {
-                        I.setClanRolesAllowed(false);
-                        I.setGlobalRankAllowed(false);
+                        I.setAreClanRolesAllowed(false);
+                        I.setAreGlobalRankAllowed(false);
                         for (Game G : Game.values()) I.setGameRanksAllowed(false, G);
                         I.Update();
                         //I.LogSlash(TLG(I, "role-recolor-permission-fail", roleemoji + " **__" + role.getName() + "__**"));
@@ -1043,8 +1077,8 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                         //I.LogSlash(TLG(I,"role-rename-interact-fail", roleemoji + " **__" + role.getName() + "__**"));
                     }
                 } else {
-                    I.setClanRolesAllowed(false);
-                    I.setGlobalRankAllowed(false);
+                    I.setAreClanRolesAllowed(false);
+                    I.setAreGlobalRankAllowed(false);
                     for (Game G : Game.values()) I.setGameRanksAllowed(false, G);
                     I.Update();
                     //I.LogSlash(TLG(I,"role-rename-permission-fail", roleemoji + " **__" + role.getName() + "__**"));
@@ -1060,8 +1094,8 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                         //I.LogSlash(TLG(I,"role-delete-interact-fail", roleemoji + " **__" + role.getName() + "__**"));
                     }
                 } else {
-                    I.setClanRolesAllowed(false);
-                    I.setGlobalRankAllowed(false);
+                    I.setAreClanRolesAllowed(false);
+                    I.setAreGlobalRankAllowed(false);
                     for (Game G : Game.values()) I.setGameRanksAllowed(false, G);
                     I.Update();
                     //I.LogSlash(TLG(I,"role-delete-permission-fail", roleemoji + " **__" + role.getName() + "__**"));
@@ -1079,8 +1113,8 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                             //if (!isStartup) I.LogSlash(TLG(I, "role-add-interact-fail", roleemoji + " **__" + role.getName() + "__**", "**" + member.getEffectiveName() + "**"));
                         }
                     } else {
-                        I.setClanRolesAllowed(false);
-                        I.setGlobalRankAllowed(false);
+                        I.setAreClanRolesAllowed(false);
+                        I.setAreGlobalRankAllowed(false);
                         for (Game G : Game.values()) I.setGameRanksAllowed(false, G);
                         I.Update();
                         //if (!isStartup) I.LogSlash(TLG(I, "role-add-permission-fail", roleemoji + " **__" + role.getName() + "__**", "**" + member.getEffectiveName() + "**"));
@@ -1099,8 +1133,8 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
                             //I.LogSlash(TLG(I, "role-remove-interact-fail", roleemoji + " **__" + role.getName() + "__**", "**" + member.getEffectiveName() + "**"));
                         }
                     } else {
-                        I.setClanRolesAllowed(false);
-                        I.setGlobalRankAllowed(false);
+                        I.setAreClanRolesAllowed(false);
+                        I.setAreGlobalRankAllowed(false);
                         for (Game G : Game.values()) I.setGameRanksAllowed(false, G);
                         I.Update();
                         //I.LogSlash(TLG(I, "role-remove-permission-fail", roleemoji + " **__" + role.getName() + "__**", "**" + member.getEffectiveName() + "**"));
@@ -1152,7 +1186,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
         }
 
         public static ServerInfo_Roles get(ServerInfo I) {
-            ServerInfo_Roles S = getById(ServerInfo_Roles.class, I.getId()).orElseGet(() -> new ServerInfo_Roles(I));
+            ServerInfo_Roles S = getById(ServerInfo_Roles.class, I.getID()).orElseGet(() -> new ServerInfo_Roles(I));
             S.I = I;
             return S;
         }
@@ -1173,7 +1207,7 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
         private ServerInfo_Matchmaking() {}
         public ServerInfo_Matchmaking(ServerInfo I, Long channelId, Long roleId, Game game) {
             ID = Instant.now().toEpochMilli();
-            ServerID = I.getId();
+            ServerID = I.getID();
             ChannelID = channelId;
             RoleID = roleId;
             GameCode = game.getCode();
@@ -1218,13 +1252,13 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
         }
 
         public static ServerInfo_Matchmaking get(ServerInfo I, Game game) {
-            ServerInfo_Matchmaking S = getWhere(ServerInfo_Matchmaking.class, "ServerID = ? AND GameCode = ?", I.getId(), game.getCode()).orElse(new ServerInfo_Matchmaking(I, null, null, game));
+            ServerInfo_Matchmaking S = getWhere(ServerInfo_Matchmaking.class, "ServerID = ? AND GameCode = ?", I.getID(), game.getCode()).orElse(new ServerInfo_Matchmaking(I, null, null, game));
             if (S == null) return null;
             S.I = I;
             return S;
         }
         public static List<ServerInfo_Matchmaking> get(ServerInfo I) {
-            List<ServerInfo_Matchmaking> S = getAllWhere(ServerInfo_Matchmaking.class, "ServerID = ?", I.getId());
+            List<ServerInfo_Matchmaking> S = getAllWhere(ServerInfo_Matchmaking.class, "ServerID = ?", I.getID());
             for (ServerInfo_Matchmaking SR : S) SR.I = I;
             return S;
         }
@@ -1427,4 +1461,190 @@ public class ServerInfo extends DatabaseObject<ServerInfo> {
             }
         }
     }
+
+
+    public boolean isSDBoardAllowed() {
+        return isSDBoardAllowed;
+    }
+
+    public void setSDBoardAllowed(boolean SDBoardAllowed) {
+        isSDBoardAllowed = SDBoardAllowed;
+    }
+
+    public boolean isIE1BoardAllowed() {
+        return isIE1BoardAllowed;
+    }
+
+    public void setIE1BoardAllowed(boolean IE1BoardAllowed) {
+        isIE1BoardAllowed = IE1BoardAllowed;
+    }
+
+    public boolean isIE2BoardAllowed() {
+        return isIE2BoardAllowed;
+    }
+
+    public void setIE2BoardAllowed(boolean IE2BoardAllowed) {
+        isIE2BoardAllowed = IE2BoardAllowed;
+    }
+
+    public boolean isIE3BoardAllowed() {
+        return isIE3BoardAllowed;
+    }
+
+    public void setIE3BoardAllowed(boolean IE3BoardAllowed) {
+        isIE3BoardAllowed = IE3BoardAllowed;
+    }
+
+    public boolean isVROHBoardAllowed() {
+        return isVROHBoardAllowed;
+    }
+
+    public void setVROHBoardAllowed(boolean VROHBoardAllowed) {
+        isVROHBoardAllowed = VROHBoardAllowed;
+    }
+
+    public boolean isVRBetaBoardAllowed() {
+        return isVRBetaBoardAllowed;
+    }
+
+    public void setVRBetaBoardAllowed(boolean VRBetaBoardAllowed) {
+        isVRBetaBoardAllowed = VRBetaBoardAllowed;
+    }
+
+    public boolean isXtremeBoardAllowed() {
+        return isXtremeBoardAllowed;
+    }
+
+    public void setXtremeBoardAllowed(boolean xtremeBoardAllowed) {
+        isXtremeBoardAllowed = xtremeBoardAllowed;
+    }
+
+    public boolean isStrikersBoardAllowed() {
+        return isStrikersBoardAllowed;
+    }
+
+    public void setStrikersBoardAllowed(boolean strikersBoardAllowed) {
+        isStrikersBoardAllowed = strikersBoardAllowed;
+    }
+
+    public boolean isGO1BoardAllowed() {
+        return isGO1BoardAllowed;
+    }
+
+    public void setGO1BoardAllowed(boolean GO1BoardAllowed) {
+        isGO1BoardAllowed = GO1BoardAllowed;
+    }
+
+    public boolean isCSBoardAllowed() {
+        return isCSBoardAllowed;
+    }
+
+    public void setCSBoardAllowed(boolean CSBoardAllowed) {
+        isCSBoardAllowed = CSBoardAllowed;
+    }
+
+    public boolean isGalaxyBoardAllowed() {
+        return isGalaxyBoardAllowed;
+    }
+
+    public void setGalaxyBoardAllowed(boolean galaxyBoardAllowed) {
+        isGalaxyBoardAllowed = galaxyBoardAllowed;
+    }
+
+    public boolean isShowBoardMembersOnly() {
+        return showBoardMembersOnly;
+    }
+
+    public boolean isAreIE1RanksAllowed() {
+        return areIE1RanksAllowed;
+    }
+
+    public void setAreIE1RanksAllowed(boolean areIE1RanksAllowed) {
+        this.areIE1RanksAllowed = areIE1RanksAllowed;
+    }
+
+    public boolean isAreIE2RanksAllowed() {
+        return areIE2RanksAllowed;
+    }
+
+    public void setAreIE2RanksAllowed(boolean areIE2RanksAllowed) {
+        this.areIE2RanksAllowed = areIE2RanksAllowed;
+    }
+
+    public boolean isAreIE3RanksAllowed() {
+        return areIE3RanksAllowed;
+    }
+
+    public void setAreIE3RanksAllowed(boolean areIE3RanksAllowed) {
+        this.areIE3RanksAllowed = areIE3RanksAllowed;
+    }
+
+    public boolean isAreSDRanksAllowed() {
+        return areSDRanksAllowed;
+    }
+
+    public void setAreSDRanksAllowed(boolean areSDRanksAllowed) {
+        this.areSDRanksAllowed = areSDRanksAllowed;
+    }
+
+    public boolean isAreVROHRanksAllowed() {
+        return areVROHRanksAllowed;
+    }
+
+    public void setAreVROHRanksAllowed(boolean areVROHRanksAllowed) {
+        this.areVROHRanksAllowed = areVROHRanksAllowed;
+    }
+
+    public boolean isAreVRBetaRanksAllowed() {
+        return areVRBetaRanksAllowed;
+    }
+
+    public void setAreVRBetaRanksAllowed(boolean areVRBetaRanksAllowed) {
+        this.areVRBetaRanksAllowed = areVRBetaRanksAllowed;
+    }
+
+    public boolean isAreXtremeRanksAllowed() {
+        return areXtremeRanksAllowed;
+    }
+
+    public void setAreXtremeRanksAllowed(boolean areXtremeRanksAllowed) {
+        this.areXtremeRanksAllowed = areXtremeRanksAllowed;
+    }
+
+    public boolean isAreStrikersRanksAllowed() {
+        return areStrikersRanksAllowed;
+    }
+
+    public void setAreStrikersRanksAllowed(boolean areStrikersRanksAllowed) {
+        this.areStrikersRanksAllowed = areStrikersRanksAllowed;
+    }
+
+    public boolean isAreGO1RanksAllowed() {
+        return areGO1RanksAllowed;
+    }
+
+    public void setAreGO1RanksAllowed(boolean areGO1RanksAllowed) {
+        this.areGO1RanksAllowed = areGO1RanksAllowed;
+    }
+
+    public boolean isAreCSRanksAllowed() {
+        return areCSRanksAllowed;
+    }
+
+    public void setAreCSRanksAllowed(boolean areCSRanksAllowed) {
+        this.areCSRanksAllowed = areCSRanksAllowed;
+    }
+
+    public boolean isAreGalaxyRanksAllowed() {
+        return areGalaxyRanksAllowed;
+    }
+
+    public void setAreGalaxyRanksAllowed(boolean areGalaxyRanksAllowed) {
+        this.areGalaxyRanksAllowed = areGalaxyRanksAllowed;
+    }
+
+    public boolean isAreGlobalRankAllowed() {
+        return areGlobalRankAllowed;
+    }
+
 }

@@ -37,6 +37,13 @@
     white-space: normal;
     font-family: IEStrike, sans-serif;
 }
+.IEItalic {
+    color: white;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    font-family: IEStrike, sans-serif;
+}
 th, td {
     font-size: 12px;
 }
@@ -105,7 +112,6 @@ body {
     background-color: rgba(255, 255, 255, 0.2);
 }
 #edit-button {
-    display: none;
     text-decoration: none;
     color: white;
     border: 1px solid white;

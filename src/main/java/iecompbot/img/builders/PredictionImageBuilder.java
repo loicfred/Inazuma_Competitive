@@ -115,24 +115,24 @@ public class PredictionImageBuilder extends ImageBuilder {
     private void WriteClans(Graphics2D g2d) throws IOException {
         Image ImgZapLeft = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/ZapLeft.png"))).getImage();
         Image ImgZapRight = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/img/ZapRight.png"))).getImage();
-        Clan c1 = Clan.getClanOfUser(P1.getId());
+        Clan c1 = Clan.getClanOfUser(P1.getID());
         if (c1 != null) {
             g2d.drawImage(ImgZapLeft, 10, 0, 125 * 4 ,48 * 4, null);
             if (c1.hasEmblem()) g2d.drawImage(CutTransparentBorders(c1.getEmblem()),10, 20, 140, 140, null);
             AddText(g2d,c1.getName(),c1.getColor(), newRodinPro,150,80,35f,false,false,true,2f,Color.black);
-            AddText(g2d, "No. " + c1.getMemberById(P1.getId()).Number,Color.WHITE, newRodinPro,150,120,32f,false,false,true,2f,Color.black);
+            AddText(g2d, "No. " + c1.getMemberById(P1.getID()).Number,Color.WHITE, newRodinPro,150,120,32f,false,false,true,2f,Color.black);
 
             Stroke stroke1 = new BasicStroke(11f);
             g2d.setColor(c1.getColor());
             g2d.setStroke(stroke1);
             g2d.setColor(Color.decode("#808080"));
         }
-        Clan c2 = Clan.getClanOfUser(P2.getId());
+        Clan c2 = Clan.getClanOfUser(P2.getID());
         if (c2 != null) {
             g2d.drawImage(ImgZapRight,  1600 - (125 * 4) - 10, 0, 125 * 4 ,48 * 4, null);
             if (c2.hasEmblem()) g2d.drawImage(CutTransparentBorders(c2.getEmblem()),  1600 - 140 - 10, 20, 140,140, null);
             AddText(g2d, c2.getName(),c2.getColor(),newRodinPro,1600 - 150,80,35f,false,true,true,2f,Color.black);
-            AddText(g2d, "No. " + c2.getMemberById(P2.getId()).Number,Color.WHITE,newRodinPro,1600 - 150,120,32f,false,true,true,2f,Color.black);
+            AddText(g2d, "No. " + c2.getMemberById(P2.getID()).Number,Color.WHITE,newRodinPro,1600 - 150,120,32f,false,true,true,2f,Color.black);
 
             Stroke stroke1 = new BasicStroke(11f);
             g2d.setColor(c2.getColor());
@@ -142,8 +142,8 @@ public class PredictionImageBuilder extends ImageBuilder {
 
     }
     private void WriteNames(Graphics2D g2d) {
-        String name1 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P1.getId()) != null ? I.getGuild().getMemberById(P1.getId()).getEffectiveName() : P1.getUser().getEffectiveName())), 20);
-        String name2 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P2.getId()) != null ? I.getGuild().getMemberById(P2.getId()).getEffectiveName() : P2.getUser().getEffectiveName())), 20);
+        String name1 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P1.getID()) != null ? I.getGuild().getMemberById(P1.getID()).getEffectiveName() : P1.getUser().getEffectiveName())), 20);
+        String name2 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P2.getID()) != null ? I.getGuild().getMemberById(P2.getID()).getEffectiveName() : P2.getUser().getEffectiveName())), 20);
 
         AttributedString as1 = new AttributedString(name1);
         as1.addAttribute(TextAttribute.FONT, newRodinPro.deriveFont(40f));

@@ -140,11 +140,11 @@ public class MatchLog extends BaseMatchLog<MatchLog> {
             points = (int) (points * (1 + opponentlevel * 0.1)) + opponentlevel - 1;
         }
 
-        if (opponent.getId() != getProfileP1().getId()) {
+        if (opponent.getID() != getProfileP1().getID()) {
             if (getProfileP1().getBoosters().stream().anyMatch(b -> b.getBoosterType().equals("XP"))) {
                 points = (int) (points * getProfileP1().getBoosters().stream().filter(b -> b.getBoosterType().equals("XP")).collect(Collectors.toList()).getFirst().getMultiplier());
             }
-        } else if (opponent.getId() != getProfileP2().getId()) {
+        } else if (opponent.getID() != getProfileP2().getID()) {
             if (getProfileP2().getBoosters().stream().anyMatch(b -> b.getBoosterType().equals("XP"))) {
                 points = (int) (points * getProfileP2().getBoosters().stream().filter(b -> b.getBoosterType().equals("XP")).collect(Collectors.toList()).getFirst().getMultiplier());
             }

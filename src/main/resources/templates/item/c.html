@@ -24,7 +24,9 @@
             margin: 40px 5px 10px 30px;
         }
 
-
+        th {
+            text-align: center;
+        }
 
 
 
@@ -149,7 +151,7 @@
     <button class="tab-button" th:onclick="|showTab(1)|">Tournaments</button>
     <button class="tab-button" th:onclick="|showTab(2)|">Matches</button>
     <button class="tab-button" th:onclick="|showTab(3)|">Interclans</button>
-    <button class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
+    <button th:if="${#authorization.expression('isAuthenticated()') && (#authentication.principal.attributes['id'] == clan.getCaptain().getId() || managers.isClanManager(#authentication.principal.attributes['id']))}" class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
 </div>
 
 <div layout:fragment="profile_media">
@@ -206,8 +208,8 @@
                    th:style="'display: flex; align-items: center; background-color:' + ${utils.darkenColor(each.getProfile().getColorCode(), 0.25)} + '88; border-radius: 6px 0 0 6px;'">
                     <img class="member-avatar" th:src="${each.getProfile().getUser().getAvatarUrl()}"/>
                     <div style="display: block">
-                        <h5><span class="membername emoji" th:text="${each.getHighestRolePosition() == 1 ? '👑' : ''} + ${each.getProfile().getNationality().getCodepoints()}"></span> <span class="IEBOLD membername" th:text="${each.getNumber()} + ' | ' + ${each.getProfile().FullName} + ' (@' + ${each.getProfile().Name} + ')'"></span></h5>
-                        <p class="IEStrike" th:text="'Level ' + ${each.getProfile().Totals().Level} + ' | ' + ${each.listTasksOneLine()}"></p>
+                        <h5 class="mb-0"><span class="membername emoji" th:text="${each.getHighestRolePosition() == 1 ? '👑' : ''} + ${each.getProfile().getNationality().getCodepoints()}"></span> <span class="IEBOLD membername" th:text="${each.getNumber()} + ' | ' + ${each.getProfile().FullName} + ' (@' + ${each.getProfile().Name} + ')'"></span></h5>
+                        <p class="IEStrike mb-0" th:text="${each.getTimeJoined('dd MMMM yyyy') + ' - Level ' + each.getProfile().Totals().Level + ' | ' + each.listTasksOneLine()}"></p>
                     </div>
                 </a>
             </div>
@@ -241,19 +243,77 @@
     <div id="tab4-clan-log"></div>
 </div>
 
-<div layout:fragment="profile_tab5" th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == clan.getCaptain().getId()}">
+<div layout:fragment="profile_tab5" th:if="${#authorization.expression('isAuthenticated()') && (#authentication.principal.attributes['id'] == clan.getCaptain().getId() || managers.isClanManager(#authentication.principal.attributes['id']))}">
     <div class="clanForm" style="display: flex;">
-        <form class="formSide" id="FORM_UPDATE_1">
+        <form class="formSide" id="FORM_UPDATE_1" th:action="${'/c/' + clan.ID + '/update'}" th:object="${clan}" method="post" >
+            <input id="clanid" type="hidden" th:field="*{ID}" />
             <h4 class="IEBOLD">Modify Information</h4>
+
+            <div class="form-group">
+                <label class="IEStrike" for="Name">Name</label>
+                <input id="Name" th:field="*{Name}" maxlength="32">
+            </div>
+            <div class="form-group">
+                <label class="IEStrike" for="Tag">Tag</label>
+                <input id="Tag" th:field="*{Tag}" maxlength="8">
+            </div>
             <div class="form-group2">
-                <label class="IEStrike" for="editnationality">Nationality</label>
-                <select name="nationality" id="editnationality" style="background-color: black;">
+                <label class="IEStrike" for="Description">Description</label>
+                <textarea id="Description" th:field="*{Description}" maxlength="256" rows="3"></textarea>
+            </div>
+            <div class="form-group2">
+                <label class="IEStrike" for="Requirements">Requirements</label>
+                <textarea id="Requirements" th:field="*{Requirements}" maxlength="256" rows="3"></textarea>
+            </div>
+            <div class="form-group2">
+                <label class="IEStrike" for="History">History</label>
+                <textarea id="History" th:field="*{History}" maxlength="1024" rows="7"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="ColorCode">Color</label>
+                <input class="ms-auto" id="ColorCode" type="color" th:field="*{Colorcode}">
+            </div>
+
+            <div class="form-group2">
+                <label class="IEStrike" for="Nationality">Nationality</label>
+                <select name="Nationality" id="Nationality" style="background-color: black;">
                     <option th:each="nation : ${clan.getNationality().getNationalities()}"
                             th:value="${nation.getName()}"
                             th:text="${nation.getCodepoints() + ' ' + nation.getName()}"
                             th:selected="${nation.getName() == clan.getNationality().getName()}">
                     </option>
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="WebsiteURL">Website URL</label>
+                <input type="text" id="WebsiteURL" maxlength="256" th:field="*{WebsiteURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="TwitchURL">Twitch URL</label>
+                <input type="text" id="TwitchURL" maxlength="256" th:field="*{TwitchURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="YouTubeURL">YouTube URL</label>
+                <input type="text" id="YouTubeURL" maxlength="256" th:field="*{YouTubeURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="DiscordURL">Discord URL</label>
+                <input type="text" id="DiscordURL" maxlength="256" th:field="*{DiscordURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="TiktokURL">Tiktok URL</label>
+                <input type="text" id="TiktokURL" maxlength="256" th:field="*{TiktokURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="InstagramURL">Instagram URL</label>
+                <input type="text" id="InstagramURL" maxlength="256" th:field="*{InstagramURL}">
             </div>
         </form>
 

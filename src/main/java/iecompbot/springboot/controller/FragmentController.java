@@ -23,23 +23,23 @@ public class FragmentController {
     @GetMapping("/p/tournament-list")
     public String getProfileTournaments(@RequestParam("p") String id, @RequestParam(value = "g", required = false) String games, Model model) throws Exception {
         Profile P = Profile.get(id);
-        model.addAttribute("tournaments", doQueryAll("CALL DisplayUserTournaments(?,?,?,?,?,?);", P.getId(), null,  games, 1, 999, true));
+        model.addAttribute("tournaments", doQueryAll("CALL DisplayUserTournaments(?,?,?,?,?,?);", P.getID(), null,  games, 1, 999, true));
         return "fragments/TournamentList_Profile";
     }
     @GetMapping("/p/match-log")
     public String getProfileMatches(@RequestParam("p") String id, @RequestParam(value = "g", required = false) String games, Model model) throws Exception {
         Profile P = Profile.get(id);
-        model.addAttribute("myid", P.getId());
+        model.addAttribute("myid", P.getID());
         model.addAttribute("game", Game.get("IE1"));
-        model.addAttribute("logs", doQueryAll("CALL DisplayUserHistory(?,?,?,?,?);", P.getId(), null, games, 1, 250)); // userid, serverid, gamelist, page, amountPerPage
+        model.addAttribute("logs", doQueryAll("CALL DisplayUserHistory(?,?,?,?,?);", P.getID(), null, games, 1, 250)); // userid, serverid, gamelist, page, amountPerPage
         model.addAttribute("utils", new Utils());
         return "fragments/MatchLogs_Profile";
     }
     @GetMapping("/p/clan-log")
     public String getProfileClanLogs(@RequestParam("p") String id, Model model) {
         Profile P = Profile.get(id);
-        model.addAttribute("logs1", Profile_PastClan.ofUser(P.getId(), true));
-        model.addAttribute("logs2", Profile_PastClan.ofUser(P.getId(), false));
+        model.addAttribute("logs1", Profile_PastClan.ofUser(P.getID(), true));
+        model.addAttribute("logs2", Profile_PastClan.ofUser(P.getID(), false));
         model.addAttribute("utils", new Utils());
         return "fragments/ProfileClanLogs";
     }

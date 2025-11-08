@@ -365,7 +365,7 @@ public class ClanMember extends DatabaseObject<ClanMember> {
                         CIB.GenerateCardPNG();
                         String CardPNGURL = getCardUrl(CIB.DownloadPNGToFile(), "card.png");
                         setCardPNGURL(CardPNGURL != null && CardPNGURL.contains("?") ? CardPNGURL.split("\\?")[0] : CardPNGURL);
-                        if (getProfile().hasGIF()) {
+                        if (getProfile().isHasGIF()) {
                             ImageGenerationTimerEpochSecond = Instant.now().plus(15, ChronoUnit.SECONDS).getEpochSecond();
                             if (M != null) M.editOriginal("**[GIF]** " + TL(M, TL(M,"generating-cards-of", "**" + getClan().getEmojiFormatted() + " " + getClan().getName() + "**"))).queue();
                             CIB.GenerateCardGIF(55, 0.5);
@@ -383,10 +383,10 @@ public class ClanMember extends DatabaseObject<ClanMember> {
     }
 
     public boolean hasClanCard() {
-        return CardPNGURL != null && (!getProfile().hasGIF() || CardGIFURL != null);
+        return CardPNGURL != null && (!getProfile().isHasGIF() || CardGIFURL != null);
     }
     public String getClanCard() {
-        return getProfile().hasGIF() ? CardGIFURL : CardPNGURL;
+        return getProfile().isHasGIF() ? CardGIFURL : CardPNGURL;
     }
     public void resetCards() {
         setCardGIFURL(null);
@@ -429,7 +429,7 @@ public class ClanMember extends DatabaseObject<ClanMember> {
                 JOIN inazuma_competitive.profile P ON P.ID = CM.UserID
                 WHERE CM.UserID = ?
                 ORDER BY CM.isMainClan DESC;
-                """, pf.getId());
+                """, pf.getID());
         for (ClanMember C : CM) C.P = pf;
         return CM;
     }
@@ -445,7 +445,7 @@ public class ClanMember extends DatabaseObject<ClanMember> {
                 SELECT CM.* FROM inazuma_competitive.clanmember CM
                 JOIN inazuma_competitive.profile P ON P.ID = CM.UserID
                 WHERE CM.UserID = ? AND CM.isMainClan = ?;
-                """, pf.getId(), true).orElse(null);
+                """, pf.getID(), true).orElse(null);
     }
 
     public static ClanMember ofClan(long clanId, long userId) {

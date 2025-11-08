@@ -41,7 +41,7 @@
       font-size: 26px;
     }
     #signature {
-      margin: 5px 5px 10px 30px;
+      margin: 15px 5px 10px 30px;
     }
     .clanbutton {
       display: flex;
@@ -106,7 +106,7 @@
     }
     .join p {
       padding: 5px;
-      font: 16px IEBold, sans-serif;
+      font: 14px IEBold, sans-serif;
       text-shadow: none;
       justify-content: center;
     }
@@ -140,7 +140,7 @@
         font-size: 16px;
       }
       #signature {
-        margin: 5px 10px 5px 10px;
+        margin: 15px 10px 5px 10px;
       }
 
 
@@ -168,7 +168,7 @@
 
 
       .join {
-        width: 80px; height: 40px;
+        width: 100px; height: 40px;
         border-radius: 3px;
         padding: 3px
       }
@@ -195,7 +195,7 @@
             </div>
             <div style="display: flex; margin-top: -2px; align-items: center;">
                 <a th:href="'/p/' + ${server.getOwnerID()}" class="clanbutton">
-                    <img th:src="${server.getOwner().getEffectiveAvatarUrl()}" style="width: 22px; height: 22px; padding: 2px; border-radius: 25%"><h5 class="IEStrike clanlink" th:text="'👑 ' + ${server.getOwner().getEffectiveName()}"></h5>
+                    <img th:src="${server.getOwner().getEffectiveAvatarUrl()}" style="width: 22px; height: 22px; padding: 2px; border-radius: 25%"><h5 class="IEStrike clanlink mb-0" th:text="'👑 ' + ${server.getOwner().getEffectiveName()}"></h5>
                 </a>
             </div>
         </div>
@@ -211,7 +211,7 @@
     <button class="tab-button" th:onclick="|showTab(1)|">Tournaments</button>
     <button class="tab-button" th:onclick="|showTab(2)|">Matches</button>
     <button class="tab-button" th:onclick="|showTab(3)|">Statistics</button>
-    <button th:if="${#authorization.expression('isAuthenticated()') && #authentication.principal.attributes['id'] == server.getOwnerID()}" class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
+    <button th:if="${#authorization.expression('isAuthenticated()') && (#authentication.principal.attributes['id'] == server.getOwnerID() || managers.isBotOwner(#authentication.principal.attributes['id']))}" class="tab-button" id="edit-button" th:onclick="|showTab(4)|">📝 Edit</button>
 </div>
 
 <div layout:fragment="profile_media">
@@ -280,22 +280,57 @@
     <table id="statsTable" style="width: 100%;"></table>
 </div>
 
-<div layout:fragment="profile_tab5">
-    <form id="serverForm" style="display: flex">
+<div layout:fragment="profile_tab5" th:if="${#authorization.expression('isAuthenticated()') && (#authentication.principal.attributes['id'] == server.getOwnerID() || managers.isBotOwner(#authentication.principal.attributes['id']))}">
+    <form id="serverForm" style="display: flex" th:action="${'/s/' + server.getID() + '/update'}" th:object="${server}" method="post">
+        <input id="serverid" type="hidden" th:field="*{ID}" />
         <div class="formSide" id="serverFormSide1">
+            <label text="Status" class="IEStrike mb-3">
+                <textarea th:field="*{History}" maxlength="1024" rows="7"></textarea>
+            </label>
+
+            <div class="form-group">
+                <label class="IEStrike" for="PermanentInviteLink">Permanent Discord Invite Link</label>
+                <input type="text" id="PermanentInviteLink" maxlength="256" th:field="*{PermanentInviteLink}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="WebsiteURL">Website URL</label>
+                <input type="text" id="WebsiteURL" maxlength="256" th:field="*{WebsiteURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="TwitchURL">Twitch URL</label>
+                <input type="text" id="TwitchURL" maxlength="256" th:field="*{TwitchURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="YouTubeURL">YouTube URL</label>
+                <input type="text" id="YouTubeURL" maxlength="256" th:field="*{YouTubeURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="TiktokURL">Tiktok URL</label>
+                <input type="text" id="TiktokURL" maxlength="256" th:field="*{TiktokURL}">
+            </div>
+
+            <div class="form-group">
+                <label class="IEStrike" for="InstagramURL">Instagram URL</label>
+                <input type="text" id="InstagramURL" maxlength="256" th:field="*{InstagramURL}">
+            </div>
+
             <h3 class="IEBOLD">Clan Settings</h3>
             <div class="form-group2" id="clanarea">
-                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
-                    <label class="IEStrike" for="editclanrole">Automatic Clan Roles</label>
+                <div style="display: flex; width: 100%; padding-right: 10px;">
+                    <label class="IEStrike" for="areClanRolesAllowed">Automatic Clan Roles</label>
                     <label class="switch" style="margin-left: auto;">
-                        <input type="checkbox" name="editclanrole" id="editclanrole" th:checked="${server.areClanRolesAllowed}">
+                        <input type="checkbox" id="areClanRolesAllowed" th:field="*{areClanRolesAllowed}">
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
-                    <label class="IEStrike" for="editclantag">Automatic Clan Tags</label>
+                <div style="display: flex; width: 100%; padding-right: 10px;">
+                    <label class="IEStrike" for="areClanTagsAllowed">Automatic Clan Tags</label>
                     <label class="switch" style="margin-left: auto;">
-                        <input type="checkbox" name="editclantag" id="editclantag" th:checked="${server.areClanTagsAllowed}">
+                        <input type="checkbox" id="areClanTagsAllowed" th:field="*{areClanTagsAllowed}">
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -303,30 +338,20 @@
 
             <h3 class="IEBOLD">Tournament Settings</h3>
             <div class="form-group2" id="tournamentarea">
-                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
-                    <label class="IEStrike" for="editwinneroles">Automatic Winner Roles</label>
+                <div style="display: flex; width: 100%; padding-right: 10px;">
+                    <label class="IEStrike" for="areWinnerRolesAllowed">Automatic Winner Roles</label>
                     <label class="switch" style="margin-left: auto;">
-                        <input type="checkbox" name="editwinneroles" id="editwinneroles" th:checked="${server.areWinnerRolesAllowed}">
+                        <input type="checkbox" id="areWinnerRolesAllowed" th:field="*{areWinnerRolesAllowed}">
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div style="display: flex; width: 100%; padding-top: 20px; padding-right: 10px; align-items: center;">
-                    <label class="IEStrike" for="editadminonlyscore">Only admins allow to accept scores</label>
+                <div style="display: flex; width: 100%; padding-right: 10px;">
+                    <label class="IEStrike" for="AdminAcceptOnly">Only admins allow to accept scores</label>
                     <label class="switch" style="margin-left: auto;">
-                        <input type="checkbox" name="editadminonlyscore" id="editadminonlyscore" th:checked="${server.AdminAcceptOnly}">
+                        <input type="checkbox" id="AdminAcceptOnly" th:field="*{AdminAcceptOnly}">
                         <span class="slider round"></span>
                     </label>
                 </div>
-            </div>
-
-            <div class="form-group2">
-                <label class="IEStrike" for="invitelink">Permanent Invite Link</label>
-                <input type="text" id="invitelink" th:value="${server.PermanentInviteLink}" minlength="24" name="invitelink">
-            </div>
-
-            <div class="form-group2">
-                <label class="IEStrike" for="edithistory">History</label>
-                <textarea id="edithistory" name="edithistory" th:text="${server.History}" maxlength="1024" rows="8"></textarea>
             </div>
         </div>
 
@@ -336,77 +361,77 @@
             <div class="form-group" id="leaderboardarea">
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardvrbeta" id="boardvrbeta" th:checked="${server.isVRBetaBoardAllowed}">
+                        <input type="checkbox" name="boardvrbeta" id="boardvrbeta" th:field="*{isVRBetaBoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardvrbeta">IE VR Beta</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardvr" id="boardvr" th:checked="${server.isVROHBoardAllowed}">
+                        <input type="checkbox" name="boardvr" id="boardvr" th:field="*{isVROHBoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardvr">IE VR</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardgalaxy" id="boardgalaxy" th:checked="${server.isGalaxyBoardAllowed}">
+                        <input type="checkbox" name="boardgalaxy" id="boardgalaxy" th:field="*{isGalaxyBoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardgalaxy">IE GO Galaxy</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardcs" id="boardcs" th:checked="${server.isCSBoardAllowed}">
+                        <input type="checkbox" name="boardcs" id="boardcs" th:field="*{isCSBoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardcs">IE GO CS</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardgo1" id="boardgo1" th:checked="${server.isGO1BoardAllowed}">
+                        <input type="checkbox" name="boardgo1" id="boardgo1" th:field="*{isGO1BoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardgo1">IE GO1</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardsd" id="boardsd" th:checked="${server.isSDBoardAllowed}">
+                        <input type="checkbox" name="boardsd" id="boardsd" th:field="*{isSDBoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardsd">IE SD</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardie3" id="boardie3" th:checked="${server.isIE3BoardAllowed}">
+                        <input type="checkbox" name="boardie3" id="boardie3" th:field="*{isIE3BoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardie3">IE3</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardie2" id="boardie2" th:checked="${server.isIE2BoardAllowed}">
+                        <input type="checkbox" name="boardie2" id="boardie2" th:field="*{isIE2BoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardie2">IE2</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardie1" id="boardie1" th:checked="${server.isIE1BoardAllowed}">
+                        <input type="checkbox" name="boardie1" id="boardie1" th:field="*{isIE1BoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardie1">IE1</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardstrikers" id="boardstrikers" th:checked="${server.isStrikersBoardAllowed}">
+                        <input type="checkbox" name="boardstrikers" id="boardstrikers" th:field="*{isStrikersBoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardstrikers">IE GO Strikers 2013</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="boardxtreme" id="boardxtreme" th:checked="${server.isXtremeBoardAllowed}">
+                        <input type="checkbox" name="boardxtreme" id="boardxtreme" th:field="*{isXtremeBoardAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="boardxtreme">IE GO Strikers Xtreme</label>
@@ -419,84 +444,84 @@
             <div class="form-group" id="rankarea">
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="globalrank" id="globalrank" th:checked="${server.areGlobalRankAllowed}">
+                        <input type="checkbox" name="globalrank" id="globalrank" th:field="*{areGlobalRankAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="globalrank">Global Ranks</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankvrbeta" id="rankvrbeta" th:checked="${server.areVRBetaRanksAllowed}">
+                        <input type="checkbox" name="rankvrbeta" id="rankvrbeta" th:field="*{areVRBetaRanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankvrbeta">IE VR Beta</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankvr" id="rankvr" th:checked="${server.areVROHRanksAllowed}">
+                        <input type="checkbox" name="rankvr" id="rankvr" th:field="*{areVROHRanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankvr">IE VR</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankgalaxy" id="rankgalaxy" th:checked="${server.areGalaxyRanksAllowed}">
+                        <input type="checkbox" name="rankgalaxy" id="rankgalaxy" th:field="*{areGalaxyRanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankgalaxy">IE GO Galaxy</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankcs" id="rankcs" th:checked="${server.areCSRanksAllowed}">
+                        <input type="checkbox" name="rankcs" id="rankcs" th:field="*{areCSRanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankcs">IE GO CS</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankgo1" id="rankgo1" th:checked="${server.areGO1RanksAllowed}">
+                        <input type="checkbox" name="rankgo1" id="rankgo1" th:field="*{areGO1RanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankgo1">IE GO1</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="ranksd" id="ranksd" th:checked="${server.areSDRanksAllowed}">
+                        <input type="checkbox" name="ranksd" id="ranksd" th:field="*{areSDRanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="ranksd">IE SD</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankie3" id="rankie3" th:checked="${server.areIE3RanksAllowed}">
+                        <input type="checkbox" name="rankie3" id="rankie3" th:field="*{areIE3RanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankie3">IE3</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankie2" id="rankie2" th:checked="${server.areIE2RanksAllowed}">
+                        <input type="checkbox" name="rankie2" id="rankie2" th:field="*{areIE2RanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankie2">IE2</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankie1" id="rankie1" th:checked="${server.areIE1RanksAllowed}">
+                        <input type="checkbox" name="rankie1" id="rankie1" th:field="*{areIE1RanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankie1">IE1</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankstrikers" id="rankstrikers" th:checked="${server.areStrikersRanksAllowed}">
+                        <input type="checkbox" name="rankstrikers" id="rankstrikers" th:field="*{areStrikersRanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankstrikers">IE GO Strikers 2013</label>
                 </div>
                 <div class="servtoggler">
                     <label class="switch">
-                        <input type="checkbox" name="rankxtreme" id="rankxtreme" th:checked="${server.areXtremeRanksAllowed}">
+                        <input type="checkbox" name="rankxtreme" id="rankxtreme" th:field="*{areXtremeRanksAllowed}">
                         <span class="slider round"></span>
                     </label>
                     <label class="IEStrike" for="rankxtreme">IE GO Strikers Xtreme</label>

@@ -76,7 +76,7 @@ public class GChallonge_Tournament extends BaseCTournament<GChallonge_Tournament
             try {
                 if (isRegistrationOpen() || force) {
                     if (u != null) {
-                        if (!u.isBot() && getParticipantById(Profile.get(u).getId()) == null) {
+                        if (!u.isBot() && getParticipantById(Profile.get(u).getID()) == null) {
                                 if (isAccountOldEnough(u) || force) {
                                     if (getSignupCap() > getParticipantCount() || getSignupCap() == 0) {
                                         AddParticipant(u);
@@ -171,7 +171,7 @@ public class GChallonge_Tournament extends BaseCTournament<GChallonge_Tournament
         if (getVSAmount() > 1) {
             EmbedBuilder E = getTournamentEmbed();
             try {
-                GChallonge_Participant MyTeam = getParticipantById(Profile.get(u).getId());
+                GChallonge_Participant MyTeam = getParticipantById(Profile.get(u).getID());
                 if (isRegistrationOpen() || MyTeam != null) {
                     if (!u.isBot() && getParticipants().stream().noneMatch(PP -> PP.getLeaderID() != u.getIdLong() && PP.getAllTeammatesIDs().contains(u.getIdLong()))) {
                             if (isAccountOldEnough(u)) {
@@ -218,7 +218,7 @@ public class GChallonge_Tournament extends BaseCTournament<GChallonge_Tournament
                 if (teammates.stream().allMatch(u -> u != null && !u.isBot())) {
                     if (teammates.stream().allMatch(TT -> getParticipants().stream().noneMatch(PP -> PP.getAllTeammatesIDs().contains(TT.getIdLong())))) {
                         if (teammates.stream().allMatch(this::isAccountOldEnough)) {
-                            GChallonge_Participant MyTeam = getParticipantById(Profile.get(M.getInteraction().getUser().getIdLong()).getId());
+                            GChallonge_Participant MyTeam = getParticipantById(Profile.get(M.getInteraction().getUser().getIdLong()).getID());
                             if (getSignupCap() > getParticipantCount() || getSignupCap() == 0 || MyTeam != null) {
                                 if (MyTeam == null) {
                                     MyTeam = AddParticipant(M.getInteraction().getUser());

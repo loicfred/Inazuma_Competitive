@@ -163,7 +163,7 @@ public class Profile_Quest extends BaseQuest<Profile_Quest> {
         Me.getUser().openPrivateChannel().queue(C -> C.sendMessage(TL(Me, "Processing")).queue(M -> {
             try {
                 String gameemoji = G != null ? " (" + G.getEmoji() + ")" : "";
-                Profile_Quest QQ = new Profile_Quest("Bounty on " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getId(), "Bounty on " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
+                Profile_Quest QQ = new Profile_Quest("Bounty on " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getID(), "Bounty on " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
                 new Quest_Objective(QQ.getId(), new Objective("Defeat **" + opponent.getEffectiveName() + "** in a match!" + gameemoji, "WIN_DUEL_" + opponent.getId() + "/" + G, 1));
                 M.editMessageEmbeds(QQ.getEmbed().build()).setReplace(true).queue();
                 Constants.LogChannel.sendMessageEmbeds(QQ.getEmbed().build()).setContent("[DM] Sent to " + Me.getUser().getEffectiveName() + " (" + Me.getUser().getIdLong() + "):").queue();
@@ -174,7 +174,7 @@ public class Profile_Quest extends BaseQuest<Profile_Quest> {
         Me.getUser().openPrivateChannel().queue(C -> C.sendMessage(TL(Me, "Processing")).queue(M -> {
             try {
                 String gameemoji = G != null ? " (" + G.getEmoji() + ")" : "";
-                Profile_Quest QQ = new Profile_Quest("Loss on " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getId(), "Loss on " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
+                Profile_Quest QQ = new Profile_Quest("Loss on " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getID(), "Loss on " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
                 new Quest_Objective(QQ.getId(), new Objective("Lose against **" + opponent.getEffectiveName() + "** in a match!" + gameemoji, "LOSE_DUEL_" + opponent.getId() + "/" + G, 1));
                 M.editMessageEmbeds(QQ.getEmbed().build()).setReplace(true).queue();
                 Constants.LogChannel.sendMessageEmbeds(QQ.getEmbed().build()).setContent("[DM] Sent to " + Me.getUser().getEffectiveName() + " (" + Me.getUser().getIdLong() + "):").queue();
@@ -185,7 +185,7 @@ public class Profile_Quest extends BaseQuest<Profile_Quest> {
         Me.getUser().openPrivateChannel().queue(C -> C.sendMessage(TL(Me, "Processing")).queue(M -> {
             try {
                 String gameemoji = G != null ? " (" + G.getEmoji() + ")" : "";
-                Profile_Quest QQ = new Profile_Quest("Tie on " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getId(), "Tie on " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
+                Profile_Quest QQ = new Profile_Quest("Tie on " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getID(), "Tie on " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
                 new Quest_Objective(QQ.getId(), new Objective("Tie a match with **" + opponent.getEffectiveName() + "**!" + gameemoji, "TIE_DUEL_" + opponent.getId() + "/" + G, 1));
                 M.editMessageEmbeds(QQ.getEmbed().build()).setReplace(true).queue();
                 Constants.LogChannel.sendMessageEmbeds(QQ.getEmbed().build()).setContent("[DM] Sent to " + Me.getUser().getEffectiveName() + " (" + Me.getUser().getIdLong() + "):").queue();
@@ -196,7 +196,7 @@ public class Profile_Quest extends BaseQuest<Profile_Quest> {
         Me.getUser().openPrivateChannel().queue(C -> C.sendMessage(TL(Me, "Processing")).queue(M -> {
             try {
                 String gameemoji = G != null ? " (" + G.getEmoji() + ")" : "";
-                Profile_Quest QQ = new Profile_Quest("Duel with " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getId(), "Duel with " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
+                Profile_Quest QQ = new Profile_Quest("Duel with " + opponent.getEffectiveName() + " " + (Profile_Quest.OfUser(Me.getID(), "Duel with " + opponent.getEffectiveName()).size()+1), "Time to clash with " + opponent.getEffectiveName() + ".", Me, BotEmoji.get("U+2694 U+FE0F"), QuestCategory.NORMAL, Instant.now().plus(3, ChronoUnit.DAYS).getEpochSecond(), Rewards.of(drops).getId(), M.getIdLong());
                 new Quest_Objective(QQ.getId(), new Objective("Play against **" + opponent.getEffectiveName() + "** in a match!" + gameemoji, "DUEL_" + opponent.getId() + "/" + G, 1));
                 M.editMessageEmbeds(QQ.getEmbed().build()).setReplace(true).queue();
                 Constants.LogChannel.sendMessageEmbeds(QQ.getEmbed().build()).setContent("[DM] Sent to " + Me.getUser().getEffectiveName() + " (" + Me.getUser().getIdLong() + "):").queue();
@@ -207,7 +207,7 @@ public class Profile_Quest extends BaseQuest<Profile_Quest> {
     private Profile_Quest() {}
     public Profile_Quest(String name, String description, Profile p, BotEmoji emoji, QuestCategory category, Long deadlineEpochSecond, long rwdsid, long dmMessageID) {
         ID = Instant.now().toEpochMilli();
-        UserID = p.getId();
+        UserID = p.getID();
         RewardsID = rwdsid;
         EmojiID = emoji.getIdLong();
         Name = name;
@@ -219,7 +219,7 @@ public class Profile_Quest extends BaseQuest<Profile_Quest> {
     }
     public Profile_Quest(String name, String description, Profile p, BotEmoji emoji, QuestCategory category, Long deadlineEpochSecond, long rwdsid) {
         ID = Instant.now().toEpochMilli();
-        UserID = p.getId();
+        UserID = p.getID();
         RewardsID = rwdsid;
         EmojiID = emoji.getIdLong();
         Name = name;

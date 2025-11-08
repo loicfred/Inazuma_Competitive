@@ -504,13 +504,13 @@ public class MDFFeatures extends ListenerAdapter {
                                     case "Tournaments" -> {
                                         for (ServerInfo I : ServerInfo.list(false)) {
                                             if (event.getOption("specific-guildid") != null) {
-                                                if (I.getId() != event.getOption("specific-guildid").getAsLong()) {
+                                                if (I.getID() != event.getOption("specific-guildid").getAsLong()) {
                                                     continue;
                                                 }
                                             }
                                             boolean hasTourney = false;
                                             EmbedBuilder E = new EmbedBuilder();
-                                            E.setTitle(":blue_circle: " + I.getName() + " - " + I.getId());
+                                            E.setTitle(":blue_circle: " + I.getName() + " - " + I.getID());
                                             try {
                                                 E.setColor(I.getColor());
                                             } catch (Exception ignored) {
@@ -576,13 +576,13 @@ public class MDFFeatures extends ListenerAdapter {
                                     case "Emojis" -> {
                                         for (ServerInfo G : ServerInfo.list(true)) {
                                             if (event.getOption("specific-guildid") != null) {
-                                                if (G.getId() != event.getOption("specific-guildid").getAsLong()) {
+                                                if (G.getID() != event.getOption("specific-guildid").getAsLong()) {
                                                     continue;
                                                 }
                                             }
                                             boolean hasEmojis = false;
                                             EmbedBuilder E = new EmbedBuilder();
-                                            E.setTitle(":blue_circle: " + G.getName() + " - " + G.getId());
+                                            E.setTitle(":blue_circle: " + G.getName() + " - " + G.getID());
                                             E.setColor(G.getColor());
                                             String S = "";
                                             for (Emoji T : G.getGuild().getEmojis()) {
@@ -605,13 +605,13 @@ public class MDFFeatures extends ListenerAdapter {
                                     case "Roles" -> {
                                         for (ServerInfo G : ServerInfo.list(true)) {
                                             if (event.getOption("specific-guildid") != null) {
-                                                if (G.getId() != event.getOption("specific-guildid").getAsLong()) {
+                                                if (G.getID() != event.getOption("specific-guildid").getAsLong()) {
                                                     continue;
                                                 }
                                             }
                                             boolean hasRoles = false;
                                             EmbedBuilder E = new EmbedBuilder();
-                                            E.setTitle(":blue_circle: " + G.getName() + " - " + G.getId());
+                                            E.setTitle(":blue_circle: " + G.getName() + " - " + G.getID());
                                             E.setColor(G.getColor());
                                             String S = "";
                                             for (Role T : G.getGuild().getRoles()) {
@@ -634,13 +634,13 @@ public class MDFFeatures extends ListenerAdapter {
                                     case "Channels" -> {
                                         for (ServerInfo G : ServerInfo.list(true)) {
                                             if (event.getOption("specific-guildid") != null) {
-                                                if (G.getId() != event.getOption("specific-guildid").getAsLong()) {
+                                                if (G.getID() != event.getOption("specific-guildid").getAsLong()) {
                                                     continue;
                                                 }
                                             }
                                             boolean hasChannels = false;
                                             EmbedBuilder E = new EmbedBuilder();
-                                            E.setTitle(":blue_circle: " + G.getName() + " - " + G.getId());
+                                            E.setTitle(":blue_circle: " + G.getName() + " - " + G.getID());
                                             E.setColor(G.getColor());
                                             String S = "";
                                             for (Channel T : G.getGuild().getChannels()) {
@@ -681,11 +681,11 @@ public class MDFFeatures extends ListenerAdapter {
                                         for (int list = 0; list < 5; list++) {
                                             for (int x = (list * 10); x < 10 + (list * 10); x++) {
                                                 try {
-                                                    String name = ClearClanTags(getUserByID(p.get(x).getId()).getEffectiveName(), cls);
+                                                    String name = ClearClanTags(getUserByID(p.get(x).getID()).getEffectiveName(), cls);
                                                     if (name.length() > 14) {
                                                         name = name.substring(0, 12) + "...";
                                                     }
-                                                    Clan clan = getClanOfUser(p.get(x).getId());
+                                                    Clan clan = getClanOfUser(p.get(x).getID());
                                                     String isInClan = (clan != null ? "**" + clan.getTag() + " • **" : "");
                                                     s1 = s1 + "`" + (x + 1) + ")` " + p.get(x).getNationality().getFlag() + " " + isInClan + name + "\n";
                                                     s2 = s2 + "`" + EpochSecondToPattern(p.get(x).getBirthday().getEpochSecond(), "dd/MM/yyyy")  + "`\n";

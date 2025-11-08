@@ -75,7 +75,7 @@ public class ProfileFeatures extends ListenerAdapter {
                             case "profile" -> {
                                 String option = (event.getOption("profile-info") != null ? event.getOption("profile-info").getAsString() : "Basic");
                                 Profile pf = Profile.get(event.getOption("player") != null ? event.getOption("player").getAsUser() : event.getUser());
-                                event.deferReply(option.equals("Inventory") || pf.hasPrivateProfile()).queue(M -> {
+                                event.deferReply(option.equals("Inventory") || pf.isHasPrivateProfile()).queue(M -> {
                                     slashProfile(M, pf, option);
                                     pf.RefreshProfileInformation(event);
                                 });
@@ -124,7 +124,7 @@ public class ProfileFeatures extends ListenerAdapter {
                                     if (event.getComponentId().contains("priv")) {
                                         P.regeneratePersonalCard(M);
                                     } else {
-                                        ClanMember CM = ClanMember.ofClan(takeOnlyDigits(CMD.Command), P.getId());
+                                        ClanMember CM = ClanMember.ofClan(takeOnlyDigits(CMD.Command), P.getID());
                                         if (CM != null) CM.regenerateClanCard(M);
                                     }
                                     System.err.println("Done Load");
@@ -276,10 +276,10 @@ public class ProfileFeatures extends ListenerAdapter {
                             if (event.getComponentId().startsWith("pf-manage-toggle")) {
                                 event.deferEdit().queue(M -> {
                                     try {
-                                        P.setMatchmakingNotification(event.getValues().contains("pf-toggle-matchmaking"));
-                                        P.setTournamentNotification(event.getValues().contains("pf-toggle-tournament"));
-                                        P.setPrivateProfile(event.getValues().contains("pf-toggle-private"));
-                                        P.setGIF(P.getItem("Shiny Card").Amount >= 1 ? event.getValues().contains("pf-toggle-card-gif") : CMD.getProfile().hasGIF());
+                                        P.setHasMatchmakingNotification(event.getValues().contains("pf-toggle-matchmaking"));
+                                        P.setHasTournamentNotification(event.getValues().contains("pf-toggle-tournament"));
+                                        P.setHasPrivateProfile(event.getValues().contains("pf-toggle-private"));
+                                        P.setHasGIF(P.getItem("Shiny Card").Amount >= 1 ? event.getValues().contains("pf-toggle-card-gif") : CMD.getProfile().isHasGIF());
                                         P.ManageProfileUI(M, CMD);
                                         P.Update();
                                     } catch (Exception e) {
@@ -832,7 +832,7 @@ public class ProfileFeatures extends ListenerAdapter {
 
     @Command(command = "profile")
     public static void slashProfile(InteractionHook M, Profile pf, String option) {
-        if (!pf.hasPrivateProfile() || pf.getUser().equals(M.getInteraction().getUser()) || isTournamentManager(M.getInteraction().getUser())) {
+        if (!pf.isHasPrivateProfile() || pf.getUser().equals(M.getInteraction().getUser()) || isTournamentManager(M.getInteraction().getUser())) {
             switch (option) {
                 case "Basic" -> {
                     pf.ViewProfile(M);
@@ -844,13 +844,13 @@ public class ProfileFeatures extends ListenerAdapter {
                     pf.ViewRPG(M);
                 }
                 case "Power & Activity" -> {
-                    pf.ViewPowerDetails(M, new FilterCommand(pf.getId(), "pf-power-filter"), new GamesCommand(pf.getId(), "pf-power-game"));
+                    pf.ViewPowerDetails(M, new FilterCommand(pf.getID(), "pf-power-filter"), new GamesCommand(pf.getID(), "pf-power-game"));
                 }
                 case "Trophies" -> {
                     pf.ViewTrophies(M);
                 }
                 case "Inventory" -> {
-                    pf.ViewInventory(M, new PageViewerCommand(pf.getId(), "pf-inv-cp"));
+                    pf.ViewInventory(M, new PageViewerCommand(pf.getID(), "pf-inv-cp"));
                 }
                 case "Quests" -> {
                     pf.ViewQuests(M);
@@ -862,10 +862,10 @@ public class ProfileFeatures extends ListenerAdapter {
                     pf.ViewClanHistory(M);
                 }
                 case "Match History" -> {
-                    pf.ViewHistory(M, new PageViewerCommand(pf.getId(), "pf-mlog-cp"), new FilterCommand(pf.getId(), "pf-mlog-filter"), new GamesCommand(pf.getId(), "pf-mlog-game"));
+                    pf.ViewHistory(M, new PageViewerCommand(pf.getID(), "pf-mlog-cp"), new FilterCommand(pf.getID(), "pf-mlog-filter"), new GamesCommand(pf.getID(), "pf-mlog-game"));
                 }
                 case "Tournament" -> {
-                    pf.ViewTournaments(M, new PageViewerCommand(pf.getId(), "pf-tourn-cp"), new FilterCommand(pf.getId(), "pf-tourn-filter"), new GamesCommand(pf.getId(), "pf-tourn-game"));
+                    pf.ViewTournaments(M, new PageViewerCommand(pf.getID(), "pf-tourn-cp"), new FilterCommand(pf.getID(), "pf-tourn-filter"), new GamesCommand(pf.getID(), "pf-tourn-game"));
                 }
                 case "License" -> {
                     pf.ViewLicenses(M);

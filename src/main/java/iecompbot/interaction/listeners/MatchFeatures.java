@@ -648,9 +648,9 @@ public class MatchFeatures extends ListenerAdapter {
             if (isGlobal) {
                 M.editOriginal(TL(M, "matchmaking-many-serv")).queue();
                 for (ServerInfo II : ServerInfo.list(true)) {
-                    if (II.isPublic || (I != null && II.getId() == I.getId())) {
+                    if (II.isPublic || (I != null && II.getID() == I.getID())) {
                         if (II.Ranking().hasPrivateRanking()) {
-                            sendMatchmaking(II, user, REQ, P.getPG(game, II.getId()).getLeague(II));
+                            sendMatchmaking(II, user, REQ, P.getPG(game, II.getID()).getLeague(II));
                         } else {
                             sendMatchmaking(II, user, REQ, PG.getLeague());
                         }
@@ -660,7 +660,7 @@ public class MatchFeatures extends ListenerAdapter {
                 if (I != null) {
                     M.editOriginal(TL(M, "matchmaking-one-serv")).queue();
                     if (I.Ranking().hasPrivateRanking()) {
-                        sendMatchmaking(I, user, REQ, P.getPG(game, I.getId()).getLeague(I));
+                        sendMatchmaking(I, user, REQ, P.getPG(game, I.getID()).getLeague(I));
                     } else {
                         sendMatchmaking(I, user, REQ, PG.getLeague());
                     } REQ.Save();
@@ -701,7 +701,7 @@ public class MatchFeatures extends ListenerAdapter {
                         E.setTimestamp(Instant.now());
                         try {
                             Message M = matchchannel.sendMessageEmbeds(E.build()).setContent(matchrole.getAsMention()).setComponents(ActionRow.of(Me, Me2)).submit().orTimeout(3, TimeUnit.SECONDS).get();
-                            req.MatchmakingRequests.add(new MatchmakingRequest.RequestData(I.getId(),matchchannel.getId(), matchrole.getId(), M.getId()));
+                            req.MatchmakingRequests.add(new MatchmakingRequest.RequestData(I.getID(),matchchannel.getId(), matchrole.getId(), M.getId()));
                         } catch (InterruptedException | ExecutionException ignored) {}
 
                         if (req.isAnonymous) {
@@ -721,9 +721,9 @@ public class MatchFeatures extends ListenerAdapter {
 
         Profile P1 = Profile.get(P1ID);
         Profile P2 = Profile.get(P2ID);
-        if (isScoreBan(P1.getId()) && T == null) {
+        if (isScoreBan(P1.getID()) && T == null) {
             M.editOriginal("**" + P1.getUser().getEffectiveName() + "** has been **banned** from **Score Reporting**.").queue();
-        } else if (isScoreBan(P2.getId()) && T == null) {
+        } else if (isScoreBan(P2.getID()) && T == null) {
             M.editOriginal("**" + P2.getUser().getEffectiveName() + "** has been **banned** from **Score Reporting**.").queue();
         } else {
             if (hasPermissionInChannel(M, channel, Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_EXT_EMOJI, Permission.MANAGE_WEBHOOKS)) {
@@ -736,7 +736,7 @@ public class MatchFeatures extends ListenerAdapter {
 
                             if (!P1.getUser().isBot() && !P2.getUser().isBot()) {
 
-                                if (I.getGuild().getMemberById(P1.getId()) != null && I.getGuild().getMemberById(P2.getId()) != null) {
+                                if (I.getGuild().getMemberById(P1.getID()) != null && I.getGuild().getMemberById(P2.getID()) != null) {
 
                                     if ((!(myscore > 20) && !(opponentscore > 20) && !(myscore < 0) && !(opponentscore < 0)) || T != null && T.getVSAmount() > 1) {
 
@@ -752,7 +752,7 @@ public class MatchFeatures extends ListenerAdapter {
                                                     E.setDescription(TL(P2,"score-reply-success-match", game.getFullName()) + ": \n" +
                                                             P1.getUser().getAsMention() + " **" + myscore + "** " + game.getVSEmoji() + " **" + opponentscore + "** " + P2.getUser().getAsMention() + "\n" +
                                                             P2.getUser().getAsMention() + ", " + TL(P2,"score-reply-success-score-confirm") + "\n" +
-                                                            (myscore == opponentscore && winneroftie != null ? (winneroftie.getIdLong() == P1.getId() ? "**Winner of tie:** " + P1.getId() : winneroftie.getIdLong() == P2.getId() ? "Winner of tie: " + P2.getId() + "\n"  : "") : "") + "\n" +
+                                                            (myscore == opponentscore && winneroftie != null ? (winneroftie.getIdLong() == P1.getID() ? "**Winner of tie:** " + P1.getID() : winneroftie.getIdLong() == P2.getID() ? "Winner of tie: " + P2.getID() + "\n"  : "") : "") + "\n" +
                                                             (T != null ? "**" + TL(M,"Tournament") + ":** " + game.getEmojiFormatted() + " " + T.getName() : ""));
                                                     if (proof != null) {
                                                         I.LogSlash(proof.getUrl());
@@ -763,8 +763,8 @@ public class MatchFeatures extends ListenerAdapter {
                                                     Button Decline = Button.danger("match-rslt-deny", TL(P2,"no"));
                                                     channel.sendMessage(P1.getUser().getAsMention() + " **" + myscore + "** " + game.getVSEmojiFormatted() + " **" + opponentscore + "** " + P2.getUser().getAsMention()).setEmbeds(E.build()).addComponents(ActionRow.of(Confirmation, Decline)).queue(Mm -> {
                                                         try {
-                                                            MatchLog ML = new MatchLog(game, P1.getId(), P2.getId(), myscore, opponentscore, Mm, winneroftie);
-                                                            new MatchLog_S(game, P1.getId(), P2.getId(), myscore, opponentscore, Mm);
+                                                            MatchLog ML = new MatchLog(game, P1.getID(), P2.getID(), myscore, opponentscore, Mm, winneroftie);
+                                                            new MatchLog_S(game, P1.getID(), P2.getID(), myscore, opponentscore, Mm);
                                                             if (T != null) {
                                                                 BaseCParticipant<?,?,?> P = T.getTeamByMyId(P1ID);
                                                                 if (P != null) P.getMatchWithOpponent(P2ID, false).setMatchLog(ML);
@@ -911,7 +911,7 @@ public class MatchFeatures extends ListenerAdapter {
         StringBuilder s = new StringBuilder();
         int i = 0;
         boolean hasPrivLeagues = I != null && I.Ranking().hasPrivateLeagues() && !I.Ranking().getLeagues().isEmpty();
-        for (BasePG<?> G : hasPrivLeagues ? p.getPGs(I.getId()) : p.getPGs()) {
+        for (BasePG<?> G : hasPrivLeagues ? p.getPGs(I.getID()) : p.getPGs()) {
             if (G.Medals > 0) {
                 if (i % 3 == 0) s.append("\n└ ");
                 else s.append(" — ");
@@ -923,7 +923,7 @@ public class MatchFeatures extends ListenerAdapter {
         E.setAuthor("• " + p.getUser().getEffectiveName(), null, p.getUser().getAvatarUrl());
         E.setDescription(TL(M,"league-description", "**" + League.listGlobal().size() + "**"));
         E.addField(TL(M,"league-description-your-league", "**" +
-                (hasPrivLeagues ? I.Ranking().getLeagueByMedal(p.Totals().getTotalMedals()) + " " + p.Totals().getTotalStats(I.getId()).get("Medals").toString() : League.getByMedal(p.Totals().getTotalMedals()) + " " + p.Totals().getTotalMedals())) + "**", s
+                (hasPrivLeagues ? I.Ranking().getLeagueByMedal(p.Totals().getTotalMedals()) + " " + p.Totals().getTotalStats(I.getID()).get("Medals").toString() : League.getByMedal(p.Totals().getTotalMedals()) + " " + p.Totals().getTotalMedals())) + "**", s
                 + (hasPrivLeagues ? "\n\n:warning: This server uses custom private leagues." : ""), false);
         String league = "";
         String tier = "";

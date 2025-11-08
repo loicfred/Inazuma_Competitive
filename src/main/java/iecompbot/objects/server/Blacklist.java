@@ -29,7 +29,7 @@ public class Blacklist extends DatabaseObject<Blacklist> {
     private Blacklist() {}
     public Blacklist(ServerInfo I, User u, Game game, int tournamentsLeft, String reason) {
         ID = Instant.now().toEpochMilli();
-        ServerID = I.getId();
+        ServerID = I.getID();
         UserID = u.getIdLong();
         TournamentsLeft = tournamentsLeft;
         GameCode = game != null ? game.getCode() : null;
@@ -72,21 +72,21 @@ public class Blacklist extends DatabaseObject<Blacklist> {
 
 
     public static List<Blacklist> get(ServerInfo I) {
-        List<Blacklist> T = getAllWhere(Blacklist.class, "ServerID = ?", I.getId());
+        List<Blacklist> T = getAllWhere(Blacklist.class, "ServerID = ?", I.getID());
         for (Blacklist CT : T) CT.I = I;
         return T;
     }
     public static List<Blacklist> get(ServerInfo I, Game game) {
         List<Blacklist> T;
-        if (game != null) T = getAllWhere(Blacklist.class, "ServerID = ? AND GameCode = ?", I.getId(), game.getCode());
-        else T = getAllWhere(Blacklist.class, "ServerID = ? AND GameCode IS NULL", I.getId());
+        if (game != null) T = getAllWhere(Blacklist.class, "ServerID = ? AND GameCode = ?", I.getID(), game.getCode());
+        else T = getAllWhere(Blacklist.class, "ServerID = ? AND GameCode IS NULL", I.getID());
         for (Blacklist CT : T) CT.I = I;
         return T;
     }
     public static Blacklist get(ServerInfo I, User user, Game game) {
         Blacklist T = null;
-        if (game != null) T = getWhere(Blacklist.class, "ServerID = ? AND UserID = ? AND GameCode = ?", I.getId(), user.getIdLong(), game.getCode()).orElse(null);
-        if (T == null) T = getWhere(Blacklist.class, "ServerID = ? AND UserID = ? AND GameCode IS NULL", I.getId(), user.getIdLong()).orElse(null);
+        if (game != null) T = getWhere(Blacklist.class, "ServerID = ? AND UserID = ? AND GameCode = ?", I.getID(), user.getIdLong(), game.getCode()).orElse(null);
+        if (T == null) T = getWhere(Blacklist.class, "ServerID = ? AND UserID = ? AND GameCode IS NULL", I.getID(), user.getIdLong()).orElse(null);
         if (T == null) return null;
         T.I = I;
         return T;

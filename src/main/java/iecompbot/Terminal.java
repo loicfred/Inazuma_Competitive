@@ -141,7 +141,7 @@ public class Terminal extends JFrame {
                             JLabel l = FT(StopString(serverInfo.getName(), 24), 10);
                             t.add(l);
                             t.add(FT(StopString(serverInfo.getName(), 24), 10));
-                            t.add(FT(String.valueOf(serverInfo.getId()), 10));
+                            t.add(FT(String.valueOf(serverInfo.getID()), 10));
                             P3.add(t);
                             count = count + 1;
                             l.addMouseListener(new MouseAdapter() {

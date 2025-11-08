@@ -67,7 +67,7 @@ public class Profile_Achievement extends BaseQuest<Profile_Achievement> {
     private Profile_Achievement() {}
     public Profile_Achievement(String name, String description, Profile p, BotEmoji emoji, Rewards rwds) {
         ID = Instant.now().toEpochMilli() + GenerateRandomNumber(1,999);
-        UserID = p.getId();
+        UserID = p.getID();
         RewardsID = rwds.getId();
         EmojiID = emoji.getIdLong();
         Name = name;
@@ -76,7 +76,7 @@ public class Profile_Achievement extends BaseQuest<Profile_Achievement> {
     }
     public Profile_Achievement(String name, String description, Profile p, BotEmoji emoji, long rwdsid) {
         ID = Instant.now().toEpochMilli() + GenerateRandomNumber(1,999);
-        UserID = p.getId();
+        UserID = p.getID();
         RewardsID = rwdsid;
         EmojiID = emoji.getIdLong();
         Name = name;

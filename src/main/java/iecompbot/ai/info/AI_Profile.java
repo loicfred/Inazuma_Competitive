@@ -144,7 +144,7 @@ public class AI_Profile {
             });
             E.submit(() -> {
                 for (BotManagers.Staff S : STAFFLIST) {
-                    if (S.UserID == profile.getId()) {
+                    if (S.UserID == profile.getID()) {
                         RoleOrContributionForTheBot = RoleOrContributionForTheBot + S.Role + " -> " + S.Description + "\n";
                     }
                 }
@@ -321,8 +321,8 @@ public class AI_Profile {
                     this.TimePlayedEpochMillis = m.getId();
                     this.P1Score = m.getP1Score();
                     this.P2Score = m.getP2Score();
-                    this.P1Name = me.getId() == m.getP1ID() ? me.getUser().getEffectiveName() : m.getP1().getEffectiveName();
-                    this.P2Name = me.getId() == m.getP2ID() ? me.getUser().getEffectiveName() : m.getP2().getEffectiveName();
+                    this.P1Name = me.getID() == m.getP1ID() ? me.getUser().getEffectiveName() : m.getP1().getEffectiveName();
+                    this.P2Name = me.getID() == m.getP2ID() ? me.getUser().getEffectiveName() : m.getP2().getEffectiveName();
                     this.GameName = m.getGame().getEmojiFormatted() + " " + m.getGame().getName();
                 } catch (Exception e) {}
             });

@@ -670,7 +670,7 @@ public class SChallonge_Tournament extends BaseCTournament<SChallonge_Tournament
                 Member m = I.getGuild().getMemberById(u.getId());
                 if (isRegistrationOpen() || force) {
                     if (m != null) {
-                        if (!u.isBot() && getParticipantById(Profile.get(u).getId()) == null) {
+                        if (!u.isBot() && getParticipantById(Profile.get(u).getID()) == null) {
                             if (I.getBlacklist(u, getGame()) == null || force) {
                                 if (isAccountOldEnough(u) || force) {
                                     if (getSignupCap() > getParticipantCount() || getSignupCap() == 0) {
@@ -786,7 +786,7 @@ public class SChallonge_Tournament extends BaseCTournament<SChallonge_Tournament
         if (getVSAmount() > 1) {
             EmbedBuilder E = getTournamentEmbed();
             try {
-                SChallonge_Participant MyTeam = getParticipantById(Profile.get(u).getId());
+                SChallonge_Participant MyTeam = getParticipantById(Profile.get(u).getID());
                 Member m = I.getGuild().getMemberById(u.getId());
                 if (isRegistrationOpen() || MyTeam != null) {
                     if (m != null) {
@@ -847,7 +847,7 @@ public class SChallonge_Tournament extends BaseCTournament<SChallonge_Tournament
                     if (teammates.stream().allMatch(u -> I.getBlacklist(u, getGame()) == null)) {
                         if (teammates.stream().allMatch(TT -> getParticipants().stream().noneMatch(PP -> PP.getAllTeammatesIDs().contains(TT.getIdLong())))) {
                             if (teammates.stream().allMatch(this::isAccountOldEnough)) {
-                                SChallonge_Participant MyTeam = getParticipantById(Profile.get(M.getInteraction().getUser().getIdLong()).getId());
+                                SChallonge_Participant MyTeam = getParticipantById(Profile.get(M.getInteraction().getUser().getIdLong()).getID());
                                 if (getSignupCap() > getParticipantCount() || getSignupCap() == 0 || MyTeam != null) {
                                     if (MyTeam == null) {
                                         MyTeam = AddParticipant(M.getInteraction().getMember());
@@ -1009,7 +1009,7 @@ public class SChallonge_Tournament extends BaseCTournament<SChallonge_Tournament
                 Member member = I.getGuild().getMemberById(PG.getUserID());
                 if (member == null) continue;
                 Profile P = Profile.get(member.getIdLong());
-                if (P.hasTournamentNotification() && PG.hasEverPlayed()) {
+                if (P.isHasTournamentNotification() && PG.hasEverPlayed()) {
                     i++;
                     MessageCreateBuilder MSG = new MessageCreateBuilder();
                     EmbedBuilder E = new EmbedBuilder(EE);
@@ -1138,7 +1138,7 @@ public class SChallonge_Tournament extends BaseCTournament<SChallonge_Tournament
         this.T = T;
         this.ID = T.getId();
         this.URL = T.getUrl();
-        this.ServerID = I.getId();
+        this.ServerID = I.getID();
         ResyncChallonge();
         Upsert();
     }
@@ -1188,7 +1188,7 @@ public class SChallonge_Tournament extends BaseCTournament<SChallonge_Tournament
         return getAllWhere(SChallonge_Tournament.class, "ServerID = ? AND (? IS NULL OR FIND_IN_SET(GameCode,?) > 0) ORDER BY ID DESC", serverid, games, games);
     }
     public static List<SChallonge_Tournament> ofServer(ServerInfo I) {
-        List<SChallonge_Tournament> T = ofServer(I.getId());
+        List<SChallonge_Tournament> T = ofServer(I.getID());
         for (SChallonge_Tournament CT : T) CT.I = I;
         return T;
     }

@@ -68,8 +68,8 @@ public class MatchResultImageBuilder extends ImageBuilder {
         this.I = I;
         this.P1 = Profile.get(user1);
         this.P2 = Profile.get(user2);
-        this.name1 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P1.getId()) != null ? I.getGuild().getMemberById(P1.getId()).getEffectiveName() : user1.getEffectiveName())), 18);
-        this.name2 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P2.getId()) != null ? I.getGuild().getMemberById(P2.getId()).getEffectiveName() : user2.getEffectiveName())), 18);
+        this.name1 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P1.getID()) != null ? I.getGuild().getMemberById(P1.getID()).getEffectiveName() : user1.getEffectiveName())), 18);
+        this.name2 = StopString(CharFix(EmojiParser.removeAllEmojis(I != null && I.getGuild().getMemberById(P2.getID()) != null ? I.getGuild().getMemberById(P2.getID()).getEffectiveName() : user2.getEffectiveName())), 18);
     }
 
     private Image getBoardToUse(){
@@ -145,7 +145,7 @@ public class MatchResultImageBuilder extends ImageBuilder {
 
             if (!isPreview) {
                 if (T != null) {
-                    BaseCMatch<?,?,?> M = (T.getVSAmount() == 1 ? T.getParticipantById(P1.getId()).getMatchWithOpponent(P2.getId(), false) : T.getMatches().stream().filter(MM -> MM.getSubMatch(P1.getId(), P2.getId()) != null).findAny().orElse(null));
+                    BaseCMatch<?,?,?> M = (T.getVSAmount() == 1 ? T.getParticipantById(P1.getID()).getMatchWithOpponent(P2.getID(), false) : T.getMatches().stream().filter(MM -> MM.getSubMatch(P1.getID(), P2.getID()) != null).findAny().orElse(null));
                     if (M != null) {
                         BufferedImage Icon = CircleAnImage(ImageIO.read(URI.create(I != null ? I.getGuild().getIconUrl().replace(".gif", ".png") : DiscordAccount.getSelfUser().getEffectiveAvatarUrl()).toURL()));
                         String TName = CharFix(EmojiParser.removeAllEmojis(T.getName()));

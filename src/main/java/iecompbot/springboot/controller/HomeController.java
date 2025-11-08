@@ -1,5 +1,6 @@
 package iecompbot.springboot.controller;
 
+import iecompbot.objects.BotManagers;
 import iecompbot.objects.Retrieval;
 import iecompbot.objects.clan.Clan;
 import iecompbot.objects.clan.ClanMember;
@@ -108,6 +109,7 @@ public class HomeController {
         model.addAttribute("profile", P);
         model.addAttribute("AvatarURL", P.getUser().getEffectiveAvatarUrl());
         model.addAttribute("ColorTheme", P.ColorCode);
+        model.addAttribute("managers", new BotManagers());
         return "item/p";
     }
     @GetMapping("/c/{id}")
@@ -118,6 +120,7 @@ public class HomeController {
         model.addAttribute("clan", C);
         model.addAttribute("AvatarURL", C.getEmblemURL());
         model.addAttribute("ColorTheme", C.Colorcode);
+        model.addAttribute("managers", new BotManagers());
         return "item/c";
     }
     @GetMapping("/s/{id}")
@@ -129,6 +132,7 @@ public class HomeController {
         model.addAttribute("AvatarURL", S.getGuild().getIconUrl());
         model.addAttribute("ColorTheme", S.DominantColorcode);
         model.addAttribute("act", doQuery("CALL DisplayServerActivity(?,?,?,?)", id, null, 30, 3).orElse(null));
+        model.addAttribute("managers", new BotManagers());
         return "item/s";
     }
     @GetMapping("/t/{id}")

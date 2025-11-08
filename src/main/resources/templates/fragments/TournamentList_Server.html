@@ -3,11 +3,11 @@
         <img th:src="@{/img/games/{gameCode}.png(gameCode=${CT.getGame().getCode()})}" style="width: 5%;">
         <div style="display: block; margin-left: 5px;">
             <h5 class="IEBOLD" th:text="${CT.getName()}"></h5>
-            <p class="IEStrike" th:text="${#dates.format((CT.getStartedAtTimeEpochSecond() > 0 ? CT.getStartedAtTimeEpochSecond() : CT.getStartedAtTimeEpochSecond()) * 1000, 'dd MMM yyyy HH:mm')} + ${CT.getCompletedAtTimeEpochSecond() > 0 ? ' - ' + #dates.format(CT.getCompletedAtTimeEpochSecond() * 1000, 'dd MMM yyyy HH:mm') : ''} + ' | Type: ' + ${CT.getType().toString().toUpperCase()} + ' - ' + ${CT.getVSAmount() + 'v' + CT.getVSAmount()} + ' | Participants: ' + ${CT.getParticipantCount()}"></p>
+            <p class="IEStrike mb-0" th:text="${#dates.format((CT.getStartedAtTimeEpochSecond() > 0 ? CT.getStartedAtTimeEpochSecond() : CT.getStartedAtTimeEpochSecond()) * 1000, 'dd MMM yyyy HH:mm')} + ${CT.getCompletedAtTimeEpochSecond() > 0 ? ' - ' + #dates.format(CT.getCompletedAtTimeEpochSecond() * 1000, 'dd MMM yyyy HH:mm') : ''} + ' | Type: ' + ${CT.getType().toString().toUpperCase()} + ' - ' + ${CT.getVSAmount() + 'v' + CT.getVSAmount()} + ' | Participants: ' + ${CT.getParticipantCount()}"></p>
         </div>
     </a>
     <a style="background-color: darkorange; margin: 5px 5px 5px auto; display: flex; align-items: center; justify-content: center; width: 100px; height: 40px; border-radius: 5px; padding: 5px" th:href="${CT.getFullChallongeURL()}" target="_blank">
-        <h5 class="IEBOLD">View</h5>
+        <p class="IEBOLD mb-0">View</p>
     </a>
 </div>
 <h5 class="IEBOLD noItemFound" style="justify-self: center;" th:if="${tournaments.isEmpty()}">No tournaments yet.</h5>
