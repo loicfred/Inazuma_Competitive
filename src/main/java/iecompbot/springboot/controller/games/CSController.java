@@ -5,6 +5,9 @@ import ie.enums.Element;
 import ie.enums.Gender;
 import ie.games.ds.cs.*;
 import ie.games.ds.object.slotmove.summon.Spirit;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,36 +18,43 @@ import static ie.Constants.InazumaCSDB;
 import static iecompbot.Constants.POWERDECIMAL;
 import static my.utilities.json.JSONItem.GSON;
 
+@Tag(name = "Inazuma Eleven GO Chrono Stones", description = "Endpoints to access data from Chrono Stones database.")
 @RestController
 @CrossOrigin(origins = "*")
 public class CSController {
 
+    @Operation(summary = "Get a list of all CS players")
+    @GetMapping("/cs/players.json")
+    public List<CSPlayer> GetCSPlayers() {
+        return InazumaCSDB.retrieveItems("Player").mapAllTo(CSPlayer.class);
+    }
+    @Operation(summary = "Get a list of a CS player by ID")
+    @GetMapping("/cs/players/{id}.json")
+    public CSPlayer GetCSPlayerByID(@PathVariable String id) {
+        return InazumaCSDB.retrieveItems("Player").where("ID = ?", id).mapFirstTo(CSPlayer.class);
+    }
+    @Operation(summary = "Get a list of all CS special moves")
+    @GetMapping("/cs/moves.json")
+    public List<CSSpecialMove> GetCSMoves() {
+        return InazumaCSDB.retrieveItems("Move").mapAllTo(CSSpecialMove.class);
+    }
+    @Operation(summary = "Get a list of a CS special move by ID")
+    @GetMapping("/cs/moves/{id}.json")
+    public CSSpecialMove GetCSMoveByID(@PathVariable String id) {
+        return InazumaCSDB.retrieveItems("Move").where("ID = ?", id).mapFirstTo(CSSpecialMove.class);
+    }
+    @Operation(summary = "Get a list of all CS fighting spirits")
+    @GetMapping("/cs/spirits.json")
+    public List<CSSpirit> GetCSSpirits() {
+        return InazumaCSDB.retrieveItems("Spirit").mapAllTo(CSSpirit.class);
+    }
+    @Operation(summary = "Get a list of a CS fighting spirit by ID")
+    @GetMapping("/cs/spirits/{id}.json")
+    public CSSpirit GetCSSpiritByID(@PathVariable String id) {
+        return InazumaCSDB.retrieveItems("Spirit").where("ID = ?", id).mapFirstTo(CSSpirit.class);
+    }
 
-    @PutMapping("/cs/players")
-    public String GetCSPlayers() {
-        return GSON.toJson(InazumaCSDB.retrieveItems("Player").mapAllTo(CSPlayer.class));
-    }
-    @PutMapping("/cs/players/{id}")
-    public String GetCSPlayerByID(@PathVariable String id) {
-        return GSON.toJson(InazumaCSDB.retrieveItems("Player").where("ID = ?", id).mapAllTo(CSPlayer.class));
-    }
-    @PutMapping("/cs/moves")
-    public String GetCSMoves() {
-        return GSON.toJson(InazumaCSDB.retrieveItems("Move").mapAllTo(CSSpecialMove.class));
-    }
-    @PutMapping("/cs/moves/{id}")
-    public String GetCSMoveByID(@PathVariable String id) {
-        return GSON.toJson(InazumaCSDB.retrieveItems("Move").where("ID = ?", id).mapAllTo(CSSpecialMove.class));
-    }
-    @PutMapping("/cs/spirits")
-    public String GetCSSpirits() {
-        return GSON.toJson(InazumaCSDB.retrieveItems("Spirit").mapAllTo(CSSpirit.class));
-    }
-    @PutMapping("/cs/spirits/{id}")
-    public String GetCSSpiritByID(@PathVariable String id) {
-        return GSON.toJson(InazumaCSDB.retrieveItems("Spirit").where("ID = ?", id).mapAllTo(CSSpirit.class));
-    }
-
+    @Hidden
     @PutMapping("/calculator/cs/dualtype")
     public String CSCalculatorSetDualType(@RequestBody Map<String, Object> payload) {
         PlayerMoveSpiritConfig CONFIG = new PlayerMoveSpiritConfig();
@@ -76,6 +86,7 @@ public class CSController {
         return GSON.toJson(CONFIG);
     }
 
+    @Hidden
     @PutMapping("/calculator/cs/move1")
     public String CSCalculatorSetMove1(@RequestBody Map<String, Object> payload) {
         MoveConfig moveConfig = new MoveConfig();
@@ -87,6 +98,7 @@ public class CSController {
         } catch (Exception ignored) {}
         return GSON.toJson(moveConfig);
     }
+    @Hidden
     @PutMapping("/calculator/cs/move2")
     public String CSCalculatorSetMove2(@RequestBody Map<String, Object> payload) {
         MoveConfig moveConfig = new MoveConfig();
@@ -99,6 +111,7 @@ public class CSController {
         return GSON.toJson(moveConfig);
     }
 
+    @Hidden
     @PutMapping("/calculator/cs/spirit1")
     public String CSCalculatorSetSpirit1(@RequestBody Map<String, Object> payload) {
         SpiritConfig spiritConfig = new SpiritConfig();
@@ -121,6 +134,7 @@ public class CSController {
         } catch (Exception ignored) {}
         return GSON.toJson(spiritConfig);
     }
+    @Hidden
     @PutMapping("/calculator/cs/spirit2")
     public String CSCalculatorSetSpirit2(@RequestBody Map<String, Object> payload) {
         SpiritConfig spiritConfig = new SpiritConfig();
@@ -144,6 +158,7 @@ public class CSController {
         return GSON.toJson(spiritConfig);
     }
 
+    @Hidden
     @PutMapping("/calculator/cs/c")
     public String CSCalculator(@RequestBody Map<String, Object> payload) {
         try {

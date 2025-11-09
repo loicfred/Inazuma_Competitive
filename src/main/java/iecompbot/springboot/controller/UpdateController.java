@@ -3,6 +3,7 @@ package iecompbot.springboot.controller;
 import iecompbot.objects.clan.Clan;
 import iecompbot.objects.profile.Profile;
 import iecompbot.objects.server.ServerInfo;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static iecompbot.objects.BotManagers.*;
 
+@Hidden
 @RestController
 @CrossOrigin(origins = "*")
 public class UpdateController {

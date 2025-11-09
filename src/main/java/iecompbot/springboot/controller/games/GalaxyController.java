@@ -5,11 +5,12 @@ import ie.enums.Element;
 import ie.enums.Gender;
 import ie.games.ds.galaxy.*;
 import ie.games.ds.object.slotmove.summon.Spirit;
-import org.springframework.ui.Model;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,43 +18,53 @@ import static ie.Constants.InazumaGLXDB;
 import static iecompbot.Constants.POWERDECIMAL;
 import static my.utilities.json.JSONItem.GSON;
 
+@Tag(name = "Inazuma Eleven GO Galaxy", description = "Endpoints to access data from Galaxy database.")
 @RestController
 @CrossOrigin(origins = "*")
 public class GalaxyController {
 
-    @PutMapping("/galaxy/players")
-    public String GetGalaxyPlayers() {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Player").mapAllTo(GalaxyPlayer.class));
+    @Operation(summary = "Get a list of all Galaxy players")
+    @GetMapping("/galaxy/players.json")
+    public List<GalaxyPlayer> GetGalaxyPlayers() {
+        return InazumaGLXDB.retrieveItems("Player").mapAllTo(GalaxyPlayer.class);
     }
-    @PutMapping("/galaxy/players/{id}")
-    public String GetGalaxyPlayerByID(@PathVariable String id) {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Player").where("ID = ?", id).mapAllTo(GalaxyPlayer.class));
+    @Operation(summary = "Get a list of a Galaxy player by ID")
+    @GetMapping("/galaxy/players/{id}.json")
+    public GalaxyPlayer GetGalaxyPlayerByID(@PathVariable String id) {
+        return InazumaGLXDB.retrieveItems("Player").where("ID = ?", id).mapFirstTo(GalaxyPlayer.class);
     }
-    @PutMapping("/galaxy/moves")
-    public String GetGalaxyMoves() {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Move").mapAllTo(GalaxySpecialMove.class));
+    @Operation(summary = "Get a list of all Galaxy special moves")
+    @GetMapping("/galaxy/moves.json")
+    public List<GalaxySpecialMove> GetGalaxyMoves() {
+        return InazumaGLXDB.retrieveItems("Move").mapAllTo(GalaxySpecialMove.class);
     }
-    @PutMapping("/galaxy/moves/{id}")
-    public String GetGalaxyMoveByID(@PathVariable String id) {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Move").where("ID = ?", id).mapAllTo(GalaxySpecialMove.class));
+    @Operation(summary = "Get a list of a Galaxy special move by ID")
+    @GetMapping("/galaxy/moves/{id}.json")
+    public GalaxySpecialMove GetGalaxyMoveByID(@PathVariable String id) {
+        return InazumaGLXDB.retrieveItems("Move").where("ID = ?", id).mapFirstTo(GalaxySpecialMove.class);
     }
-    @PutMapping("/galaxy/spirits")
-    public String GetGalaxySpirits() {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Spirit").mapAllTo(GalaxySpirit.class));
+    @Operation(summary = "Get a list of all Galaxy fighting spirits")
+    @GetMapping("/galaxy/spirits.json")
+    public List<GalaxySpirit> GetGalaxySpirits() {
+        return InazumaGLXDB.retrieveItems("Spirit").mapAllTo(GalaxySpirit.class);
     }
-    @PutMapping("/galaxy/spirits/{id}")
-    public String GetGalaxySpiritByID(@PathVariable String id) {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Spirit").where("ID = ?", id).mapAllTo(GalaxySpirit.class));
+    @Operation(summary = "Get a list of a Galaxy fighting spirit by ID")
+    @GetMapping("/galaxy/spirits/{id}.json")
+    public GalaxySpirit GetGalaxySpiritByID(@PathVariable String id) {
+        return InazumaGLXDB.retrieveItems("Spirit").where("ID = ?", id).mapFirstTo(GalaxySpirit.class);
     }
-    @PutMapping("/galaxy/totems")
-    public String GetGalaxyTotems() {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Totem").mapAllTo(Totem.class));
+    @Operation(summary = "Get a list of all Galaxy totems")
+    @GetMapping("/galaxy/totems.json")
+    public List<Totem> GetGalaxyTotems() {
+        return InazumaGLXDB.retrieveItems("Totem").mapAllTo(Totem.class);
     }
-    @PutMapping("/galaxy/totems/{id}")
-    public String GetGalaxyTotemByID(@PathVariable String id) {
-        return GSON.toJson(InazumaGLXDB.retrieveItems("Totem").where("ID = ?", id).mapAllTo(Totem.class));
+    @Operation(summary = "Get a list of a Galaxy totem by ID")
+    @GetMapping("/galaxy/totems/{id}.json")
+    public Totem GetGalaxyTotemByID(@PathVariable String id) {
+        return InazumaGLXDB.retrieveItems("Totem").where("ID = ?", id).mapFirstTo(Totem.class);
     }
 
+    @Hidden
     @PutMapping("/calculator/galaxy/dualtype")
     public String GalaxyCalculatorSetDualType(@RequestBody Map<String, Object> payload) {
         PlayerMoveSpiritConfig CONFIG = new PlayerMoveSpiritConfig();
@@ -85,6 +96,7 @@ public class GalaxyController {
         return GSON.toJson(CONFIG);
     }
 
+    @Hidden
     @PutMapping("/calculator/galaxy/spirit1")
     public String GalaxyCalculatorSetSpirit1(@RequestBody Map<String, Object> payload) {
         SpiritConfig spiritConfig = new SpiritConfig();
@@ -107,6 +119,7 @@ public class GalaxyController {
         } catch (Exception ignored) {}
         return GSON.toJson(spiritConfig);
     }
+    @Hidden
     @PutMapping("/calculator/galaxy/spirit2")
     public String GalaxyCalculatorSetSpirit2(@RequestBody Map<String, Object> payload) {
         SpiritConfig spiritConfig = new SpiritConfig();
@@ -130,6 +143,7 @@ public class GalaxyController {
         return GSON.toJson(spiritConfig);
     }
 
+    @Hidden
     @PutMapping("/calculator/galaxy/c")
     public String GalaxyCalculator(@RequestBody Map<String, Object> payload) {
         try {

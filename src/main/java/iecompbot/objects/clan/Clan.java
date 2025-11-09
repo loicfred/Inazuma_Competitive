@@ -2010,7 +2010,7 @@ public class Clan extends DatabaseObject<Clan> {
     private void setTag(String tag) {
         Tag = tag;
     }
-    private String getColorcode() {
+    public String getColorcode() {
         return Colorcode;
     }
     private void setColorcode(String colorcode) {

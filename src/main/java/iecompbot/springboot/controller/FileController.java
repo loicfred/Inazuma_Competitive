@@ -1,6 +1,8 @@
 package iecompbot.springboot.controller;
 
 import iecompbot.objects.profile.item.Item;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -17,11 +19,13 @@ import java.nio.file.Paths;
 import static iecompbot.Main.MainDirectory;
 import static iecompbot.springboot.data.DatabaseObject.doQueryValue;
 
+@Tag(name = "File Accessor", description = "Endpoints to access files such as icons or logos.")
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class FileController {
 
+    @Operation(summary = "Get the image of a league by ID")
     @GetMapping("/img/league/{id}.png")
     @Cacheable(value = "leagueimg", key = "#id")
     public ResponseEntity<byte[]> getLeagueImg(@PathVariable Long id) {
@@ -33,6 +37,7 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Get the image tier of a league by ID")
     @GetMapping("/img/league/tier/{id}.png")
     @Cacheable(value = "leaguetierimg", key = "#id")
     public ResponseEntity<byte[]> getLeagueTierImg(@PathVariable Long id) {
@@ -44,6 +49,7 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Get the emblem of a clan by ID")
     @GetMapping("/img/clan/{id}/emblem.png")
     @Cacheable(value = "clanemblem", key = "#id")
     public ResponseEntity<byte[]> getClanEmblem(@PathVariable Long id) {
@@ -55,6 +61,7 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Get the image of an item by ID")
     @GetMapping("/img/item/{id}.png")
     @Cacheable(value = "itemimg", key = "#id + '-' + #i")
     public ResponseEntity<byte[]> getItemImg(@PathVariable Long id, @RequestParam int i) {
@@ -67,6 +74,7 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Get an image asset from an event by name")
     @GetMapping("/img/event/{id}/{filename}.png")
     @Cacheable(value = "eventimg", key = "#id + '-' + #filename")
     public ResponseEntity<Resource> getEventImage(@PathVariable String id, @PathVariable String filename) {
@@ -83,6 +91,7 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Get the image of a tournament by ID")
     @GetMapping("/img/server/{serverid}/{tournamentid}/img.png")
     @Cacheable(value = "eventimg", key = "#serverid + '-' + #tournamentid")
     public ResponseEntity<Resource> getTournamentImage(@PathVariable Long serverid, @PathVariable Long tournamentid) {
