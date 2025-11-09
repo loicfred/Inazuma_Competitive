@@ -1,7 +1,5 @@
 package iecompbot.springboot.controller.rest;
 
-import iecompbot.objects.clan.Clan;
-import iecompbot.objects.clan.ClanMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cache.annotation.Cacheable;
@@ -10,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Tag(name = "Clans", description = "Endpoints to access community clan information.")
+@Tag(name = "Clans", description = "Endpoints to access community clans information.")
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
@@ -20,32 +18,32 @@ public class ClanRESTController {
     @GetMapping("/clans/ids.json")
     @Cacheable(value = "apiclanids", key = "null")
     public List<Long> getClanIDs() {
-        return Clan.listOpenPaused().stream().map(Clan::getID).collect(Collectors.toList());
+        return iecompbot.objects.clan.Clan.listOpenPaused().stream().map(iecompbot.objects.clan.Clan::getID).collect(Collectors.toList());
     }
 
     @Operation(summary = "Get a clan by ID")
     @GetMapping("/clan/{id}.json")
     @Cacheable(value = "apiclan", key = "#id")
-    public ClanREST getClanById(@PathVariable long id) {
-        return new ClanREST(Clan.get(id));
+    public Clan getClanById(@PathVariable long id) {
+        return new Clan(iecompbot.objects.clan.Clan.get(id));
     }
 
     @Operation(summary = "Get a list of a clan's members")
     @GetMapping("/clan/{id}/members.json")
-    @Cacheable(value = "apiclanmembers", key = "id")
-    public List<ClanMemberREST> getClanMembersOfClan(@PathVariable long id) {
-        return ClanMember.ofClan(id).stream().map(ClanMemberREST::new).collect(Collectors.toList());
+    @Cacheable(value = "apiclanmembers", key = "#id")
+    public List<ClanMember> getClanMembersOfClan(@PathVariable long id) {
+        return iecompbot.objects.clan.ClanMember.ofClan(id).stream().map(ClanMember::new).collect(Collectors.toList());
     }
 
     @Operation(summary = "Get a list of all active clans")
     @GetMapping("/clans/active.json")
     @Cacheable(value = "apiclans", key = "null")
-    public List<ClanREST> getClansOpenPaused() {
-        return Clan.listOpenPaused().stream().map(ClanREST::new).collect(Collectors.toList());
+    public List<Clan> getClansOpenPaused() {
+        return iecompbot.objects.clan.Clan.listOpenPaused().stream().map(Clan::new).collect(Collectors.toList());
     }
 
 
-    public static class ClanMemberREST {
+    public static class ClanMember {
         public long ClanID;
         public long UserID;
         public String Number;
@@ -54,7 +52,7 @@ public class ClanRESTController {
         public String CardGIFURL;
         public boolean isMainClan;
 
-        public ClanMemberREST(ClanMember CM) {
+        public ClanMember(iecompbot.objects.clan.ClanMember CM) {
             this.ClanID = CM.getClanID();
             this.UserID = CM.getUserID();
             this.Number = CM.getNumber();
@@ -65,7 +63,7 @@ public class ClanRESTController {
         }
     }
 
-    public static class ClanREST {
+    public static class Clan {
         public Long ID;
         public String Name;
         public String Tag;
@@ -89,7 +87,7 @@ public class ClanRESTController {
         public Long ClanCaptainUserID;
         public String ClanCaptain;
 
-        public ClanREST(Clan clan) {
+        public Clan(iecompbot.objects.clan.Clan clan) {
             this.ID = clan.getID();
             this.Name = clan.getName();
             this.Tag = clan.getTag();
