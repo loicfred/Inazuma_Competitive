@@ -350,7 +350,7 @@ public class Profile extends DatabaseObject<Profile> {
 
 
     public Profile_PastClan AddClanLog(ClanMember member) {
-        return new Profile_PastClan(getID(), member.getClanID(), member.getId(), Instant.now().toEpochMilli(), member.isMainClan());
+        return new Profile_PastClan(getID(), member.getClanID(), member.getID(), Instant.now().toEpochMilli(), member.isMainClan());
     }
     public List<Profile_PastClan> getClanLogs(boolean mainClan) {
         return Profile_PastClan.ofUser(getID(), mainClan);
@@ -609,7 +609,7 @@ public class Profile extends DatabaseObject<Profile> {
         EmbedBuilder E = new EmbedBuilder();
         E.setThumbnail(getUser().getAvatarUrl());
         E.setColor(getColor());
-        E.setAuthor(TL(M,"profile-of-user", getUser().getEffectiveName(), DefaultURL + "/p/" + Name));
+        E.setAuthor(TL(M,"profile-of-user", getUser().getEffectiveName()), DefaultURL + "/p/" + Name);
         String power = POWERDECIMAL.format(getPower(null, null));
         E.setDescription("\"*" + getSignature().replaceAll("<br>", "\n") + "*\"\n" +
                 (!isPowerDisabled(G) ? "**Average Power: " + BotEmoji.get("POW") + power + "**" : ""));

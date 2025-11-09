@@ -1598,11 +1598,11 @@ public class Clan extends DatabaseObject<Clan> {
                 getClanMembers().sort(Comparator.comparingInt(ClanMember::getHighestRolePosition));
                 for (ClanMember member : getClanMembers()) {
                     if (MemberOptions1.size() < 25) {
-                        MemberOptions1.add(SelectOption.of(member.Number + " • " + member.getUser().getEffectiveName(), member.getId() + "")
+                        MemberOptions1.add(SelectOption.of(member.Number + " • " + member.getUser().getEffectiveName(), member.getID() + "")
                                 .withDescription(member.listTasksOneLine())
                                 .withEmoji(member.getClanRoles().isEmpty() ? Emoji.fromUnicode("U+1f464") : member.getClanRoles().getFirst().getEmoji()));
                     } else {
-                        MemberOptions2.add(SelectOption.of(member.Number + " • " + member.getUser().getEffectiveName(), member.getId() + "")
+                        MemberOptions2.add(SelectOption.of(member.Number + " • " + member.getUser().getEffectiveName(), member.getID() + "")
                                 .withDescription(member.listTasksOneLine())
                                 .withEmoji(member.getClanRoles().isEmpty() ? Emoji.fromUnicode("U+1f464") : member.getClanRoles().getFirst().getEmoji()));
                     }

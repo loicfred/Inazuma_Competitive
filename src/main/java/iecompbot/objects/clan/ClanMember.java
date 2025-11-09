@@ -1,5 +1,6 @@
 package iecompbot.objects.clan;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import iecompbot.img.builders.CardImageBuilder;
 import iecompbot.interaction.cmdbreakdown.clan.ClanMemberInteractCommand;
 import iecompbot.objects.BotEmoji;
@@ -34,6 +35,7 @@ import static iecompbot.objects.BotManagers.isClanManager;
 import static iecompbot.objects.Retrieval.getUserByID;
 import static my.utilities.var.Constants.ProgramZoneId;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class ClanMember extends DatabaseObject<ClanMember> {
 
     public transient int Authority;
@@ -53,12 +55,12 @@ public class ClanMember extends DatabaseObject<ClanMember> {
     public String Nickname = null;
     public String CardPNGURL = null;
     public String CardGIFURL = null;
-    public Long EndOfContractEpochSecond;
+    public Long EndOfContractEpochSecond = null;
     public boolean isMainClan = true;
     public boolean hasClanTag = true;
 
 
-    public long getId() {
+    public long getID() {
         return ID;
     }
     public long getUserID() {
@@ -83,7 +85,7 @@ public class ClanMember extends DatabaseObject<ClanMember> {
         return CardGIFURL;
     }
     public Instant getTimeJoined() {
-        return Instant.ofEpochMilli(getId());
+        return Instant.ofEpochMilli(getID());
     }
     public String getTimeJoined(String pattern) {
         return getTimeJoined().atZone(ProgramZoneId).format(DateTimeFormatter.ofPattern(pattern));
@@ -100,7 +102,7 @@ public class ClanMember extends DatabaseObject<ClanMember> {
                 "JOIN inazuma_competitive.clanmember_to_clanrole CC ON CC.ClanRoleID = CR.ID " +
                 "JOIN inazuma_competitive.clanmember CM ON CC.ClanMemberID = CM.ID " +
                 "WHERE CM.ID = ? " +
-                "ORDER BY Position ASC", getId()) : ClanRoles;
+                "ORDER BY Position ASC", getID()) : ClanRoles;
     }
 
     public void setNumber(String number) {
@@ -526,5 +528,34 @@ public class ClanMember extends DatabaseObject<ClanMember> {
                     .build().asDisabled()));
         }
         M.editOriginalEmbeds(embed.build()).setComponents(rows).setReplace(true).queue();
+    }
+
+
+    public boolean isHasClanTag() {
+        return hasClanTag;
+    }
+    public void setHasClanTag(boolean hasClanTag) {
+        this.hasClanTag = hasClanTag;
+    }
+
+    public void setMainClan(boolean mainClan) {
+        isMainClan = mainClan;
+    }
+    public Long getEndOfContractEpochSecond() {
+        return EndOfContractEpochSecond;
+    }
+    public void setEndOfContractEpochSecond(Long endOfContractEpochSecond) {
+        EndOfContractEpochSecond = endOfContractEpochSecond;
+    }
+
+    public void setUserID(long userID) {
+        UserID = userID;
+    }
+    public void setClanID(long clanID) {
+        ClanID = clanID;
+    }
+
+    public void setID(long ID) {
+        this.ID = ID;
     }
 }

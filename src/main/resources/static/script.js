@@ -59,7 +59,7 @@ function writeCheckboxField(identifier, labelText, containerId, isChecked) {
     const html = `
         <div style="display: flex; width: 100%; padding-right: 10px;">
             <label class="IEStrike" for="${identifier}">${labelText}</label>
-            <label class="switch" style="margin-left: auto;">
+            <label class="switch ms-auto">
                 <input type="checkbox" name="${identifier}" id="${identifier}" ${checkedAttribute}>
                 <span class="slider round"></span>
             </label>

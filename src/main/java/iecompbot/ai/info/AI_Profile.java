@@ -301,7 +301,7 @@ public class AI_Profile {
 
         // Constructor to copy values from ClanMember object
         public AI_ClanMember(ClanMember clanMember) {
-            this.TimeJoinedInEpochMilli = clanMember.getId();
+            this.TimeJoinedInEpochMilli = clanMember.getID();
             this.Number = clanMember.getNumber();
             this.ClanName = (clanMember.getClan().EmojiID != null ? clanMember.getClan().getEmojiFormatted() + " " : "") + clanMember.getClan().getName();
             this.Roles = clanMember.getClanRoles().stream().map(cm -> cm.Name).collect(Collectors.joining(", "));

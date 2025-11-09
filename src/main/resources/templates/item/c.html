@@ -208,10 +208,10 @@
                    th:style="'display: flex; align-items: center; background-color:' + ${utils.darkenColor(each.getProfile().getColorCode(), 0.25)} + '88; border-radius: 6px 0 0 6px;'">
                     <img class="member-avatar" th:src="${each.getProfile().getUser().getAvatarUrl()}"/>
                     <div style="display: block">
-                        <h5 class="mb-0"><span class="membername emoji" th:text="${each.getHighestRolePosition() == 1 ? '👑' : ''} + ${each.getProfile().getNationality().getCodepoints()}"></span> <span class="IEBOLD membername" th:text="${each.getNumber()} + ' | ' + ${each.getProfile().FullName} + ' (@' + ${each.getProfile().Name} + ')'"></span></h5>
+                        <h5><span class="membername emoji" th:text="${each.getHighestRolePosition() == 1 ? '👑' : ''} + ${each.getProfile().getNationality().getCodepoints()}"></span> <span class="IEBOLD membername" th:text="${each.getNumber()} + ' | ' + ${each.getProfile().FullName} + ' (@' + ${each.getProfile().Name} + ')'"></span></h5>
                         <p class="IEStrike mb-0" th:text="${each.getTimeJoined('dd MMMM yyyy') + ' - Level ' + each.getProfile().Totals().Level + ' | ' + each.listTasksOneLine()}"></p>
-                    </div>
-                </a>
+                     </div>
+                    <img class="ms-auto" th:src="${'/api/img/league/' + each.getProfile().Totals().getLeague().getId() + '.png'}" width="60" height="60" onerror="this.src='/api/img/league/1.png'" alt=""></a>
             </div>
         </div>
     </div>

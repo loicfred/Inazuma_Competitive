@@ -343,15 +343,24 @@
         <div class="formSide" id="FORM_UPDATE_2">
             <div style="display: flex; width: 100%; padding-right: 10px;">
                 <label class="IEStrike" for="hasMatchmakingNotification">Toggle Matchmaking Notification</label>
-                <label class="switch" style="margin-left: auto;">
+                <label class="switch ms-auto">
                     <input type="checkbox" id="hasMatchmakingNotification" th:field="*{hasMatchmakingNotification}">
                     <span class="slider round"></span>
                 </label>
             </div>
 
             <div style="display: flex; width: 100%; padding-right: 10px;">
+                <label class="IEStrike" for="hasTournamentNotificationTest">Toggle Matchmaking Notification</label>
+                <label class="switch ms-auto">
+                    <input type="checkbox" id="hasTournamentNotificationTest" name="hasTournamentNotificationTest">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+
+            <div style="display: flex; width: 100%; padding-right: 10px;">
                 <label class="IEStrike" for="hasTournamentNotification">Toggle Matchmaking Notification</label>
-                <label class="switch" style="margin-left: auto;">
+                <label class="switch ms-auto">
                     <input type="checkbox" id="hasTournamentNotification" th:field="*{hasTournamentNotification}">
                     <span class="slider round"></span>
                 </label>
@@ -359,7 +368,7 @@
 
             <div style="display: flex; width: 100%; padding-right: 10px;">
                 <label class="IEStrike" for="hasGIF">Toggle Card GIF (if has Shiny Card)</label>
-                <label class="switch" style="margin-left: auto;">
+                <label class="switch ms-auto">
                     <input type="checkbox" id="hasGIF" th:field="*{hasGIF}">
                     <span class="slider round"></span>
                 </label>

@@ -24,7 +24,10 @@
                 <p class="IEStrike mb-0" th:text="${TR.getAsString('FullName')}"></p>
             </a>
         </td>
-        <td class="IEStrike mb-0" th:text="${TR.getAsInt('Medals')}"></td>
+        <td class="IEStrike mb-0 d-flex align-items-center">
+            <img th:src="${'/api/img/league/' + TR.get('LeagueID') + '.png'}" width="32" height="32" onerror="this.src='/api/img/league/1.png'" alt="">
+            <p class="IEStrike mb-0" th:text="${TR.getAsInt('Medals')}"></p>
+        </td>
         <td class="IEStrike mb-0" th:text="${TR.getAsInt('T1')}"></td>
         <td class="IEStrike mb-0" th:text="${TR.getAsInt('T2')}"></td>
         <td class="IEStrike mb-0" th:text="${TR.getAsInt('T3')}"></td>

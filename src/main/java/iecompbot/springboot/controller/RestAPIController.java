@@ -6,6 +6,7 @@ import iecompbot.objects.profile.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -27,21 +28,14 @@ public class RestAPIController {
         return Profile.get(id);
     }
 
-    @GetMapping("/clans.json")
-    public List<Clan> getClans() {
-        return Clan.list();
+    @GetMapping("/clans/ids.json")
+    public List<Long> getClanIDs() {
+        return Clan.listOpenPaused().stream().map(Clan::getID).collect(Collectors.toList());
     }
-    @GetMapping("/clans/open.json")
-    public List<Clan> getClansOpen() {
-        return Clan.listOpen();
-    }
-    @GetMapping("/clans/paused.json")
-    public List<Clan> getClansPaused() {
-        return Clan.listPaused();
-    }
-    @GetMapping("/clans/closed.json")
-    public List<Clan> getClansClosed() {
-        return Clan.listClosed();
+
+    @GetMapping("/clans/active.json")
+    public List<Clan> getClansOpenPaused() {
+        return Clan.listOpenPaused();
     }
 
 }

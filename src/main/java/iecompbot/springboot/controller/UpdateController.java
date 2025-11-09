@@ -30,7 +30,7 @@ public class UpdateController {
     @PostMapping("/c/update")
     public String updateClan(@AuthenticationPrincipal OAuth2User principal, Clan clan) {
         Object ID = principal.getAttribute("id");
-        if (ID != null && Long.parseLong(ID.toString()) == clan.getCaptain().getId() || isClanManager(Long.parseLong(ID.toString()))) {
+        if (ID != null && Long.parseLong(ID.toString()) == clan.getCaptain().getID() || isClanManager(Long.parseLong(ID.toString()))) {
             clan.UpdateOnly("Name", "Tag", "Description", "Requirements", "History",
                     "WebsiteURL", "DiscordURL", "TwitchURL", "YouTubeURL", "TiktokURL", "InstagramURL");
             return "redirect:/c/" + clan.getID() + "?success";
